@@ -1,11 +1,11 @@
 import {ACTION_TYPES} from "./postActionTypes";
-import {couriers} from "./couriers";
+import couriers from "./couriers";
 
 export const INITIAL_STATE = {
   loading: false,
   post: {},
   error: false,
-  couriers,
+  couriers: couriers.forFetchingData,
 };
 
 export const postReducer = (state, action) => {

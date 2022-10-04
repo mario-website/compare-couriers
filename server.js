@@ -1,5 +1,5 @@
 require("dotenv").config();
-const getApiUrl = require("./src/store/getApiUrl");
+const couriers = require("./src/store/couriers");
 const express = require("express");
 // const cheerio = require("cheerio");
 // const superagent = require("superagent");
@@ -10,7 +10,7 @@ const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 
 app.use(express.json());
 
-getApiUrl.couriers.forEach((courier) => {
+couriers.couriersNamesArr.forEach((courier) => {
   app.post(courier.apiUrl, async (req, res) => {
     const fetchRes = await fetch(req.body.url, req.body)
       .then((res) => res.json())
