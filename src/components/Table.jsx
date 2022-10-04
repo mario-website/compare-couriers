@@ -22,7 +22,7 @@ const Table = () => {
 
   const main = async (signal) => {
     console.log(`state:`, state);
-    state.couriers.forEach(async (courier) => {
+    state.forFetchingData.forEach(async (courier) => {
       let tokken = "";
       let optionsData = {};
       if (courier.getToken) {

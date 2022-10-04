@@ -1,7 +1,7 @@
 // const getApiUrl = require("./getApiUrl");
 // import getApiUrl from "./getApiUrl";
 const couriersNamesArr = [
-  // {apiUrl: "/api/p4d/", courierName: "p4d"},
+  {apiUrl: "/api/parcelmonkey/", courierName: "parcelmonkey"},
   {apiUrl: "/api/p2g/", courierName: "parcel2go"},
 ];
 const getApiUrl = (courierName) =>
@@ -52,6 +52,51 @@ module.exports = {
                 Height: 10,
               },
             ],
+          }),
+        },
+      },
+    },
+    {
+      apiUrl: getApiUrl("parcelmonkey"),
+      getData: {
+        url: "https://api.parcelmonkey.co.uk/GetQuote",
+        options: {
+          method: "POST",
+          headers: {
+            apiversion: process.env.REACT_APP_PARCELMONKEY_APIVERSION,
+            userid: process.env.REACT_APP_PARCELMONKEY_USER_ID,
+            token: process.env.REACT_APP_PARCELMONKEY_API_KEY,
+          },
+          body: JSON.stringify({
+            origin: "GB",
+            destination: "GB",
+            boxes: [
+              {
+                length: 10,
+                width: 10,
+                height: 10,
+                weight: 10,
+              },
+            ],
+            goods_value: 0,
+            // sender: {
+            //   name: "Rich",
+            //   phone: "01234567890",
+            //   address1: "Unit 21 Tollgate",
+            //   town: "purfleet",
+            //   county: "essex",
+            //   postcode: "RM19 1ZY",
+            // },
+            // recipient: {
+            //   name: "Nicola",
+            //   phone: "01234567890",
+            //   email: "nicola@example.com",
+            //   address1: "2 Baker's Yard",
+            //   address2: "",
+            //   town: "purfleet",
+            //   county: "essex",
+            //   postcode: "RM19 1ZY",
+            // },
           }),
         },
       },
