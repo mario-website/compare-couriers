@@ -1,19 +1,28 @@
-// const getApiUrl = require("./getApiUrl");
-// import getApiUrl from "./getApiUrl";
+const {COURIER_NAMES} = require("./postActionTypes.js");
+const {PARCEL2GO, PARCEL_MONKEY} = COURIER_NAMES;
 const couriersNamesArr = [
-  {apiUrl: "/api/parcelmonkey/", courierName: "parcelmonkey"},
-  {apiUrl: "/api/p2g/", courierName: "parcel2go"},
+  {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
+  {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
 ];
-const getApiUrl = (courierName) =>
-  couriersNamesArr.filter((name) => name.courierName === courierName)[0].apiUrl;
+
+const getObjName = (companyName) =>
+  couriersNamesArr.find((name) => name.companyName === companyName);
+
+const defaultValues = {
+  value: 0,
+  weight: 10,
+  length: 10,
+  width: 10,
+  height: 10,
+};
 
 module.exports = {
   couriersNamesArr,
   forFetchingData: [
     {
-      apiUrl: getApiUrl("parcel2go"),
+      names: getObjName(PARCEL2GO),
       getToken: {
-        url: "https://www.parcel2go.com/auth/connect/token",
+        url: "https://sandbox.parcel2go.com/auth/connect/token",
         options: {
           method: "POST",
           headers: {
@@ -45,11 +54,11 @@ module.exports = {
             },
             Parcels: [
               {
-                Value: 0,
-                Weight: 10,
-                Length: 10,
-                Width: 10,
-                Height: 10,
+                Value: defaultValues.value,
+                Weight: defaultValues.weight,
+                Length: defaultValues.length,
+                Width: defaultValues.width,
+                Height: defaultValues.height,
               },
             ],
           }),
@@ -57,7 +66,7 @@ module.exports = {
       },
     },
     {
-      apiUrl: getApiUrl("parcelmonkey"),
+      names: getObjName(PARCEL_MONKEY),
       getData: {
         url: "https://api.parcelmonkey.co.uk/GetQuote",
         options: {
@@ -72,10 +81,10 @@ module.exports = {
             destination: "GB",
             boxes: [
               {
-                length: 10,
-                width: 10,
-                height: 10,
-                weight: 10,
+                length: defaultValues.length,
+                width: defaultValues.width,
+                height: defaultValues.height,
+                weight: defaultValues.weight,
               },
             ],
             goods_value: 0,
