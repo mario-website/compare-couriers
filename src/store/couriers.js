@@ -11,13 +11,14 @@ const getObjName = (companyName) =>
 const defaultValues = {
   value: 0,
   weight: 10,
-  length: 10,
+  length: 8,
   width: 10,
   height: 10,
 };
 
 module.exports = {
   couriersNamesArr,
+  defaultValues,
   forFetchingData: [
     {
       names: getObjName(PARCEL2GO),

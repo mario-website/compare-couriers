@@ -61,10 +61,11 @@ export const getData = async (courierData, signal) => {
   return data;
 };
 
-export const formattingData = (companyName, data) => {
+export const formattingData = (companyName, data, dimension) => {
   const formatedData = [];
   switch (companyName) {
     case PARCEL2GO:
+      // console.log(`data:`, data);
       data.Quotes.forEach((item) => {
         const courierName = normalizerNames.courierName(
           item.Service.CourierName,
@@ -76,6 +77,7 @@ export const formattingData = (companyName, data) => {
           companyName
         );
         const price = item.TotalPrice.toFixed(2);
+        const url = `https://www.parcel2go.com/quotes?col=219&dest=219&mdd=0&mode=Default&p=1~${dimension.weight}|${dimension.length}|${dimension.width}|${dimension.height}&quoteType=Default`;
 
         formatedData.push({
           companyName,
@@ -83,22 +85,27 @@ export const formattingData = (companyName, data) => {
           serviceName,
           price,
           deliveryTime,
+          url,
         });
       });
       break;
 
     case PARCEL_MONKEY:
+      console.log(`data:`, data);
       data.forEach((item) => {
+        // console.log(`item:`, item);
         const courierName = normalizerNames.courierName(item.carrier, companyName);
         const serviceName = normalizerNames.serviceName(item.service, companyName);
         const deliveryTime = normalizerNames.deliveryTime(item.service_name, companyName);
         const price = item.total_price_gross;
+        const url = "https://www.parcelmonkey.co.uk/";
         formatedData.push({
           companyName,
           courierName,
           serviceName,
           price,
           deliveryTime,
+          url,
         });
       });
       break;
@@ -160,6 +167,7 @@ export const setNewData = (tempAllRes, formatedData) => {
     });
     const minPrice = Math.min(...tempData.map((item) => item.min));
     const maxPrice = Math.max(...tempData.map((item) => item.max));
+
     tempData.sort(dynamicSort("min"));
     return {
       id: idDelTime,

@@ -23,7 +23,7 @@ const Table = () => {
       const data = await getData(courierData, signal);
       // console.log(`data:`, data);
       const companyName = courierData.names.companyName;
-      const formatedData = formattingData(companyName, data);
+      const formatedData = formattingData(companyName, data, state.defaultValues);
       // console.log(`formatedData:`, formatedData);
 
       setAllResponses((prev) => {
@@ -85,7 +85,10 @@ const Table = () => {
               {timeSpeed.deliveryTime}
               {timeSpeed.timeSpeedData.map((service) => {
                 return (
-                  <div key={service.id} className={service.serviceName}>
+                  <div
+                    key={service.id}
+                    className={service.serviceName}
+                    style={{margin: "0 0 10px 0", border: "1px solid black"}}>
                     <div>
                       <span>service:</span>
                       <span style={{background: "lightgreen"}}>

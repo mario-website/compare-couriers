@@ -3,8 +3,8 @@ const couriers = require("./src/store/couriers");
 const express = require("express");
 // const cheerio = require("cheerio");
 // const superagent = require("superagent");
-// const fetch = (...args) =>
-//   import("node-fetch").then(({default: fetch}) => fetch(...args));
+const fetch = (...args) =>
+  import("node-fetch").then(({default: fetch}) => fetch(...args));
 const app = express();
 const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 

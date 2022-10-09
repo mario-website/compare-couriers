@@ -5,56 +5,26 @@ module.exports = {
   // The parameters 'name' and 'surname' will be provided inside the function
   // when the function is called in the main file.
   // Example: concatenameNames('John,'Doe');
-  courierNameP4D: (courierName) => {
-    let output = "";
 
-    if (
-      courierName === "Parcelforce 24" ||
-      courierName === "Parcelforce by 9am" ||
-      courierName === "Parcelforce by 10am" ||
-      courierName === "Parcelforce 48" ||
-      courierName === "Parcelforce AM" ||
-      courierName === "Parcelforce Large" ||
-      courierName === "Sunday Delivery" ||
-      courierName === "Saturday Delivery" ||
-      courierName === "Parcelforce by 12pm"
-    ) {
-      output = "Parcelforce";
-    }
-    if (courierName === "Express Sameday Collect" || courierName === "UPS Express") {
-      output = "UPS";
-    }
-    if (
-      courierName === "DHL Express" ||
-      courierName === "DHL Express PRE NOON" ||
-      courierName === "DHL Express PRE 9AM" ||
-      courierName === "DHL Express"
-    ) {
-      output = "DHL";
-    }
-    if (output === "") {
-      // console.log("new courierNameP4D: ", courierName);
-    }
-
-    return output;
-  },
   courierName: (courierName, courier) => {
     let output = "";
 
-    if (courierName === "MyHermes" || courierName === "Hermes") {
+    if (["MyHermes", "Hermes"].includes(courierName)) {
       output = "Hermes";
     }
     if (
-      courierName === "Parcelforce 24" ||
-      courierName === "Parcelforce by 9am" ||
-      courierName === "Parcelforce by 10am" ||
-      courierName === "Parcelforce 48" ||
-      courierName === "Parcelforce AM" ||
-      courierName === "Parcelforce Large" ||
-      courierName === "Sunday Delivery" ||
-      courierName === "Saturday Delivery" ||
-      courierName === "Parcelforce by 12pm" ||
-      courierName === "Parcelforce"
+      [
+        "Parcelforce 24",
+        "Parcelforce by 9am",
+        "Parcelforce by 10am",
+        "Parcelforce 48",
+        "Parcelforce AM",
+        "Parcelforce Large",
+        "Sunday Delivery",
+        "Saturday Delivery",
+        "Parcelforce by 12pm",
+        "Parcelforce",
+      ].includes(courierName)
     ) {
       output = "Parcelforce";
     }
@@ -62,10 +32,13 @@ module.exports = {
       output = "Yodel";
     }
     if (
-      courierName === "UPS" ||
-      courierName === "UPS Access Point" ||
-      courierName === "Express Sameday Collect" ||
-      courierName === "UPS Express"
+      [
+        "UPS",
+        "UPS Access Point",
+        "Express Sameday Collect",
+        "UPS Express",
+        "UPS carrier",
+      ].includes(courierName)
     ) {
       output = "UPS";
     }
@@ -78,7 +51,7 @@ module.exports = {
     if (courierName === "InPost") {
       output = "InPost";
     }
-    if (courierName === "DX") {
+    if (courierName === "DX" || courierName === "DX Freight") {
       output = "DX";
     }
     if (courierName === "DPD" || courierName === "DPD Collection") {
@@ -88,21 +61,23 @@ module.exports = {
       output = "PalletForce";
     }
     if (
-      courierName === "DHL Express" ||
-      courierName === "DHL Express PRE NOON" ||
-      courierName === "DHL Express PRE 9AM" ||
-      courierName === "DHL" ||
-      courierName === "DHL Parcel UK" ||
-      courierName === "DHL Parcel"
+      [
+        "DHL Express",
+        "DHL Express PRE NOON",
+        "DHL Express PRE 9AM",
+        "DHL",
+        "DHL Parcel UK",
+        "DHL Parcel",
+      ].includes(courierName)
       // ||
       // courierName === "DHL UK - Drop Off"
     ) {
       output = "DHL";
     }
     if (
-      courierName === "Evri Collection" ||
-      courierName === "Evri Drop-off" ||
-      courierName === "Evri ParcelShop Next Day"
+      ["Evri Collection", "Evri Drop-off", "Evri ParcelShop Next Day"].includes(
+        courierName
+      )
     ) {
       output = "Evri";
     }
@@ -116,7 +91,7 @@ module.exports = {
     //   output = 'InPost'
     // }
     if (output === "") {
-      // console.log("new courierName: ", courierName, courier);
+      console.log("new courierName: ", courierName, courier);
     }
 
     return output;
@@ -126,45 +101,58 @@ module.exports = {
     let output = "";
 
     if (
-      deliveryTime === "Fast" ||
-      deliveryTime === "Saturday Delivery" ||
-      deliveryTime === "Sunday Delivery" ||
-      deliveryTime === "DHL Parcel UK" ||
-      deliveryTime === "Parcelforce 24" ||
-      deliveryTime === "Parcelforce by 9am" ||
-      deliveryTime === "Parcelforce by 10am" ||
-      deliveryTime === "Parcelforce by 12pm" ||
-      deliveryTime === "DHL Parcel Next Day" ||
-      deliveryTime === "Next Day before 9am" ||
-      deliveryTime === "Next Day before 10.30am" ||
-      deliveryTime === "DHL Parcel UK Next Day" ||
-      deliveryTime === "Next Day Before 12pm" ||
-      deliveryTime === "Next Day Before 10am" ||
-      deliveryTime === "DPD Pickup" ||
-      deliveryTime === "Next Day Before 9am" ||
-      deliveryTime === "Sunday" ||
-      deliveryTime === "Saturday" ||
-      deliveryTime === "Next working day" ||
-      deliveryTime === "DHL Parcel UK Next Day Drop Off" ||
-      deliveryTime === "DPD Next Day Collected" ||
-      deliveryTime === "DX Next Day"
+      [
+        "Fast",
+        "Saturday Delivery",
+        "Sunday Delivery",
+        "DHL Parcel UK",
+        "Parcelforce 24",
+        "Parcelforce by 9am",
+        "Parcelforce by 10am",
+        "Parcelforce by 12pm",
+        "DHL Parcel Next Day",
+        "Next Day before 9am",
+        "Next Day before 10.30am",
+        "DHL Parcel UK Next Day",
+        "Next Day Before 12pm",
+        "Next Day Before 10am",
+        "DPD Pickup",
+        "Next Day Before 9am",
+        "Sunday",
+        "Saturday",
+        "Next working day",
+        "DHL Parcel UK Next Day Drop Off",
+        "DPD Next Day Collected",
+        "DX Next Day",
+        "Express 24",
+        "Express 9 (by 9)",
+        "Express 10 (by 10)",
+        "Express AM (by 12)",
+      ].includes(deliveryTime)
     ) {
       output = FAST;
     }
     if (
-      deliveryTime === "Parcelforce 48" ||
-      deliveryTime === "1-2 days drop off service" ||
-      deliveryTime === "Medium" ||
-      deliveryTime === "Parcelforce Large" ||
-      deliveryTime === "2 working days"
+      [
+        "Parcelforce 48",
+        "1-2 days drop off service",
+        "Medium",
+        "Parcelforce Large",
+        "2 working days",
+        "Express 48 Large",
+        "Express 48",
+        "UPS Access Point™",
+        "DPD Drop Off",
+        "UPS Collected",
+      ].includes(deliveryTime)
     ) {
       output = MEDIUM;
     }
-    if (deliveryTime === "Slow") {
+    if (["Slow", "Drop Off", "Collected"].includes(deliveryTime)) {
       output = SLOW;
     }
     if (output === "") {
-      // console.log("new deliveryTime: ", deliveryTime, courier);
+      console.log("new deliveryTime: ", deliveryTime, courier);
     }
     return output;
   },
@@ -261,7 +249,10 @@ module.exports = {
     if (serviceName === "Palletforce Delivery - Next Day") {
       output = "Palletforce Delivery - Next Day";
     }
-    if (serviceName === "Palletforce Delivery - 48 Hours") {
+    if (
+      serviceName === "Palletforce Delivery - 48 Hours" ||
+      serviceName === "ukparcels_pfidw"
+    ) {
       output = "Palletforce Delivery - 48 Hours";
     }
     if (serviceName === "ukparcels_pfsaturday" || serviceName === "Saturday Delivery") {
@@ -281,11 +272,15 @@ module.exports = {
     }
     if (
       serviceName === "Hermes UK Collection" ||
+      serviceName === "ukparcels_hermescollected" ||
       serviceName === "Hermes UK Collection Small Parcel"
     ) {
       output = "Hermes UK Collection";
     }
-    if (serviceName === "Hermes ParcelShop") {
+    if (
+      serviceName === "Hermes ParcelShop" ||
+      serviceName === "ukparcels_hermesdropoff"
+    ) {
       output = "Drop off - Hermes ParcelShop";
     }
     if (serviceName === "Hermes UK Collection Medium Parcel") {
@@ -322,17 +317,36 @@ module.exports = {
     ) {
       output = "UPS Standard";
     }
-    if (serviceName === "Express Sameday Collect") {
+    if (
+      serviceName === "Express Sameday Collect" ||
+      serviceName === "ukparcels_upsstandard_collected"
+    ) {
       output = "UPS Express Sameday Collect";
     }
-    if (serviceName === "UPS Access Point™") {
+    if (
+      serviceName === "UPS Access Point™" ||
+      serviceName === "ukparcels_upsstandard_dropoff"
+    ) {
       output = "Drop off - UPS Access Point™";
+    }
+    if (serviceName === "UPS Express® by 10.30am") {
+      output = "UPS Express® by 10.30am";
+    }
+    if (serviceName === "UPS Express Saver® by 12pm") {
+      output = "UPS Express Saver® by 12pm";
     }
     if (serviceName === "InPost 48") {
       output = "Drop off - InPost 48";
     }
-    if (serviceName === "DX24" || serviceName === "ukbag_fast") {
+    if (
+      serviceName === "DX24" ||
+      serviceName === "ukbag_fast" ||
+      serviceName === "ukparcels_nfnextday"
+    ) {
       output = "DX 24H";
+    }
+    if (serviceName === "ukparcels_nfnextday") {
+      output = "DX Freight";
     }
     if (serviceName === "DX48") {
       output = "DX 48H";
@@ -342,12 +356,6 @@ module.exports = {
     }
     if (serviceName === "DPD Drop Off") {
       output = "Drop off - DPD";
-    }
-    if (serviceName === "UPS Express® by 10.30am") {
-      output = "UPS Express® by 10.30am";
-    }
-    if (serviceName === "UPS Express Saver® by 12pm") {
-      output = "UPS Express Saver® by 12pm";
     }
     if (serviceName === "Collect+") {
       output = "Drop off - Collect+";
@@ -398,7 +406,10 @@ module.exports = {
     if (serviceName === "Evri ParcelShop Next Day") {
       output = "Evri ParcelShop Next Day";
     }
-    if (serviceName === "DHL UK - Drop Off") {
+    if (
+      serviceName === "DHL UK - Drop Off" ||
+      serviceName === "ukparcels_dhlparceluk_nextday_dropoff"
+    ) {
       output = "DHL UK - Drop Off";
     }
     if (serviceName === "Yodel Direct Economy") {
@@ -416,7 +427,7 @@ module.exports = {
     if (serviceName === "FedEx UK Drop Off") {
       output = "FedEx UK Drop Off";
     }
-    if (serviceName === "DPD Collection") {
+    if (serviceName === "DPD Collection" || serviceName === "ukparcels_dpdcollected24") {
       output = "DPD Collection";
     }
     if (serviceName === "") {
@@ -432,8 +443,41 @@ module.exports = {
       output = "";
     }
     if (output === "") {
-      // console.log("new serviceName: ", serviceName, courier);
+      console.log("new serviceName: ", serviceName, courier);
     }
+    return output;
+  },
+  courierNameP4D: (courierName) => {
+    let output = "";
+
+    if (
+      courierName === "Parcelforce 24" ||
+      courierName === "Parcelforce by 9am" ||
+      courierName === "Parcelforce by 10am" ||
+      courierName === "Parcelforce 48" ||
+      courierName === "Parcelforce AM" ||
+      courierName === "Parcelforce Large" ||
+      courierName === "Sunday Delivery" ||
+      courierName === "Saturday Delivery" ||
+      courierName === "Parcelforce by 12pm"
+    ) {
+      output = "Parcelforce";
+    }
+    if (courierName === "Express Sameday Collect" || courierName === "UPS Express") {
+      output = "UPS";
+    }
+    if (
+      courierName === "DHL Express" ||
+      courierName === "DHL Express PRE NOON" ||
+      courierName === "DHL Express PRE 9AM" ||
+      courierName === "DHL Express"
+    ) {
+      output = "DHL";
+    }
+    if (output === "") {
+      console.log("new courierNameP4D: ", courierName);
+    }
+
     return output;
   },
 };

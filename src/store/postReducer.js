@@ -7,6 +7,7 @@ export const INITIAL_STATE = {
   error: false,
   forFetchingData: couriers.forFetchingData,
   couriersNamesArr: couriers.couriersNamesArr,
+  defaultValues: couriers.defaultValues,
 };
 
 export const postReducer = (state, action) => {
