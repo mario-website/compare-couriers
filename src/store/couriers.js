@@ -1,8 +1,8 @@
 const {COURIER_NAMES} = require("./postActionTypes.js");
 const {PARCEL2GO, PARCEL_MONKEY} = COURIER_NAMES;
 const couriersNamesArr = [
-  {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
-  {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
+  {apiUrl: "/api/parcelmonkey", companyName: PARCEL_MONKEY},
+  {apiUrl: "/api/p2g", companyName: PARCEL2GO},
 ];
 
 const getObjName = (companyName) =>

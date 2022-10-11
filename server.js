@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 couriers.couriersNamesArr.forEach((courier) => {
+  console.log(`courier.apiUrl:`, courier.apiUrl);
   app.post(courier.apiUrl, async (req, res) => {
     const fetchRes = await fetch(req.body.url, req.body)
       .then((res) => res.json())
