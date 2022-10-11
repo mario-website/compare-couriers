@@ -1,6 +1,8 @@
 require("dotenv").config();
 const couriers = require("./src/store/couriers");
 const express = require("express");
+const path = require("path");
+
 // const cheerio = require("cheerio");
 // const superagent = require("superagent");
 const fetch = (...args) =>
@@ -9,6 +11,9 @@ const app = express();
 const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 
 app.use(express.json());
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "build")));
+}
 
 couriers.couriersNamesArr.forEach((courier) => {
   app.post(courier.apiUrl, async (req, res) => {
