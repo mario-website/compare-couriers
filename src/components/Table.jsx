@@ -12,6 +12,7 @@ const Table = () => {
   const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
   const [allResponses, setAllResponses] = useState([]);
   const [fetchCounter, setFetchCounter] = useState(0);
+  const [tempController, setTempController] = useState();
 
   const fetchDataFromAllCouriers = async (signal) => {
     // console.log(`state:`, state);
@@ -20,6 +21,7 @@ const Table = () => {
     setData([]);
 
     state.forFetchingData.forEach(async (courierData) => {
+      //todo: Change to try/catch and then prompt error if occured
       const data = await getData(courierData, signal);
       // console.log(`data:`, data);
       const companyName = courierData.names.companyName;
@@ -42,7 +44,6 @@ const Table = () => {
       // console.log(`allResponses:`, allResponses);
     }
   }, [allResponses]);
-  const [tempController, setTempController] = useState();
 
   const handleClick = () => {
     const controller = new AbortController();
@@ -59,21 +60,82 @@ const Table = () => {
       controller.abort();
     };
   };
-  const [isPriceAsc, setIsPriceAsc] = useState(false);
 
   const sortByPrice = () => {
     const tempData = [...data];
     tempData.forEach((timeSpeed) => {
-      timeSpeed.timeSpeedData.sort(dynamicSort(`${isPriceAsc ? "min" : "-max"}`));
+      //for every time, when clicked button "sortByPrice",
+      //value "isAscending" is reversed and stored in object
+      // console.log(`timeSpeed:`, timeSpeed);
+      // timeSpeed.forEach((timeS) => {
+      //   if (timeS.ascendingBy.isPriceAscending) {
+      //   }
+      // });
+      let isAscending = true;
+
+      if (timeSpeed.sortedBy.includes("price")) {
+        if (timeSpeed.sortedBy[0] === "-") {
+          timeSpeed.sortedBy = "price";
+        } else {
+          isAscending = false;
+          timeSpeed.sortedBy = "-price";
+        }
+      } else {
+        timeSpeed.sortedBy = "price";
+      }
+
+      //for every time, when clicked button "sortByPrice",
+      //value "isAscending" is reversed and stored in object
+      const {timeSpeedData} = timeSpeed;
+      timeSpeedData.sort(dynamicSort(isAscending ? "min" : "-min"));
+      timeSpeedData.forEach((speedData) => {
+        speedData.serviceData.sort(dynamicSort(isAscending ? "price" : "-price"));
+      });
     });
-    setIsPriceAsc((prev) => !prev);
+    console.log(`tempData:`, tempData);
     setData(tempData);
+  };
+
+  const sortByName = () => {
+    const tempData = [...data];
+    tempData.forEach((timeSpeed) => {
+      //for every time, when clicked button "sortByPrice",
+      //value "isAscending" is reversed and stored in object
+      // console.log(`timeSpeed:`, timeSpeed);
+      // timeSpeed.forEach((timeS) => {
+      //   if (timeS.ascendingBy.isPriceAscending) {
+      //   }
+      // });
+      let isAscending = true;
+      if (timeSpeed.sortedBy.includes("alphabetical")) {
+        if (timeSpeed.sortedBy[0] === "-") {
+          timeSpeed.sortedBy = "alphabetical";
+        } else {
+          isAscending = false;
+          timeSpeed.sortedBy = "-alphabetical";
+        }
+      } else {
+        timeSpeed.sortedBy = "alphabetical";
+      }
+
+      //for every time, when clicked button "sortByPrice",
+      //value "isAscending" is reversed and stored in object
+      timeSpeed.timeSpeedData.sort(
+        dynamicSort(isAscending ? "serviceName" : "-serviceName")
+      );
+      // timeSpeedData.forEach((speedData) => {
+      //   speedData.sort(dynamicSort(isAscending ? "serviceName" : "-serviceName"));
+      // });
+    });
+    setData(tempData);
+    console.log(`tempData:`, tempData);
   };
 
   return (
     <div className="Table">
       <button onClick={handleClick}>get data</button>
       <button onClick={sortByPrice}>sortByPrice</button>
+      <button onClick={sortByName}>sortByName</button>
       <span>fetchCounter:{fetchCounter}</span>
       <div style={{display: "flex", columnGap: "20px"}}>
         {data.map((timeSpeed) => {

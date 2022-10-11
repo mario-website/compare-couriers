@@ -91,7 +91,7 @@ export const formattingData = (companyName, data, dimension) => {
       break;
 
     case PARCEL_MONKEY:
-      console.log(`data:`, data);
+      // console.log(`data:`, data);
       data.forEach((item) => {
         // console.log(`item:`, item);
         const courierName = normalizerNames.courierName(item.carrier, companyName);
@@ -133,9 +133,13 @@ export const setNewData = (tempAllRes, formatedData) => {
   });
   // console.log(`allDelveryTimes:`, allDelveryTimes);
 
-  // console.log(`onlyUniqueServicesName:`, onlyUniqueServicesName);
+  //added unique ID for each entry
+  const withIdTempAllRes = tempAllRes.map((item, id) => {
+    return {...item, id};
+  });
+
   const newData = allDelveryTimes.map((deliveryTime, idDelTime) => {
-    const filteredWithDelTime = tempAllRes.filter(
+    const filteredWithDelTime = withIdTempAllRes.filter(
       (singleData) => singleData.deliveryTime === deliveryTime
     );
     const allServicesNames = [];
@@ -148,32 +152,32 @@ export const setNewData = (tempAllRes, formatedData) => {
         allServicesNames.push(singleData.serviceName);
     });
 
+    const sortedBy = "price";
     const tempData = allServicesNames.map((serviceName, idService) => {
-      const data = filteredWithDelTime.filter((item) => item.serviceName === serviceName);
-      const dataWithId = data.map((item, id) => {
-        return {...item, id};
-      });
-      dataWithId.sort(dynamicSort("price"));
-      const min = Math.min(...dataWithId.map((item) => item.price));
-      const max = Math.max(...dataWithId.map((item) => item.price));
+      const filteredWithServiceName = filteredWithDelTime.filter(
+        (item) => item.serviceName === serviceName
+      );
+      filteredWithServiceName.sort(dynamicSort(sortedBy));
+      const min = Math.min(...filteredWithServiceName.map((item) => item.price));
+      const max = Math.max(...filteredWithServiceName.map((item) => item.price));
       return {
-        id: idService,
-        isAscending: true,
+        id: idService + serviceName,
         min,
         max,
-        serviceData: dataWithId,
+        serviceData: filteredWithServiceName,
         serviceName,
       };
     });
+
     const minPrice = Math.min(...tempData.map((item) => item.min));
     const maxPrice = Math.max(...tempData.map((item) => item.max));
 
     tempData.sort(dynamicSort("min"));
     return {
-      id: idDelTime,
+      sortedBy,
+      id: idDelTime + deliveryTime,
       deliveryTime,
       timeSpeedData: tempData,
-      isAscending: true,
       minPrice,
       maxPrice,
     };
