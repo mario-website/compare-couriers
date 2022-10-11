@@ -20,9 +20,9 @@ const Table = () => {
     setAllResponses([]);
     setData([]);
 
-    state.forFetchingData.forEach(async (courierData) => {
-      //todo: Change to try/catch and then prompt error if occured
+    state.forFetchingData.map(async (courierData) => {
       const data = await getData(courierData, signal);
+      //todo: Change to try/catch and then prompt error if occured
       // console.log(`data:`, data);
       const companyName = courierData.names.companyName;
       const formatedData = formattingData(companyName, data, state.defaultValues);
@@ -129,6 +129,7 @@ const Table = () => {
     });
     setData(tempData);
     console.log(`tempData:`, tempData);
+    console.log(process.env.NODE_ENV);
   };
 
   return (
