@@ -1,6 +1,6 @@
-import normalizerNames from "../store/normalizerNames";
-import {ACTION_TYPES, COURIER_NAMES, VARIABLES} from "../store/postActionTypes";
-import {dynamicSort} from "../store/functions";
+import normalizerNames from "../../store/normalizerNames";
+import {COURIER_NAMES} from "../../store/postActionTypes";
+import {dynamicSort} from "../../store/functions";
 
 const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
 
@@ -116,7 +116,7 @@ export const formattingData = (companyName, data, dimension) => {
   return formatedData;
 };
 
-export const setNewData = (tempAllRes, formatedData) => {
+export const getNewData = (tempAllRes, formatedData) => {
   //ie. onlyUniqueServicesName = ['DX 24H', 'DHL UK NextDay by 9am'] so 'DX 24H' will not repeat in this array
   const onlyUniqueServicesName = [];
 
@@ -153,6 +153,7 @@ export const setNewData = (tempAllRes, formatedData) => {
     });
 
     const sortedBy = "price";
+    const isAscending = true;
     const tempData = allServicesNames.map((serviceName, idService) => {
       const filteredWithServiceName = filteredWithDelTime.filter(
         (item) => item.serviceName === serviceName
@@ -174,8 +175,9 @@ export const setNewData = (tempAllRes, formatedData) => {
 
     tempData.sort(dynamicSort("min"));
     return {
-      sortedBy,
       id: idDelTime + deliveryTime,
+      sortedBy,
+      isAscending,
       deliveryTime,
       timeSpeedData: tempData,
       minPrice,
@@ -183,4 +185,89 @@ export const setNewData = (tempAllRes, formatedData) => {
     };
   });
   return newData;
+};
+
+const getSortValSD = (sortBy, isAscending) => {
+  if (sortBy === "price") return isAscending ? "price" : "-price";
+
+  //if condition where not matched then default value is returned
+  //like if clicked sorting("alphabetical")
+  return "price";
+};
+
+export const sorting = (sortBy, data, defaultValueIsAscending, setData) => {
+  //the goal is when is sorting sortBy for the first time,
+  //everytime is sorted by default which is set under state.defaultValues.isAscending
+  const sortedData = data.map((timeSpeed) => {
+    //when clicking button sorting, reversal value of timeSpeed.isAscending is set
+    //but only if prevoius click where also the same, if not, load defalut value
+    timeSpeed.isAscending =
+      timeSpeed.sortedBy !== sortBy ? !defaultValueIsAscending : !timeSpeed.isAscending;
+
+    const {timeSpeedData, isAscending} = timeSpeed;
+    const sortingBy = sortBy === "price" ? "min" : "serviceName";
+    const valSortByTS = isAscending ? sortingBy : `-${sortingBy}`;
+    timeSpeedData.sort(dynamicSort(valSortByTS));
+    timeSpeedData.forEach((speedData) => {
+      const valSortBySD = getSortValSD(sortBy, isAscending);
+      speedData.serviceData.sort(dynamicSort(valSortBySD));
+    });
+    timeSpeed.sortedBy = sortBy;
+    return timeSpeed;
+  });
+  console.log(`sortedData:`, sortedData);
+  setData(sortedData);
+};
+
+export const handleFetchNewData = (
+  tempController,
+  setTempController,
+  setFetchCounter,
+  setAllResponses,
+  setData,
+  state
+) => {
+  const controller = new AbortController();
+  const {signal} = controller;
+
+  //so for any new fetch I need to cancell all current fetching in asyc functions
+  //so I checking if there is any of them, I need to cancel that one
+  if (tempController) tempController.abort();
+
+  setTempController(controller);
+  fetchDataFromAllCouriers(signal, setFetchCounter, setAllResponses, setData, state);
+  // console.log("handleClick");
+  return () => {
+    controller.abort();
+  };
+};
+
+export const fetchDataFromAllCouriers = async (
+  signal,
+  setFetchCounter,
+  setAllResponses,
+  setData,
+  state
+) => {
+  //every time when starting fetching all data, reset to default values
+  setFetchCounter(0);
+  setAllResponses([]);
+  setData([]);
+
+  const {forFetchingData, defaultValues} = state;
+  //I might use Promise.all() but I want to do display new results after each response
+  forFetchingData.forEach(async (courierData) => {
+    const data = await getData(courierData, signal);
+    //todo: Change to try/catch and then prompt error if occured
+    const {companyName} = courierData.names;
+    const formatedData = formattingData(companyName, data, defaultValues);
+
+    setAllResponses((prev) => {
+      const tempAllRes = [...prev, ...formatedData];
+      const newData = getNewData(tempAllRes, formatedData);
+      setData(newData);
+      return tempAllRes;
+    });
+    setFetchCounter((prev) => prev + 1);
+  });
 };

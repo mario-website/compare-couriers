@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef, useReducer} from "react";
-import AllPricesInThisService from "./AllPricesInThisService";
+import React from "react";
+import AllPricesInThisService from "./AllPricesInThisService/AllPricesInThisService";
 
 const SingleService = ({data}) => {
   return (

@@ -14,6 +14,7 @@ const defaultValues = {
   length: 8,
   width: 10,
   height: 10,
+  isAscending: true,
 };
 
 module.exports = {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useReducer} from "react";
+import React from "react";
 
 const AllPricesInThisService = ({serviceData}) => {
   return (
