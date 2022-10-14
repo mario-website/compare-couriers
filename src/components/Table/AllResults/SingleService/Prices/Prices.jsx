@@ -1,6 +1,6 @@
 import React from "react";
 
-const AllPricesInThisService = ({serviceData}) => {
+const Prices = ({serviceData}) => {
   return (
     <>
       {serviceData.map((company) => {
@@ -15,4 +15,4 @@ const AllPricesInThisService = ({serviceData}) => {
   );
 };
 
-export default AllPricesInThisService;
+export default Prices;

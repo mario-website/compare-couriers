@@ -1,7 +1,7 @@
 import React, {useState, useReducer} from "react";
 import {INITIAL_STATE, postReducer} from "../../store/postReducer";
 import {handleFetchNewData, sorting} from "./functions";
-import SingleService from "./SingleService/SingleService";
+import AllResults from "./AllResults/AllResults";
 
 const Table = () => {
   const [data, setData] = useState([]);
@@ -36,9 +36,9 @@ const Table = () => {
       <p>Server port:{process.env.REACT_APP_LOCAL_SERVER_PORT}</p>
       <button onClick={setNewData}>get data</button>
       <button onClick={() => setSorting("price")}>sortByPrice</button>
-      <button onClick={() => setSorting("alphabetical")}>sortByName</button>
+      <button onClick={() => setSorting("alphabetical")}>sortByServiceName</button>
       <span>fetchCounter:{fetchCounter}</span>
-      <SingleService data={data} />
+      <AllResults data={data} />
     </div>
   );
 };

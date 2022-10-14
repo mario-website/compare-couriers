@@ -215,7 +215,7 @@ export const sorting = (sortBy, data, defaultValueIsAscending, setData) => {
     timeSpeed.sortedBy = sortBy;
     return timeSpeed;
   });
-  console.log(`sortedData:`, sortedData);
+  // console.log(`sortedData:`, sortedData);
   setData(sortedData);
 };
 
