@@ -1,5 +1,5 @@
 require("dotenv").config();
-const couriers = require("./src/store/couriers");
+const couriers = require("../src/store/couriers");
 const express = require("express");
 const path = require("path");
 

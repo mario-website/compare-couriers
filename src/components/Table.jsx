@@ -129,7 +129,6 @@ const Table = () => {
     });
     setData(tempData);
     console.log(`tempData:`, tempData);
-    console.log(process.env.NODE_ENV);
   };
 
   return (
