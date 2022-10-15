@@ -11,11 +11,11 @@ const fetch = (...args) =>
 const app = express();
 const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 
-// app.use(express.json());
+app.use(express.json());
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "build")));
+  app.use(express.static("build"));
 }
 
 couriers.couriersNamesArr.forEach((courier) => {
@@ -28,12 +28,11 @@ couriers.couriersNamesArr.forEach((courier) => {
   });
 });
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
+// app.get("/", (req, res) => {
+//   res.render("index");
+// });
 // app.get("/api/p4d/", (req, res) => {
 // superagent
 //   .get("https://app.p4d.co.uk/quotes/GB:RM191ZY/PL:51-315/7,12,34,56")
