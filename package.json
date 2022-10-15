@@ -18,6 +18,10 @@
     "serverless-http": "^3.0.3",
     "web-vitals": "^2.1.4"
   },
+  "engines": {
+    "node": "18.10.0",
+    "npm": "8.19.2"
+  },
   "proxy": "http://localhost:3001",
   "devDependencies": {
     "concurrently": "^7.4.0",
