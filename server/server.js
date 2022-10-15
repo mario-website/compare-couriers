@@ -2,6 +2,7 @@ require("dotenv").config();
 const couriers = require("../src/store/couriers");
 const express = require("express");
 const path = require("path");
+const bodyParser = require("body-parser");
 
 // const cheerio = require("cheerio");
 // const superagent = require("superagent");
@@ -10,7 +11,9 @@ const fetch = (...args) =>
 const app = express();
 const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 
-app.use(express.json());
+// app.use(express.json());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "build")));
 }
@@ -23,6 +26,10 @@ couriers.couriersNamesArr.forEach((courier) => {
       .catch((error) => error);
     res.json(fetchRes);
   });
+});
+
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
