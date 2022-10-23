@@ -10,7 +10,11 @@ const AllResults = ({data}) => {
           <div
             key={timeSpeed.id}
             className={timeSpeed.deliveryTime}
-            style={{display: "flex", flexDirection: "column"}}>
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "-webkit-fill-available",
+            }}>
             {delTime(timeSpeed.deliveryTime)}
             <SingleService timeSpeedData={timeSpeed.timeSpeedData} />
           </div>

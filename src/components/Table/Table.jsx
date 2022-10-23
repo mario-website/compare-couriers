@@ -82,8 +82,8 @@ export default Table;
 const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
 
 const getScreenSize = (width) => {
-  if (width < 325) return SMALL;
-  if (width >= 325) return LARGE;
+  if (width < 600) return SMALL;
+  if (width >= 600) return LARGE;
 };
 
 function useWindowSize() {
