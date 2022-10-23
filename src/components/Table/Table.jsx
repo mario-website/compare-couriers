@@ -1,19 +1,28 @@
-import React, {useState, useReducer} from "react";
+import React, {useState, useReducer, useLayoutEffect, useEffect} from "react";
 import {INITIAL_STATE, postReducer} from "../../store/postReducer";
 // import {handleFetchNewData, sorting} from "./functions";
 import AllResults from "./AllResults/AllResults";
 import normalizerNames from "../../store/normalizerNames";
-import {COURIER_NAMES} from "../../store/postActionTypes";
+import {COURIER_NAMES, VARIABLES} from "../../store/postActionTypes";
 import {dynamicSort} from "../../store/functions";
+const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
 const Table = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({data: []});
+  const [filteredData, setFilteredData] = useState({
+    options: {
+      sortedBy: "",
+      isAscending: true,
+    },
+    data: [],
+  });
   const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
+  const [width, height] = useWindowSize();
+  const [screenSize, setScreenSize] = useState(SMALL);
   const [allResponses, setAllResponses] = useState([]);
   const [fetchCounter, setFetchCounter] = useState(0);
   const [tempController, setTempController] = useState();
-  const {defValIsAscending} = state.defaultValues.isAscending;
-
+  const defValIsAscending = state.defaultValues.isAscending;
   const setNewData = () => {
     handleFetchNewData(
       tempController,
@@ -21,12 +30,29 @@ const Table = () => {
       setFetchCounter,
       setAllResponses,
       setData,
-      state
+      state,
+      screenSize,
+      setFilteredData
     );
   };
 
+  useEffect(() => {
+    if (data.data.length > 0) {
+      const filtered = getFilteredData(screenSize, data);
+      setFilteredData((prev) => {
+        const newData = {...filtered, ...{options: prev.options}};
+        return sorting(newData, defValIsAscending);
+      });
+    }
+  }, [data, defValIsAscending, screenSize]);
+
+  useEffect(() => {
+    setScreenSize(getScreenSize(width));
+  }, [width]);
+
   const setSorting = (sortBy) => {
-    sorting(sortBy, data, defValIsAscending, setData);
+    const sortedData = sorting(filteredData, defValIsAscending, sortBy);
+    setFilteredData(sortedData);
   };
 
   return (
@@ -36,18 +62,39 @@ const Table = () => {
           error message{state.error.message}, error stack{state.error.stack}
         </p>
       )}
-      <p>Server port:{process.env.REACT_APP_LOCAL_SERVER_PORT}</p>
-      <button onClick={setNewData}>get data</button>
-      <button onClick={() => setSorting("price")}>sortByPrice</button>
-      <button onClick={() => setSorting("alphabetical")}>sortByServiceName</button>
+      <div>
+        <button onClick={setNewData}>get data with default values</button>
+      </div>
+      <div>
+        <button onClick={() => setSorting("price")}>sortByPrice</button>
+        <button onClick={() => setSorting("alphabetical")}>sortByServiceName</button>
+      </div>
       <span>fetchCounter:{fetchCounter}</span>
-      <AllResults data={data} />
+      <AllResults data={filteredData.data} sorting={sorting} />
     </div>
   );
 };
 export default Table;
 
 const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
+
+const getScreenSize = (width) => {
+  if (width < 325) return SMALL;
+  if (width >= 325) return LARGE;
+};
+
+function useWindowSize() {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+  return size;
+}
 
 const fetching = async (url, options) => {
   // console.log(`url, options:`, url, options);
@@ -179,8 +226,11 @@ const getNewData = (tempAllRes, formatedData) => {
 
   //added unique ID for each entry
   const withIdTempAllRes = tempAllRes.map((item, id) => {
-    return {...item, id};
+    return {...item, ...id};
   });
+
+  const sortedBy = "price";
+  const isAscending = true;
 
   const newData = allDelveryTimes.map((deliveryTime, idDelTime) => {
     const filteredWithDelTime = withIdTempAllRes.filter(
@@ -196,8 +246,6 @@ const getNewData = (tempAllRes, formatedData) => {
         allServicesNames.push(singleData.serviceName);
     });
 
-    const sortedBy = "price";
-    const isAscending = true;
     const tempData = allServicesNames.map((serviceName, idService) => {
       const filteredWithServiceName = filteredWithDelTime.filter(
         (item) => item.serviceName === serviceName
@@ -220,47 +268,104 @@ const getNewData = (tempAllRes, formatedData) => {
     tempData.sort(dynamicSort("min"));
     return {
       id: idDelTime + deliveryTime,
-      sortedBy,
-      isAscending,
+
       deliveryTime,
       timeSpeedData: tempData,
       minPrice,
       maxPrice,
     };
   });
-  return newData;
+  return {
+    options: {
+      sortedBy,
+      isAscending,
+    },
+    data: newData,
+  };
 };
 
-const getSortValSD = (sortBy, isAscending) => {
-  if (sortBy === "price") return isAscending ? "price" : "-price";
+const getSortValSD = (isAscending, sortedBy) => {
+  if (sortedBy === "price") return isAscending ? "price" : "-price";
 
   //if condition where not matched then default value is returned
-  //like if clicked sorting("alphabetical")
+  //like if clicked sorting("alphabetical") by default sorting is "price" by ascending
   return "price";
 };
 
-const sorting = (sortBy, data, defaultValueIsAscending, setData) => {
-  //the goal is when is sorting sortBy for the first time,
-  //everytime is sorted by default which is set under state.defaultValues.isAscending
-  const sortedData = data.map((timeSpeed) => {
-    //when clicking button sorting, reversal value of timeSpeed.isAscending is set
-    //but only if prevoius click where also the same, if not, load defalut value
-    timeSpeed.isAscending =
-      timeSpeed.sortedBy !== sortBy ? !defaultValueIsAscending : !timeSpeed.isAscending;
+const isSortedByAscending = (isAscending, defaultValueIsAscending, sortedBy, sortBy) => {
+  if (sortBy) {
+    //when clicking button sorting, I check if fired button is the same as current sorting
+    //if yes, returning current sorting I need to revert value isAscending,
+    //otherwise default sorting
+    return sortedBy === sortBy ? !isAscending : defaultValueIsAscending;
+  } else {
+    //if there is no value under sortBy (this function just sort data with current value of isAscending)
+    return isAscending;
+  }
+};
 
-    const {timeSpeedData, isAscending} = timeSpeed;
-    const sortingBy = sortBy === "price" ? "min" : "serviceName";
-    const valSortByTS = isAscending ? sortingBy : `-${sortingBy}`;
-    timeSpeedData.sort(dynamicSort(valSortByTS));
-    timeSpeedData.forEach((speedData) => {
-      const valSortBySD = getSortValSD(sortBy, isAscending);
-      speedData.serviceData.sort(dynamicSort(valSortBySD));
+const getServiceValue = (isTrue, isAscending) => {
+  return isTrue
+    ? isAscending
+      ? "min"
+      : "-min"
+    : isAscending
+    ? "serviceName"
+    : "-serviceName";
+};
+const getSortingBy = (isAscending, options, sortBy) => {
+  if (sortBy) {
+    const isTrue = sortBy === "price";
+    return getServiceValue(isTrue, isAscending);
+  }
+
+  //if this sorting is not clicked with variable sortBy
+  const isTrue = options.sortedBy === "price";
+  return getServiceValue(isTrue, isAscending);
+};
+
+const sorting = (filteredData, defaultValueIsAscending, sortBy) => {
+  const {data, options} = filteredData;
+  const {isAscending, sortedBy} = options;
+  const isAsc = isSortedByAscending(
+    isAscending,
+    defaultValueIsAscending,
+    sortedBy,
+    sortBy
+  );
+
+  const sortedData = data.map((timeSpeedObj) => {
+    const timeSpeedData = [...timeSpeedObj.timeSpeedData];
+    const TSDSortBy = getSortingBy(isAsc, options, sortBy);
+    timeSpeedData.sort(dynamicSort(TSDSortBy));
+
+    const sortedTSD = timeSpeedData.map((speedData) => {
+      const valSortBySD = getSortValSD(isAsc, sortedBy);
+      const serviceData = [...speedData.serviceData];
+      //no need to sort if in array is only one object
+      if (serviceData.length > 1) {
+        serviceData.sort(dynamicSort(valSortBySD));
+      }
+      const returnSortedTSD = {...speedData, ...{serviceData}};
+      return returnSortedTSD;
     });
-    timeSpeed.sortedBy = sortBy;
-    return timeSpeed;
+
+    const returnSortedData = {...timeSpeedObj, ...{timeSpeedData: sortedTSD}};
+    return returnSortedData;
   });
-  // console.log(`sortedData:`, sortedData);
-  setData(sortedData);
+
+  const returnSorting = {
+    ...filteredData,
+    ...{
+      options: {
+        isAscending: isAsc,
+        sortedBy: sortBy ? sortBy : sortedBy,
+      },
+    },
+    ...{data: sortedData},
+  };
+
+  return returnSorting;
 };
 
 const handleFetchNewData = (
@@ -269,7 +374,9 @@ const handleFetchNewData = (
   setFetchCounter,
   setAllResponses,
   setData,
-  state
+  state,
+  screenSize,
+  setFilteredData
 ) => {
   const controller = new AbortController();
   const {signal} = controller;
@@ -279,7 +386,15 @@ const handleFetchNewData = (
   if (tempController) tempController.abort();
 
   setTempController(controller);
-  fetchDataFromAllCouriers(signal, setFetchCounter, setAllResponses, setData, state);
+  fetchDataFromAllCouriers(
+    signal,
+    setFetchCounter,
+    setAllResponses,
+    setData,
+    state,
+    screenSize,
+    setFilteredData
+  );
   // console.log("handleClick");
   return () => {
     controller.abort();
@@ -291,12 +406,14 @@ const fetchDataFromAllCouriers = async (
   setFetchCounter,
   setAllResponses,
   setData,
-  state
+  state,
+  screenSize,
+  setFilteredData
 ) => {
   //every time when starting fetching all data, reset to default values
   setFetchCounter(0);
   setAllResponses([]);
-  setData([]);
+  setData({data: []});
 
   const {forFetchingData, defaultValues} = state;
   //I might use Promise.all() but I want to do display new results after each response
@@ -310,8 +427,31 @@ const fetchDataFromAllCouriers = async (
       const tempAllRes = [...prev, ...formatedData];
       const newData = getNewData(tempAllRes, formatedData);
       setData(newData);
+      const filteredData = getFilteredData(screenSize, newData);
+      setFilteredData(filteredData);
       return tempAllRes;
     });
     setFetchCounter((prev) => prev + 1);
   });
+};
+
+const getFilteredData = (screenSize, newData) => {
+  if (screenSize === SMALL) {
+    const tempData = [
+      {
+        id: "0ALL",
+        deliveryTime: ALL,
+        minPrice: 5.99,
+        maxPrice: 5.99,
+        timeSpeedData: [],
+      },
+    ];
+    const allTSD = newData.data.map((e) => e.timeSpeedData);
+    const mergedAllTSD = allTSD.flat(1);
+
+    tempData[0].timeSpeedData = mergedAllTSD;
+    return {...newData, ...{data: tempData}};
+  } else {
+    return newData;
+  }
 };

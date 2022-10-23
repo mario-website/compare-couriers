@@ -1,24 +1,17 @@
-import React from "react";
+import React, {useState, useEffect, useLayoutEffect} from "react";
 import SingleService from "./SingleService/SingleService";
-
 import {VARIABLES} from "../../../store/postActionTypes";
 
 const AllResults = ({data}) => {
-  const {FAST, MEDIUM, SLOW} = VARIABLES;
   return (
     <div style={{display: "flex", columnGap: "20px"}}>
       {data.map((timeSpeed) => {
-        const delTime = () => {
-          if (timeSpeed.deliveryTime === FAST) return "Next Day Delivery";
-          if (timeSpeed.deliveryTime === MEDIUM) return "2 Days Delivery";
-          if (timeSpeed.deliveryTime === SLOW) return "3 or more Days Delivery";
-        };
         return (
           <div
             key={timeSpeed.id}
             className={timeSpeed.deliveryTime}
             style={{display: "flex", flexDirection: "column"}}>
-            {delTime()}
+            {delTime(timeSpeed.deliveryTime)}
             <SingleService timeSpeedData={timeSpeed.timeSpeedData} />
           </div>
         );
@@ -28,3 +21,11 @@ const AllResults = ({data}) => {
 };
 
 export default AllResults;
+
+const {FAST, MEDIUM, SLOW, ALL} = VARIABLES;
+const delTime = (time) => {
+  if (time === FAST) return "Next Day Delivery";
+  if (time === MEDIUM) return "2 Days Delivery";
+  if (time === SLOW) return "3 or more Days Delivery";
+  if (time === ALL) return "All services";
+};

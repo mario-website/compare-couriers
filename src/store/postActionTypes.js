@@ -12,5 +12,8 @@ module.exports = {
     SLOW: "SLOW",
     MEDIUM: "MEDIUM",
     FAST: "FAST",
+    SMALL: "SMALL",
+    LARGE: "LARGE",
+    ALL: "ALL",
   },
 };
