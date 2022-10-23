@@ -14,7 +14,8 @@ const defaultValues = {
   length: 8,
   width: 10,
   height: 10,
-  isAscending: true,
+  IS_ASCENDING: true,
+  SORTED_BY: "price",
 };
 
 module.exports = {

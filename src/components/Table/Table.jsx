@@ -6,23 +6,25 @@ import normalizerNames from "../../store/normalizerNames";
 import {COURIER_NAMES, VARIABLES} from "../../store/postActionTypes";
 import {dynamicSort} from "../../store/functions";
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
+const {IS_ASCENDING, SORTED_BY} = INITIAL_STATE.defaultValues;
+const defaultData = {
+  options: {
+    sortedBy: SORTED_BY,
+    isAscending: IS_ASCENDING,
+  },
+  data: [],
+};
 
 const Table = () => {
-  const [data, setData] = useState({data: []});
-  const [filteredData, setFilteredData] = useState({
-    options: {
-      sortedBy: "",
-      isAscending: true,
-    },
-    data: [],
-  });
+  const [data, setData] = useState(defaultData);
+  const [filteredData, setFilteredData] = useState(defaultData);
   const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
   const [width, height] = useWindowSize();
   const [screenSize, setScreenSize] = useState(SMALL);
   const [allResponses, setAllResponses] = useState([]);
   const [fetchCounter, setFetchCounter] = useState(0);
   const [tempController, setTempController] = useState();
-  const defValIsAscending = state.defaultValues.isAscending;
+  const defValIsAscending = IS_ASCENDING;
   const setNewData = () => {
     handleFetchNewData(
       tempController,
@@ -208,85 +210,8 @@ const formattingData = (companyName, data, dimension) => {
   return formatedData;
 };
 
-const getNewData = (tempAllRes, formatedData) => {
-  //ie. onlyUniqueServicesName = ['DX 24H', 'DHL UK NextDay by 9am'] so 'DX 24H' will not repeat in this array
-  const onlyUniqueServicesName = [];
-
-  //like allDelveryTimes = [FAST', 'MEDIUM']
-  const allDelveryTimes = [];
-  formatedData.forEach((item) => {
-    if (!onlyUniqueServicesName.includes(item.serviceName)) {
-      onlyUniqueServicesName.push(item.serviceName);
-    }
-    if (!allDelveryTimes.includes(item.deliveryTime) && item.deliveryTime !== "") {
-      allDelveryTimes.push(item.deliveryTime);
-    }
-  });
-  // console.log(`allDelveryTimes:`, allDelveryTimes);
-
-  //added unique ID for each entry
-  const withIdTempAllRes = tempAllRes.map((item, id) => {
-    return {...item, ...id};
-  });
-
-  const sortedBy = "price";
-  const isAscending = true;
-
-  const newData = allDelveryTimes.map((deliveryTime, idDelTime) => {
-    const filteredWithDelTime = withIdTempAllRes.filter(
-      (singleData) => singleData.deliveryTime === deliveryTime
-    );
-    const allServicesNames = [];
-
-    filteredWithDelTime.forEach((singleData) => {
-      if (
-        !allServicesNames.includes(singleData.serviceName) &&
-        singleData.serviceName !== ""
-      )
-        allServicesNames.push(singleData.serviceName);
-    });
-
-    const tempData = allServicesNames.map((serviceName, idService) => {
-      const filteredWithServiceName = filteredWithDelTime.filter(
-        (item) => item.serviceName === serviceName
-      );
-      filteredWithServiceName.sort(dynamicSort(sortedBy));
-      const min = Math.min(...filteredWithServiceName.map((item) => item.price));
-      const max = Math.max(...filteredWithServiceName.map((item) => item.price));
-      return {
-        id: idService + serviceName,
-        min,
-        max,
-        serviceData: filteredWithServiceName,
-        serviceName,
-      };
-    });
-
-    const minPrice = Math.min(...tempData.map((item) => item.min));
-    const maxPrice = Math.max(...tempData.map((item) => item.max));
-
-    tempData.sort(dynamicSort("min"));
-    return {
-      id: idDelTime + deliveryTime,
-
-      deliveryTime,
-      timeSpeedData: tempData,
-      minPrice,
-      maxPrice,
-    };
-  });
-  return {
-    options: {
-      sortedBy,
-      isAscending,
-    },
-    data: newData,
-  };
-};
-
 const getSortValSD = (isAscending, sortedBy) => {
   if (sortedBy === "price") return isAscending ? "price" : "-price";
-
   //if condition where not matched then default value is returned
   //like if clicked sorting("alphabetical") by default sorting is "price" by ascending
   return "price";
@@ -295,7 +220,7 @@ const getSortValSD = (isAscending, sortedBy) => {
 const isSortedByAscending = (isAscending, defaultValueIsAscending, sortedBy, sortBy) => {
   if (sortBy) {
     //when clicking button sorting, I check if fired button is the same as current sorting
-    //if yes, returning current sorting I need to revert value isAscending,
+    //if yes, I need to revert value isAscending as I want to revert value when click button,
     //otherwise default sorting
     return sortedBy === sortBy ? !isAscending : defaultValueIsAscending;
   } else {
@@ -318,8 +243,7 @@ const getSortingBy = (isAscending, options, sortBy) => {
     const isTrue = sortBy === "price";
     return getServiceValue(isTrue, isAscending);
   }
-
-  //if this sorting is not clicked with variable sortBy
+  //if this sorting is not clicked with value of variable sortBy
   const isTrue = options.sortedBy === "price";
   return getServiceValue(isTrue, isAscending);
 };
@@ -401,6 +325,82 @@ const handleFetchNewData = (
   };
 };
 
+const getNewData = (tempAllRes, formatedData) => {
+  //ie. onlyUniqueServicesName = ['DX 24H', 'DHL UK NextDay by 9am'] so 'DX 24H' will not repeat in this array
+  const onlyUniqueServicesName = [];
+
+  //like allDelveryTimes = [FAST', 'MEDIUM']
+  const allDelveryTimes = [];
+  formatedData.forEach((item) => {
+    if (!onlyUniqueServicesName.includes(item.serviceName)) {
+      onlyUniqueServicesName.push(item.serviceName);
+    }
+    if (!allDelveryTimes.includes(item.deliveryTime) && item.deliveryTime !== "") {
+      allDelveryTimes.push(item.deliveryTime);
+    }
+  });
+  // console.log(`allDelveryTimes:`, allDelveryTimes);
+
+  //added unique ID for each entry
+  const withIdTempAllRes = tempAllRes.map((item, id) => {
+    return {...item, ...id};
+  });
+
+  const newData = allDelveryTimes.map((deliveryTime, idDelTime) => {
+    const filteredWithDelTime = withIdTempAllRes.filter(
+      (singleData) => singleData.deliveryTime === deliveryTime
+    );
+    const allServicesNames = [];
+
+    filteredWithDelTime.forEach((singleData) => {
+      if (
+        !allServicesNames.includes(singleData.serviceName) &&
+        singleData.serviceName !== ""
+      )
+        allServicesNames.push(singleData.serviceName);
+    });
+
+    const tempData = allServicesNames.map((serviceName, idService) => {
+      const filteredWithServiceName = filteredWithDelTime.filter(
+        (item) => item.serviceName === serviceName
+      );
+      filteredWithServiceName.sort(dynamicSort(SORTED_BY));
+      const min = Math.min(...filteredWithServiceName.map((item) => item.price));
+      const max = Math.max(...filteredWithServiceName.map((item) => item.price));
+      const returnTempData = {
+        id: idService + serviceName,
+        min,
+        max,
+        serviceData: filteredWithServiceName,
+        serviceName,
+      };
+      return returnTempData;
+    });
+
+    const minPrice = Math.min(...tempData.map((item) => item.min));
+    const maxPrice = Math.max(...tempData.map((item) => item.max));
+
+    tempData.sort(dynamicSort("min"));
+    const returnNewData = {
+      id: idDelTime + deliveryTime,
+      deliveryTime,
+      timeSpeedData: tempData,
+      minPrice,
+      maxPrice,
+    };
+    return returnNewData;
+  });
+
+  const returnGetNewData = {
+    options: {
+      sortedBy: SORTED_BY,
+      isAscending: IS_ASCENDING,
+    },
+    data: newData,
+  };
+  return returnGetNewData;
+};
+
 const fetchDataFromAllCouriers = async (
   signal,
   setFetchCounter,
@@ -413,7 +413,9 @@ const fetchDataFromAllCouriers = async (
   //every time when starting fetching all data, reset to default values
   setFetchCounter(0);
   setAllResponses([]);
-  setData({data: []});
+
+  setData(defaultData);
+  setFilteredData(defaultData);
 
   const {forFetchingData, defaultValues} = state;
   //I might use Promise.all() but I want to do display new results after each response
@@ -428,7 +430,9 @@ const fetchDataFromAllCouriers = async (
       const newData = getNewData(tempAllRes, formatedData);
       setData(newData);
       const filteredData = getFilteredData(screenSize, newData);
-      setFilteredData(filteredData);
+      setFilteredData((prev) => {
+        return {...prev, ...filteredData};
+      });
       return tempAllRes;
     });
     setFetchCounter((prev) => prev + 1);
