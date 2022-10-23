@@ -39,6 +39,7 @@ const Table = () => {
   };
 
   useEffect(() => {
+    console.log(`screenSize:`, screenSize);
     if (data.data.length > 0) {
       const filtered = getFilteredData(screenSize, data);
       setFilteredData((prev) => {
