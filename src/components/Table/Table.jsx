@@ -437,19 +437,19 @@ const fetchDataFromAllCouriers = async (
 
 const getFilteredData = (screenSize, newData) => {
   if (screenSize === SMALL) {
+    const allTSD = newData.data.map((e) => e.timeSpeedData);
+    const mergedAllTSD = allTSD.flat(1);
+    const minPrice = Math.min(...mergedAllTSD.map((item) => item.min));
+    const maxPrice = Math.max(...mergedAllTSD.map((item) => item.max));
     const tempData = [
       {
         id: "0ALL",
         deliveryTime: ALL,
-        minPrice: 5.99,
-        maxPrice: 5.99,
-        timeSpeedData: [],
+        minPrice,
+        maxPrice,
+        timeSpeedData: mergedAllTSD,
       },
     ];
-    const allTSD = newData.data.map((e) => e.timeSpeedData);
-    const mergedAllTSD = allTSD.flat(1);
-
-    tempData[0].timeSpeedData = mergedAllTSD;
     return {...newData, ...{data: tempData}};
   } else {
     return newData;
