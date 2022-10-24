@@ -234,7 +234,7 @@ const getServiceValue = (isTrue, isAscending) => {
   return isTrue
     ? isAscending
       ? "min"
-      : "-min"
+      : "-max"
     : isAscending
     ? "serviceName"
     : "-serviceName";

@@ -9,11 +9,11 @@ const getObjName = (companyName) =>
   couriersNamesArr.find((name) => name.companyName === companyName);
 
 const defaultValues = {
-  value: 0,
-  weight: 10,
-  length: 8,
-  width: 10,
-  height: 10,
+  VALUE: 0,
+  WEIGHT: 10,
+  LENGTH: 8,
+  WIDTH: 10,
+  HEIGHT: 10,
   IS_ASCENDING: true,
   SORTED_BY: "price",
 };
@@ -57,11 +57,11 @@ module.exports = {
             },
             Parcels: [
               {
-                Value: defaultValues.value,
-                Weight: defaultValues.weight,
-                Length: defaultValues.length,
-                Width: defaultValues.width,
-                Height: defaultValues.height,
+                Value: defaultValues.VALUE,
+                Weight: defaultValues.WEIGHT,
+                Length: defaultValues.LENGTH,
+                Width: defaultValues.WIDTH,
+                Height: defaultValues.HEIGHT,
               },
             ],
           }),
@@ -84,10 +84,10 @@ module.exports = {
             destination: "GB",
             boxes: [
               {
-                length: defaultValues.length,
-                width: defaultValues.width,
-                height: defaultValues.height,
-                weight: defaultValues.weight,
+                length: defaultValues.LENGTH,
+                width: defaultValues.WIDTH,
+                height: defaultValues.HEIGHT,
+                weight: defaultValues.WEIGHT,
               },
             ],
             goods_value: 0,

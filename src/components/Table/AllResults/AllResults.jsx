@@ -15,7 +15,7 @@ const AllResults = ({data}) => {
               flexDirection: "column",
               width: "-webkit-fill-available",
             }}>
-            {delTime(timeSpeed.deliveryTime)}
+            <span>{delTime(timeSpeed.deliveryTime)}</span>
             <SingleService timeSpeedData={timeSpeed.timeSpeedData} />
           </div>
         );
