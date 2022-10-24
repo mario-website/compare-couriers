@@ -1,6 +1,5 @@
 import React, {useState, useReducer, useLayoutEffect, useEffect} from "react";
 import {INITIAL_STATE, postReducer} from "../../store/postReducer";
-// import {handleFetchNewData, sorting} from "./functions";
 import AllResults from "./AllResults/AllResults";
 import normalizerNames from "../../store/normalizerNames";
 import {COURIER_NAMES, VARIABLES} from "../../store/postActionTypes";
@@ -19,13 +18,16 @@ const Table = () => {
   const [data, setData] = useState(defaultData);
   const [filteredData, setFilteredData] = useState(defaultData);
   const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
+  //3.0
   const [width, height] = useWindowSize();
   const [screenSize, setScreenSize] = useState(SMALL);
   const [allResponses, setAllResponses] = useState([]);
   const [fetchCounter, setFetchCounter] = useState(0);
   const [tempController, setTempController] = useState();
   const defValIsAscending = IS_ASCENDING;
+
   const setNewData = () => {
+    //1.0
     handleFetchNewData(
       tempController,
       setTempController,
@@ -39,21 +41,24 @@ const Table = () => {
   };
 
   useEffect(() => {
-    console.log(`screenSize:`, screenSize);
     if (data.data.length > 0) {
+      //1.5
       const filtered = getFilteredData(screenSize, data);
       setFilteredData((prev) => {
         const newData = {...filtered, ...{options: prev.options}};
+        //2.0
         return sorting(newData, defValIsAscending);
       });
     }
   }, [data, defValIsAscending, screenSize]);
 
   useEffect(() => {
+    //4.0
     setScreenSize(getScreenSize(width));
   }, [width]);
 
   const setSorting = (sortBy) => {
+    //2.0
     const sortedData = sorting(filteredData, defValIsAscending, sortBy);
     setFilteredData(sortedData);
   };
@@ -81,39 +86,81 @@ export default Table;
 
 const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
 
-const getScreenSize = (width) => {
-  if (width < 600) return SMALL;
-  if (width >= 600) return LARGE;
+//1.0
+const handleFetchNewData = (
+  tempController,
+  setTempController,
+  setFetchCounter,
+  setAllResponses,
+  setData,
+  state,
+  screenSize,
+  setFilteredData
+) => {
+  const controller = new AbortController();
+  const {signal} = controller;
+
+  //so for any new fetch I need to cancell all current fetching in asyc functions
+  //so I checking if there is any of them, I need to cancel that one
+  if (tempController) tempController.abort();
+
+  setTempController(controller);
+  //1.1
+  fetchDataFromAllCouriers(
+    signal,
+    setFetchCounter,
+    setAllResponses,
+    setData,
+    state,
+    screenSize,
+    setFilteredData
+  );
+  // console.log("handleClick");
+  return () => {
+    controller.abort();
+  };
 };
+//1.1
+const fetchDataFromAllCouriers = async (
+  signal,
+  setFetchCounter,
+  setAllResponses,
+  setData,
+  state,
+  screenSize,
+  setFilteredData
+) => {
+  //every time when starting fetching all data, reset to default values
+  setFetchCounter(0);
+  setAllResponses([]);
 
-function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
-  useLayoutEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-  return size;
-}
+  setData(defaultData);
+  setFilteredData(defaultData);
 
-const fetching = async (url, options) => {
-  // console.log(`url, options:`, url, options);
-  const fetchRes = await fetch(url, options)
-    .then((res) => res.json())
-    .then((body) => {
-      // console.log(`body:`, body);
-      return body;
-    })
-    .catch((error) => {
-      // console.log("Server failed to return data: " + error);
-      return error;
+  const {forFetchingData, defaultValues} = state;
+  //I might use Promise.all() but I want to do display new results after each response
+  forFetchingData.forEach(async (courierData) => {
+    //1.2
+    const data = await getData(courierData, signal);
+    //todo: Change to try/catch and then prompt error if occured
+    const {companyName} = courierData.names;
+    //1.3
+    const formatedData = formattingData(companyName, data, defaultValues);
+
+    setAllResponses((prev) => {
+      const tempAllRes = [...prev, ...formatedData];
+      //1.4
+      const newData = getNewData(tempAllRes, formatedData);
+      setData(newData);
+      //1.5
+      const filteredData = getFilteredData(screenSize, newData);
+      setFilteredData(filteredData);
+      return tempAllRes;
     });
-  return fetchRes;
+    setFetchCounter((prev) => prev + 1);
+  });
 };
-
+//1.2
 const getData = async (courierData, signal) => {
   let optionsData = {};
   if (courierData.getToken) {
@@ -121,6 +168,7 @@ const getData = async (courierData, signal) => {
       ...courierData.getToken.options,
       ...{url: courierData.getToken.url},
     };
+    //1.2.1
     const tokken = await fetching(courierData.names.apiUrl, {
       method: "POST",
       body: JSON.stringify(optionsToken),
@@ -144,7 +192,7 @@ const getData = async (courierData, signal) => {
     ...{url: courierData.getData.url},
     ...optionsData,
   };
-
+  //1.2.1
   const data = await fetching(courierData.names.apiUrl, {
     method: "POST",
     body: JSON.stringify(optionsData),
@@ -155,7 +203,22 @@ const getData = async (courierData, signal) => {
   });
   return data;
 };
-
+//1.2.1
+const fetching = async (url, options) => {
+  // console.log(`url, options:`, url, options);
+  const fetchRes = await fetch(url, options)
+    .then((res) => res.json())
+    .then((body) => {
+      // console.log(`body:`, body);
+      return body;
+    })
+    .catch((error) => {
+      // console.log("Server failed to return data: " + error);
+      return error;
+    });
+  return fetchRes;
+};
+//1.3
 const formattingData = (companyName, data, dimension) => {
   const formatedData = [];
   switch (companyName) {
@@ -210,122 +273,7 @@ const formattingData = (companyName, data, dimension) => {
   }
   return formatedData;
 };
-
-const getSortValSD = (isAscending, sortedBy) => {
-  if (sortedBy === "price") return isAscending ? "price" : "-price";
-  //if condition where not matched then default value is returned
-  //like if clicked sorting("alphabetical") by default sorting is "price" by ascending
-  return "price";
-};
-
-const isSortedByAscending = (isAscending, defaultValueIsAscending, sortedBy, sortBy) => {
-  if (sortBy) {
-    //when clicking button sorting, I check if fired button is the same as current sorting
-    //if yes, I need to revert value isAscending as I want to revert value when click button,
-    //otherwise default sorting
-    return sortedBy === sortBy ? !isAscending : defaultValueIsAscending;
-  } else {
-    //if there is no value under sortBy (this function just sort data with current value of isAscending)
-    return isAscending;
-  }
-};
-
-const getServiceValue = (isTrue, isAscending) => {
-  return isTrue
-    ? isAscending
-      ? "min"
-      : "-max"
-    : isAscending
-    ? "serviceName"
-    : "-serviceName";
-};
-const getSortingBy = (isAscending, options, sortBy) => {
-  if (sortBy) {
-    const isTrue = sortBy === "price";
-    return getServiceValue(isTrue, isAscending);
-  }
-  //if this sorting is not clicked with value of variable sortBy
-  const isTrue = options.sortedBy === "price";
-  return getServiceValue(isTrue, isAscending);
-};
-
-const sorting = (filteredData, defaultValueIsAscending, sortBy) => {
-  const {data, options} = filteredData;
-  const {isAscending, sortedBy} = options;
-  const isAsc = isSortedByAscending(
-    isAscending,
-    defaultValueIsAscending,
-    sortedBy,
-    sortBy
-  );
-
-  const sortedData = data.map((timeSpeedObj) => {
-    const timeSpeedData = [...timeSpeedObj.timeSpeedData];
-    const TSDSortBy = getSortingBy(isAsc, options, sortBy);
-    timeSpeedData.sort(dynamicSort(TSDSortBy));
-
-    const sortedTSD = timeSpeedData.map((speedData) => {
-      const valSortBySD = getSortValSD(isAsc, sortedBy);
-      const serviceData = [...speedData.serviceData];
-      //no need to sort if in array is only one object
-      if (serviceData.length > 1) {
-        serviceData.sort(dynamicSort(valSortBySD));
-      }
-      const returnSortedTSD = {...speedData, ...{serviceData}};
-      return returnSortedTSD;
-    });
-
-    const returnSortedData = {...timeSpeedObj, ...{timeSpeedData: sortedTSD}};
-    return returnSortedData;
-  });
-
-  const returnSorting = {
-    ...filteredData,
-    ...{
-      options: {
-        isAscending: isAsc,
-        sortedBy: sortBy ? sortBy : sortedBy,
-      },
-    },
-    ...{data: sortedData},
-  };
-
-  return returnSorting;
-};
-
-const handleFetchNewData = (
-  tempController,
-  setTempController,
-  setFetchCounter,
-  setAllResponses,
-  setData,
-  state,
-  screenSize,
-  setFilteredData
-) => {
-  const controller = new AbortController();
-  const {signal} = controller;
-
-  //so for any new fetch I need to cancell all current fetching in asyc functions
-  //so I checking if there is any of them, I need to cancel that one
-  if (tempController) tempController.abort();
-
-  setTempController(controller);
-  fetchDataFromAllCouriers(
-    signal,
-    setFetchCounter,
-    setAllResponses,
-    setData,
-    state,
-    screenSize,
-    setFilteredData
-  );
-  // console.log("handleClick");
-  return () => {
-    controller.abort();
-  };
-};
-
+//1.4
 const getNewData = (tempAllRes, formatedData) => {
   //ie. onlyUniqueServicesName = ['DX 24H', 'DHL UK NextDay by 9am'] so 'DX 24H' will not repeat in this array
   const onlyUniqueServicesName = [];
@@ -401,45 +349,7 @@ const getNewData = (tempAllRes, formatedData) => {
   };
   return returnGetNewData;
 };
-
-const fetchDataFromAllCouriers = async (
-  signal,
-  setFetchCounter,
-  setAllResponses,
-  setData,
-  state,
-  screenSize,
-  setFilteredData
-) => {
-  //every time when starting fetching all data, reset to default values
-  setFetchCounter(0);
-  setAllResponses([]);
-
-  setData(defaultData);
-  setFilteredData(defaultData);
-
-  const {forFetchingData, defaultValues} = state;
-  //I might use Promise.all() but I want to do display new results after each response
-  forFetchingData.forEach(async (courierData) => {
-    const data = await getData(courierData, signal);
-    //todo: Change to try/catch and then prompt error if occured
-    const {companyName} = courierData.names;
-    const formatedData = formattingData(companyName, data, defaultValues);
-
-    setAllResponses((prev) => {
-      const tempAllRes = [...prev, ...formatedData];
-      const newData = getNewData(tempAllRes, formatedData);
-      setData(newData);
-      const filteredData = getFilteredData(screenSize, newData);
-      setFilteredData((prev) => {
-        return {...prev, ...filteredData};
-      });
-      return tempAllRes;
-    });
-    setFetchCounter((prev) => prev + 1);
-  });
-};
-
+//1.5
 const getFilteredData = (screenSize, newData) => {
   if (screenSize === SMALL) {
     const allTSD = newData.data.map((e) => e.timeSpeedData);
@@ -459,4 +369,110 @@ const getFilteredData = (screenSize, newData) => {
   } else {
     return newData;
   }
+};
+//2.0
+const sorting = (filteredData, defaultValueIsAscending, sortBy) => {
+  const {data, options} = filteredData;
+  const {isAscending, sortedBy} = options;
+  //2.1
+  const isAsc = isSortedByAscending(
+    isAscending,
+    defaultValueIsAscending,
+    sortedBy,
+    sortBy
+  );
+
+  const sortedData = data.map((timeSpeedObj) => {
+    const timeSpeedData = [...timeSpeedObj.timeSpeedData];
+    //2.2.0
+    const TSDSortBy = getSortingBy(isAsc, options, sortBy);
+    timeSpeedData.sort(dynamicSort(TSDSortBy));
+
+    const sortedTSD = timeSpeedData.map((speedData) => {
+      //2.3
+      const valSortBySD = getSortValSD(isAsc, sortedBy);
+      const serviceData = [...speedData.serviceData];
+      //no need to sort if in array is only one object
+      if (serviceData.length > 1) {
+        serviceData.sort(dynamicSort(valSortBySD));
+      }
+      const returnSortedTSD = {...speedData, ...{serviceData}};
+      return returnSortedTSD;
+    });
+
+    const returnSortedData = {...timeSpeedObj, ...{timeSpeedData: sortedTSD}};
+    return returnSortedData;
+  });
+
+  const returnSorting = {
+    ...filteredData,
+    ...{
+      options: {
+        isAscending: isAsc,
+        sortedBy: sortBy ? sortBy : sortedBy,
+      },
+    },
+    ...{data: sortedData},
+  };
+
+  return returnSorting;
+};
+//2.1
+const isSortedByAscending = (isAscending, defaultValueIsAscending, sortedBy, sortBy) => {
+  if (sortBy) {
+    //when clicking button sorting, I check if fired button is the same as current sorting
+    //if yes, I need to revert value isAscending as I want to revert value when click button,
+    //otherwise default sorting
+    return sortedBy === sortBy ? !isAscending : defaultValueIsAscending;
+  } else {
+    //if there is no value under sortBy (this function just sort data with current value of isAscending)
+    return isAscending;
+  }
+};
+//2.2.0
+const getSortingBy = (isAscending, options, sortBy) => {
+  if (sortBy) {
+    const isTrue = sortBy === "price";
+    //2.2.1
+    return getServiceValue(isTrue, isAscending);
+  }
+  //if this sorting is not clicked with value of variable sortBy
+  const isTrue = options.sortedBy === "price";
+  //2.2.1
+  return getServiceValue(isTrue, isAscending);
+};
+//2.2.1
+const getServiceValue = (isTrue, isAscending) => {
+  return isTrue
+    ? isAscending
+      ? "min"
+      : "-max"
+    : isAscending
+    ? "serviceName"
+    : "-serviceName";
+};
+//2.3
+const getSortValSD = (isAscending, sortedBy) => {
+  if (sortedBy === "price") return isAscending ? "price" : "-price";
+  //if condition where not matched then default value is returned
+  //like if clicked sorting("alphabetical") by default sorting is "price" by ascending
+  return "price";
+};
+//3.0
+const useWindowSize = () => {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+  return size;
+};
+//4.0
+const getScreenSize = (width) => {
+  if (width < 600) return SMALL;
+  if (width >= 600) return LARGE;
 };
