@@ -477,11 +477,12 @@ const useWindowSize = () => {
   useLayoutEffect(() => {
     //to not setSize for every window change, added small delay 100ms for
     //reading and set curent window.innerWidth and window.innerHeight
+    //founded delay at https://stackoverflow.com/a/63010184
+    //3.1
     const withDelayUpdate = debounce(() => {
       setSize([window.innerWidth, window.innerHeight]);
     }, 100);
     window.addEventListener("resize", withDelayUpdate);
-
     return () => window.removeEventListener("resize", withDelayUpdate);
   }, []);
   return size;
