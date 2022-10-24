@@ -479,9 +479,10 @@ const useWindowSize = () => {
     //reading and set curent window.innerWidth and window.innerHeight
     //founded delay at https://stackoverflow.com/a/63010184
     //3.1
-    const withDelayUpdate = debounce(() => {
+    const withDelayUpdate = () => {
       setSize([window.innerWidth, window.innerHeight]);
-    }, 100);
+    };
+    withDelayUpdate();
     window.addEventListener("resize", withDelayUpdate);
     return () => window.removeEventListener("resize", withDelayUpdate);
   }, []);
