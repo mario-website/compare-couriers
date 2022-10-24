@@ -4,8 +4,11 @@ import AllResults from "./AllResults/AllResults";
 import normalizerNames from "../../store/normalizerNames";
 import {COURIER_NAMES, VARIABLES} from "../../store/postActionTypes";
 import {dynamicSort} from "../../store/functions";
+
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 const {IS_ASCENDING, SORTED_BY} = INITIAL_STATE.defaultValues;
+const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
+
 const defaultData = {
   options: {
     sortedBy: SORTED_BY,
@@ -42,11 +45,14 @@ const Table = () => {
 
   useEffect(() => {
     if (data.data.length > 0) {
-      //1.5
+      //1.5 - setFilteredData only when screenSize is different
       const filtered = getFilteredData(screenSize, data);
       setFilteredData((prev) => {
         const newData = {...filtered, ...{options: prev.options}};
-        //2.0
+        //2.0 - need to sort every time, when screenSize is changing
+        //I might to create one data who contains all screenSize scenarios but
+        //in most cases, user do not change screenSize so often like asking for new results
+        //so is better for preformance to create current output data only if screenSize is changed
         return sorting(newData, defValIsAscending);
       });
     }
@@ -84,8 +90,6 @@ const Table = () => {
 };
 export default Table;
 
-const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
-
 //1.0
 const handleFetchNewData = (
   tempController,
@@ -100,8 +104,8 @@ const handleFetchNewData = (
   const controller = new AbortController();
   const {signal} = controller;
 
-  //so for any new fetch I need to cancell all current fetching in asyc functions
-  //so I checking if there is any of them, I need to cancel that one
+  //for any new fetch I need to cancell all current fetching in asyc functions
+  //I checking if there is any of them, I need to cancel that one
   if (tempController) tempController.abort();
 
   setTempController(controller);
@@ -115,7 +119,6 @@ const handleFetchNewData = (
     screenSize,
     setFilteredData
   );
-  // console.log("handleClick");
   return () => {
     controller.abort();
   };
@@ -130,10 +133,9 @@ const fetchDataFromAllCouriers = async (
   screenSize,
   setFilteredData
 ) => {
-  //every time when starting fetching all data, reset to default values
+  //every time when starting fetching new data, reset to default values
   setFetchCounter(0);
   setAllResponses([]);
-
   setData(defaultData);
   setFilteredData(defaultData);
 
@@ -148,11 +150,13 @@ const fetchDataFromAllCouriers = async (
     const formatedData = formattingData(companyName, data, defaultValues);
 
     setAllResponses((prev) => {
+      //for everytime when new data received (formatedData), merged with current one (prev)
       const tempAllRes = [...prev, ...formatedData];
-      //1.4
+      //1.4 - needs to create new output data and filter
       const newData = getNewData(tempAllRes, formatedData);
       setData(newData);
-      //1.5
+      //1.5 - by default, newData is created an array with each object represent
+      //all delveryTimes so filteredData might be different on screenSize value
       const filteredData = getFilteredData(screenSize, newData);
       setFilteredData(filteredData);
       return tempAllRes;
@@ -278,7 +282,7 @@ const getNewData = (tempAllRes, formatedData) => {
   //ie. onlyUniqueServicesName = ['DX 24H', 'DHL UK NextDay by 9am'] so 'DX 24H' will not repeat in this array
   const onlyUniqueServicesName = [];
 
-  //like allDelveryTimes = [FAST', 'MEDIUM']
+  //like allDelveryTimes = ['FAST', 'MEDIUM']
   const allDelveryTimes = [];
   formatedData.forEach((item) => {
     if (!onlyUniqueServicesName.includes(item.serviceName)) {
@@ -288,7 +292,6 @@ const getNewData = (tempAllRes, formatedData) => {
       allDelveryTimes.push(item.deliveryTime);
     }
   });
-  // console.log(`allDelveryTimes:`, allDelveryTimes);
 
   //added unique ID for each entry
   const withIdTempAllRes = tempAllRes.map((item, id) => {
@@ -296,6 +299,7 @@ const getNewData = (tempAllRes, formatedData) => {
   });
 
   const newData = allDelveryTimes.map((deliveryTime, idDelTime) => {
+    //looking for all objects who is the same as deliveryTime
     const filteredWithDelTime = withIdTempAllRes.filter(
       (singleData) => singleData.deliveryTime === deliveryTime
     );
@@ -303,13 +307,17 @@ const getNewData = (tempAllRes, formatedData) => {
 
     filteredWithDelTime.forEach((singleData) => {
       if (
+        //filtering if in allServicesNames array exist singleData.serviceName
+        //AND is not an empty string. If yes, do not do anything
         !allServicesNames.includes(singleData.serviceName) &&
         singleData.serviceName !== ""
       )
         allServicesNames.push(singleData.serviceName);
     });
 
+    //after having all uniques serviceName, I can start to create tempData
     const tempData = allServicesNames.map((serviceName, idService) => {
+      //looking for all objects who is the same as serviceName
       const filteredWithServiceName = filteredWithDelTime.filter(
         (item) => item.serviceName === serviceName
       );
@@ -372,6 +380,11 @@ const getFilteredData = (screenSize, newData) => {
 };
 //2.0
 const sorting = (filteredData, defaultValueIsAscending, sortBy) => {
+  //the goal is to sort via sorting button (passed sortBy) or not and
+  //return in object filteredData.options current sorting
+  //if sortBy is passed then is checking is previous button where the same
+  //if where the same reversal sorting is doing, if not defalut sorting is doing
+  //if case when not sortBy is passed, then just sort via filteredData.options
   const {data, options} = filteredData;
   const {isAscending, sortedBy} = options;
   //2.1
@@ -462,15 +475,28 @@ const getSortValSD = (isAscending, sortedBy) => {
 const useWindowSize = () => {
   const [size, setSize] = useState([0, 0]);
   useLayoutEffect(() => {
-    function updateSize() {
+    //to not setSize for every window change, added small delay 100ms for
+    //reading and set curent window.innerWidth and window.innerHeight
+    const withDelayUpdate = debounce(() => {
       setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
+    }, 100);
+    window.addEventListener("resize", withDelayUpdate);
+
+    return () => window.removeEventListener("resize", withDelayUpdate);
   }, []);
   return size;
 };
+//3.1
+function debounce(fn, ms) {
+  let timer;
+  return (_) => {
+    clearTimeout(timer);
+    timer = setTimeout((_) => {
+      timer = null;
+      fn.apply(this, arguments);
+    }, ms);
+  };
+}
 //4.0
 const getScreenSize = (width) => {
   if (width < 600) return SMALL;
