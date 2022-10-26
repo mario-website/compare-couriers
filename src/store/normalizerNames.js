@@ -310,11 +310,10 @@ module.exports = {
     if (serviceName === "Collect+ Economy") {
       output = "Collect+ Economy";
     }
-    if (
-      serviceName === "UPS Standard®" ||
-      serviceName === "UPS Express" ||
-      serviceName === "Next Day"
-    ) {
+    if (serviceName === "UPS Express" || serviceName === "Next Day") {
+      output = "UPS Express";
+    }
+    if (serviceName === "UPS Standard®") {
       output = "UPS Standard";
     }
     if (

@@ -1,7 +1,7 @@
 import React from "react";
 import Prices from "./Prices/Prices";
 
-const SingleService = ({timeSpeedData}) => {
+const ColumnOfDeliveryTime = ({timeSpeedData}) => {
   return (
     <>
       {timeSpeedData.map((service) => {
@@ -22,4 +22,4 @@ const SingleService = ({timeSpeedData}) => {
   );
 };
 
-export default SingleService;
+export default ColumnOfDeliveryTime;
