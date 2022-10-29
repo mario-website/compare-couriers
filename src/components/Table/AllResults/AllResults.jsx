@@ -53,7 +53,7 @@ const AllResults = ({
 
   useEffect(() => {
     if (valueOfClickedSorting !== "") {
-      setDataAllResponses((prev) =>
+      setNewFilteredData((prev) =>
         sorting(prev, defValIsAscending, valueOfClickedSorting)
       );
     }
@@ -63,7 +63,9 @@ const AllResults = ({
     e.preventDefault();
     setNewFilteredData((prev) => {
       const filteredAllData = prev.mergedAllData.filter((e) => e.deliveryTime === btn);
-      return {...prev, ...{data: filteredAllData}};
+      const newData = {...prev, ...{data: filteredAllData}};
+      const sortedData = sorting(newData, defValIsAscending);
+      return sortedData;
     });
   };
 
