@@ -1,13 +1,13 @@
-import {ACTION_TYPES} from "./postActionTypes";
-import couriers from "./couriers";
+import {ACTION_TYPES} from "./postActionTypes.js";
+import {defaultValues, couriersNamesArr, forFetchingData} from "./couriers.js";
 
 export const INITIAL_STATE = {
   loading: false,
   post: {},
   error: false,
-  forFetchingData: couriers.forFetchingData,
-  couriersNamesArr: couriers.couriersNamesArr,
-  defaultValues: couriers.defaultValues,
+  forFetchingData,
+  couriersNamesArr,
+  currentValues: defaultValues,
 };
 
 export const postReducer = (state, action) => {

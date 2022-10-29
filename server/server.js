@@ -1,24 +1,31 @@
-require("dotenv").config();
-const couriers = require("../src/store/couriers");
-const express = require("express");
-const path = require("path");
-const bodyParser = require("body-parser");
+// const couriersNamesArr = require("../src/store/couriers");
 
+const express = require("express");
+// const path = require("path");
+// const bodyParser = require("body-parser");
+const app = express();
+app.use(express.json());
+const couriersNamesArr = [
+  {apiUrl: "/api/parcelmonkey/", companyName: "PARCEL_MONKEY", method: app.post},
+  {apiUrl: "/api/p2g/", companyName: "PARCEL2GO", method: app.post},
+];
 // const cheerio = require("cheerio");
 // const superagent = require("superagent");
 const fetch = (...args) =>
   import("node-fetch").then(({default: fetch}) => fetch(...args));
-const app = express();
-const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
-
-app.use(express.json());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: true}));
+require("dotenv").config();
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
+const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 
-couriers.couriersNamesArr.forEach((courier) => {
+// app.use(express.static("public"));
+// app.use(bodyParser.urlencoded({extended: true}));
+// app.set("view engine", "ejs");
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
+
+couriersNamesArr.forEach((courier) => {
   app.post(courier.apiUrl, async (req, res) => {
     const fetchRes = await fetch(req.body.url, req.body)
       .then((res) => res.json())
@@ -27,6 +34,22 @@ couriers.couriersNamesArr.forEach((courier) => {
     res.json(fetchRes);
   });
 });
+
+// app.post("/api/parcelmonkey/", async (req, res) => {
+//   const fetchRes = await fetch(req.body.url, req.body)
+//     .then((res) => res.json())
+//     .then((body) => body)
+//     .catch((error) => error);
+//   res.json(fetchRes);
+// });
+
+// app.post("/api/p2g/", async (req, res) => {
+//   const fetchRes = await fetch(req.body.url, req.body)
+//     .then((res) => res.json())
+//     .then((body) => body)
+//     .catch((error) => error);
+//   res.json(fetchRes);
+// });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

@@ -3,9 +3,8 @@ import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime/ColumnOfDeliveryTime";
 import {VARIABLES} from "../../../store/postActionTypes";
 import {dynamicSort} from "../../../store/functions";
 import {INITIAL_STATE, postReducer} from "../../../store/postReducer";
-import {deliveryTime} from "../../../store/normalizerNames";
 
-const {IS_ASCENDING, SORTED_BY} = INITIAL_STATE.defaultValues;
+const {IS_ASCENDING, SORTED_BY} = INITIAL_STATE.currentValues;
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 const defValIsAscending = IS_ASCENDING;
 
@@ -45,7 +44,6 @@ const AllResults = ({
     if (dataAllResponses.data.length) {
       setNewFilteredData(() => {
         const newData = filterData(dataAllResponses, screenSize);
-        // console.log(`newData:`, newData);
         return newData;
       });
     }

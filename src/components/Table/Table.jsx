@@ -1,8 +1,9 @@
 import React, {useState, useReducer, useLayoutEffect, useEffect} from "react";
-import {INITIAL_STATE, postReducer} from "../../store/postReducer";
-import AllResults from "./AllResults/AllResults";
-import normalizerNames from "../../store/normalizerNames";
-import {COURIER_NAMES, VARIABLES} from "../../store/postActionTypes";
+import {INITIAL_STATE, postReducer} from "../../store/postReducer.js";
+import AllResults from "./AllResults/AllResults.jsx";
+import {courierNameF, deliveryTimeF, serviceNameF} from "../../store/normalizerNames.js";
+import {COURIER_NAMES, VARIABLES} from "../../store/postActionTypes.js";
+import ParcelValues from "../SearchForm/ParcelValues.jsx";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
@@ -41,13 +42,14 @@ const Table = () => {
 
   return (
     <div className="Table">
-      {state.error !== false && (
+      {state.error && (
         <p>
           error message{state.error.message}, error stack{state.error.stack}
         </p>
       )}
       <div>
         <button onClick={setNewData}>get data with default values</button>
+        <ParcelValues />
       </div>
       <div>
         <button onClick={() => setSorting("price")}>sortByPrice</button>
@@ -96,7 +98,7 @@ const fetchDataFromAllCouriers = async (
   setFetchCounter(0);
   setAllResponses([]);
 
-  const {forFetchingData, defaultValues} = state;
+  const {forFetchingData, currentValues} = state;
   //I might use Promise.all() but I want to do display new results after each response
   forFetchingData.forEach(async (courierData) => {
     //1.2
@@ -104,7 +106,7 @@ const fetchDataFromAllCouriers = async (
     //todo: Change to try/catch and then prompt error if occured
     const {companyName} = courierData.names;
     //1.3
-    const formatedData = formattingData(companyName, data, defaultValues);
+    const formatedData = formattingData(companyName, data, currentValues);
 
     setAllResponses((prev) => [...prev, ...formatedData]);
     setFetchCounter((prev) => prev + 1);
@@ -175,17 +177,11 @@ const formattingData = (companyName, data, dimension) => {
     case PARCEL2GO:
       // console.log(`data:`, data);
       data.Quotes.forEach((item) => {
-        const courierName = normalizerNames.courierName(
-          item.Service.CourierName,
-          companyName
-        );
-        const serviceName = normalizerNames.serviceName(item.Service.Name, companyName);
+        const courierName = courierNameF(item.Service.CourierName, companyName);
+        const serviceName = serviceNameF(item.Service.Name, companyName);
 
         // console.log(`item:`, item);
-        const deliveryTime = normalizerNames.deliveryTime(
-          item.Service.Classification,
-          companyName
-        );
+        const deliveryTime = deliveryTimeF(item.Service.Classification, companyName);
         const price = item.TotalPrice.toFixed(2);
         const url = `https://www.parcel2go.com/quotes?col=219&dest=219&mdd=0&mode=Default&p=1~${dimension.weight}|${dimension.length}|${dimension.width}|${dimension.height}&quoteType=Default`;
 
@@ -204,9 +200,9 @@ const formattingData = (companyName, data, dimension) => {
       // console.log(`data:`, data);
       data.forEach((item) => {
         // console.log(`item:`, item);
-        const courierName = normalizerNames.courierName(item.carrier, companyName);
-        const serviceName = normalizerNames.serviceName(item.service, companyName);
-        const deliveryTime = normalizerNames.deliveryTime(item.service_name, companyName);
+        const courierName = courierNameF(item.carrier, companyName);
+        const serviceName = serviceNameF(item.service, companyName);
+        const deliveryTime = deliveryTimeF(item.service_name, companyName);
         const price = item.total_price_gross;
         const url = "https://www.parcelmonkey.co.uk/";
         formatedData.push({
