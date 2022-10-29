@@ -14,7 +14,6 @@ const Table = () => {
   const [width, height] = useWindowSize();
   const [screenSize, setScreenSize] = useState("");
   const [allResponses, setAllResponses] = useState([]);
-  const [fetchCounter, setFetchCounter] = useState(0);
   const [tempController, setTempController] = useState();
   const [valueOfClickedSorting, setValueOfClickedSorting] = useState("");
   const [clickedBtnHasBeenFired, setClickedBtnHasBeenFired] = useState(true);
@@ -24,9 +23,9 @@ const Table = () => {
     handleFetchNewData(
       tempController,
       setTempController,
-      setFetchCounter,
       setAllResponses,
-      state
+      state,
+      dispatch
     );
   };
 
@@ -55,7 +54,7 @@ const Table = () => {
         <button onClick={() => setSorting("price")}>sortByPrice</button>
         <button onClick={() => setSorting("alphabetical")}>sortByServiceName</button>
       </div>
-      <span>fetchCounter:{fetchCounter}</span>
+      <span>fetchCounter:{state.fetchCounter}</span>
       <AllResults
         allResponses={allResponses}
         screenSize={screenSize}
@@ -71,9 +70,10 @@ export default Table;
 const handleFetchNewData = (
   tempController,
   setTempController,
-  setFetchCounter,
+
   setAllResponses,
-  state
+  state,
+  dispatch
 ) => {
   const controller = new AbortController();
   const {signal} = controller;
@@ -82,20 +82,15 @@ const handleFetchNewData = (
   if (tempController) tempController.abort();
   setTempController(controller);
   //1.1
-  fetchDataFromAllCouriers(signal, setFetchCounter, setAllResponses, state);
+  fetchDataFromAllCouriers(signal, setAllResponses, state, dispatch);
   return () => {
     controller.abort();
   };
 };
 //1.1
-const fetchDataFromAllCouriers = async (
-  signal,
-  setFetchCounter,
-  setAllResponses,
-  state
-) => {
+const fetchDataFromAllCouriers = async (signal, setAllResponses, state, dispatch) => {
   //every time when starting fetching new data, reset to default values
-  setFetchCounter(0);
+  dispatch({type: "SET_TO_ZERO_FETCH_COUNTER"});
   setAllResponses([]);
 
   const {forFetchingData, currentValues} = state;
@@ -109,7 +104,7 @@ const fetchDataFromAllCouriers = async (
     const formatedData = formattingData(companyName, data, currentValues);
 
     setAllResponses((prev) => [...prev, ...formatedData]);
-    setFetchCounter((prev) => prev + 1);
+    dispatch({type: "INCREASE_FETCH_COUNTER"});
   });
 };
 //1.2

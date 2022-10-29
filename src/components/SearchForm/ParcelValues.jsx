@@ -2,10 +2,17 @@ import React, {useState, useEffect, useReducer} from "react";
 import InputForm from "./InputForm";
 // import InputCountry from "./InputCountry";
 import {INITIAL_STATE, postReducer} from "../../store/postReducer";
+import {VARIABLES} from "../../store/postActionTypes.js";
+const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
 const ParcelValues = () => {
   const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
-  const {WEIGHT, LENGTH, WIDTH, HEIGHT} = state.currentValues;
+  const dimensions = [
+    {name: WEIGHT, labelName: "Weight", placeholder: "Weight in kg"},
+    {name: LENGTH, labelName: "Length", placeholder: "Length in cm"},
+    {name: WIDTH, labelName: "Width", placeholder: "Width in cm"},
+    {name: HEIGHT, labelName: "Height", placeholder: "Height in cm"},
+  ];
 
   return (
     <form>
@@ -41,34 +48,18 @@ const ParcelValues = () => {
         />
       </div> */}
       <div>
-        <InputForm
-          // nameClass={this.state.displayOffOn}
-          // sendValue={value => setWeight(value)}
-          value={WEIGHT}
-          placeholder={"Weight in kg"}
-          labelName="Weight"
-        />
-        {/* <InputForm
-          // nameClass={this.state.displayOffOn}
-          sendValue={value => setWidth(value)}
-          value={parcel_width}
-          placeholder={"Width in cm"}
-          labelName="Width"
-        />
-        <InputForm
-          // nameClass={this.state.displayOffOn}
-          sendValue={value => setHeight(value)}
-          value={parcel_height}
-          placeholder={"Height in cm"}
-          labelName="Height"
-        />
-        <InputForm
-          // nameClass={this.state.displayOffOn}
-          sendValue={value => setLength(value)}
-          value={parcel_length}
-          placeholder={"Length in cm"}
-          labelName="Length"
-        /> */}
+        {dimensions.map((e, i) => {
+          return (
+            <InputForm
+              // nameClass={this.state.displayOffOn}
+              // sendValue={value => setWeight(value)}
+              key={i + e.name}
+              placeholder={e.placeholder}
+              name={e.name}
+              labelName={e.labelName}
+            />
+          );
+        })}
       </div>
       <div>
         <button>Submit</button>
