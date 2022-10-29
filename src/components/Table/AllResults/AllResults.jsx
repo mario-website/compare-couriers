@@ -3,6 +3,7 @@ import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime/ColumnOfDeliveryTime";
 import {VARIABLES} from "../../../store/postActionTypes";
 import {dynamicSort} from "../../../store/functions";
 import {INITIAL_STATE, postReducer} from "../../../store/postReducer";
+import {deliveryTime} from "../../../store/normalizerNames";
 
 const {IS_ASCENDING, SORTED_BY} = INITIAL_STATE.defaultValues;
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
@@ -44,6 +45,7 @@ const AllResults = ({
     if (dataAllResponses.data.length) {
       setNewFilteredData(() => {
         const newData = filterData(dataAllResponses, screenSize);
+        // console.log(`newData:`, newData);
         return newData;
       });
     }
@@ -57,8 +59,34 @@ const AllResults = ({
     }
   }, [valueOfClickedSorting, clickedBtnHasBeenFired]);
 
+  const handleDeliveryTime = (e, btn) => {
+    e.preventDefault();
+    setNewFilteredData((prev) => {
+      const filteredAllData = prev.mergedAllData.filter((e) => e.deliveryTime === btn);
+      return {...prev, ...{data: filteredAllData}};
+    });
+  };
+
   return (
-    <div style={{display: "flex", columnGap: "20px"}}>
+    <div
+      style={{
+        display: "flex",
+        columnGap: "20px",
+        flexDirection: screenSize === SMALL ? "column" : "",
+      }}>
+      <div>
+        {screenSize === SMALL &&
+          newFilteredData.mergedAllData?.map((timeSpeed) => {
+            const deliveryTimeBtn = timeSpeed.deliveryTime;
+            return (
+              <button
+                key={timeSpeed.id}
+                onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
+                {delTime(deliveryTimeBtn)}
+              </button>
+            );
+          })}
+      </div>
       {newFilteredData.data.map((timeSpeed) => {
         return (
           <div
@@ -155,28 +183,38 @@ const createNewData = (allResponses) => {
 };
 
 const filterData = (allData, screenSize) => {
+  const TSD = allData.data[0].timeSpeedData;
+  const unique = [...new Set(TSD.map((item) => item.deliveryTime))];
+  const newData = unique.map((ele, index) => {
+    const filteredWithDelTime = TSD.filter(
+      (singleData) => singleData.deliveryTime === ele
+    );
+    const minPrice = Math.min(...filteredWithDelTime.map((item) => item.min));
+    const maxPrice = Math.max(...filteredWithDelTime.map((item) => item.max));
+    return {
+      id: index + ele,
+      deliveryTime: ele,
+      minPrice,
+      maxPrice,
+      timeSpeedData: [...filteredWithDelTime],
+    };
+  });
+  newData.sort(dynamicSort("deliveryTime"));
+
   if (screenSize === LARGE) {
-    const TSD = allData.data[0].timeSpeedData;
-    const unique = [...new Set(TSD.map((item) => item.deliveryTime))];
-    const newData = unique.map((ele, index) => {
-      const filteredWithDelTime = TSD.filter(
-        (singleData) => singleData.deliveryTime === ele
-      );
-      const minPrice = Math.min(...filteredWithDelTime.map((item) => item.min));
-      const maxPrice = Math.max(...filteredWithDelTime.map((item) => item.max));
-      return {
-        id: index + ele,
-        deliveryTime: ele,
-        minPrice,
-        maxPrice,
-        timeSpeedData: [...filteredWithDelTime],
-      };
-    });
-    newData.sort(dynamicSort("deliveryTime"));
     return {...{options: allData.options}, ...{data: newData}};
   } else {
     //default screenSize === ALL
-    return allData;
+
+    const mergedAllData = [...newData];
+    mergedAllData.push(allData.data[0]);
+    mergedAllData.sort(dynamicSort("deliveryTime"));
+
+    return {
+      ...{options: allData.options},
+      ...{data: allData.data},
+      mergedAllData,
+    };
   }
 };
 
