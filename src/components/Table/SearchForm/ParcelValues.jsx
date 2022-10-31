@@ -1,12 +1,9 @@
 import React, {useState, useEffect, useReducer} from "react";
-import InputForm from "./InputForm";
-// import InputCountry from "./InputCountry";
-import {INITIAL_STATE, postReducer} from "../../store/postReducer";
-import {VARIABLES} from "../../store/postActionTypes.js";
+import InputForm from "./InputForm/InputForm";
+import {VARIABLES} from "../../../store/variables.js";
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
-const ParcelValues = () => {
-  const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
+const ParcelValues = ({useReducerTable, setNewData}) => {
   const dimensions = [
     {name: WEIGHT, labelName: "Weight", placeholder: "Weight in kg"},
     {name: LENGTH, labelName: "Length", placeholder: "Length in cm"},
@@ -57,12 +54,13 @@ const ParcelValues = () => {
               placeholder={e.placeholder}
               name={e.name}
               labelName={e.labelName}
+              useReducerTable={useReducerTable}
             />
           );
         })}
       </div>
       <div>
-        <button>Submit</button>
+        <button onClick={setNewData}>get data with values</button>
       </div>
     </form>
   );

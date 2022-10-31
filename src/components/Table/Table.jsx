@@ -1,65 +1,73 @@
 import React, {useState, useReducer, useLayoutEffect, useEffect} from "react";
-import {INITIAL_STATE, postReducer} from "../../store/postReducer.js";
+import {INITIAL_STATE, tableReducer} from "../../store/tableReducer.js";
 import AllResults from "./AllResults/AllResults.jsx";
-import {courierNameF, deliveryTimeF, serviceNameF} from "../../store/normalizerNames.js";
-import {COURIER_NAMES, VARIABLES} from "../../store/postActionTypes.js";
-import ParcelValues from "../SearchForm/ParcelValues.jsx";
 
-const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
-const {PARCEL_MONKEY, PARCEL2GO} = COURIER_NAMES;
+import {courierNameF, deliveryTimeF, serviceNameF} from "../../store/normalizerNames";
+import {VARIABLES} from "../../store/variables.js";
+import ParcelValues from "./SearchForm/ParcelValues.jsx";
+
+const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
 const Table = () => {
-  const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
+  const {
+    screenSize,
+    couriersData,
+    currentValues,
+    fetchCounter,
+    allRes,
+    error,
+    valueClickedBtn,
+    isClickedBtn,
+    tempController,
+  } = state;
   //2.0
   const [width, height] = useWindowSize();
-  const [screenSize, setScreenSize] = useState("");
-  const [allResponses, setAllResponses] = useState([]);
-  const [tempController, setTempController] = useState();
-  const [valueOfClickedSorting, setValueOfClickedSorting] = useState("");
-  const [clickedBtnHasBeenFired, setClickedBtnHasBeenFired] = useState(true);
 
-  const setNewData = () => {
+  const setNewData = (e) => {
+    e.preventDefault();
     //1.0
-    handleFetchNewData(
-      tempController,
-      setTempController,
-      setAllResponses,
-      state,
-      dispatch
-    );
+    handleFetchNewData(tempController, dispatch, couriersData, currentValues);
   };
 
   useEffect(() => {
     //3.0
-    setScreenSize(getScreenSize(width));
+    dispatch({type: "SET_SCREEN_SIZE", payload: getScreenSize(width)});
   }, [width]);
 
   const setSorting = (item) => {
-    setClickedBtnHasBeenFired((prev) => !prev);
-    setValueOfClickedSorting(item);
+    dispatch({type: "SET_IS_CLICKED_BTN", payload: true});
+    dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
+  };
+
+  const setDefaultClickedBtn = () => {
+    dispatch({type: "SET_IS_CLICKED_BTN_TO_DEFAULT"});
   };
 
   return (
     <div className="Table">
-      {state.error && (
+      {error && (
         <p>
-          error message{state.error.message}, error stack{state.error.stack}
+          error message{error.message}, error stack{error.stack}
         </p>
       )}
       <div>
-        <button onClick={setNewData}>get data with default values</button>
-        <ParcelValues />
+        <ParcelValues
+          useReducerTable={{stateCurrentValues: state.currentValues, dispatch}}
+          setNewData={setNewData}
+        />
       </div>
       <div>
         <button onClick={() => setSorting("price")}>sortByPrice</button>
         <button onClick={() => setSorting("alphabetical")}>sortByServiceName</button>
       </div>
-      <span>fetchCounter:{state.fetchCounter}</span>
+      <span>fetchCounter:{fetchCounter}</span>
       <AllResults
-        allResponses={allResponses}
+        allResponses={allRes}
         screenSize={screenSize}
-        valueOfClickedSorting={valueOfClickedSorting}
-        clickedBtnHasBeenFired={clickedBtnHasBeenFired}
+        valueClickedBtn={valueClickedBtn}
+        isClickedBtn={isClickedBtn}
+        setDefaultClickedBtn={setDefaultClickedBtn}
       />
     </div>
   );
@@ -67,35 +75,33 @@ const Table = () => {
 export default Table;
 
 //1.0
-const handleFetchNewData = (
-  tempController,
-  setTempController,
-
-  setAllResponses,
-  state,
-  dispatch
-) => {
+const handleFetchNewData = (tempController, dispatch, couriersData, currentValues) => {
   const controller = new AbortController();
   const {signal} = controller;
   //for any new fetch I need to cancell all current fetching in asyc functions
   //I checking if there is any of them, I need to cancel that one
   if (tempController) tempController.abort();
-  setTempController(controller);
+  dispatch({type: "SET_TEMP_CONTROLLER", payload: controller});
   //1.1
-  fetchDataFromAllCouriers(signal, setAllResponses, state, dispatch);
+  fetchDataFromAllCouriers(signal, dispatch, couriersData, currentValues);
   return () => {
     controller.abort();
   };
 };
 //1.1
-const fetchDataFromAllCouriers = async (signal, setAllResponses, state, dispatch) => {
+const fetchDataFromAllCouriers = async (
+  signal,
+  dispatch,
+  couriersData,
+  currentValues
+) => {
   //every time when starting fetching new data, reset to default values
-  dispatch({type: "SET_TO_ZERO_FETCH_COUNTER"});
-  setAllResponses([]);
+  dispatch({type: "SET_TO_DEFAULT_FETCH_COUNTER"});
+  dispatch({type: "SET_TO_DEFAULT_ALL_RES"});
 
-  const {forFetchingData, currentValues} = state;
+  // const {couriersData, currentValues} = state;
   //I might use Promise.all() but I want to do display new results after each response
-  forFetchingData.forEach(async (courierData) => {
+  couriersData(currentValues).forEach(async (courierData) => {
     //1.2
     const data = await getData(courierData, signal);
     //todo: Change to try/catch and then prompt error if occured
@@ -103,8 +109,8 @@ const fetchDataFromAllCouriers = async (signal, setAllResponses, state, dispatch
     //1.3
     const formatedData = formattingData(companyName, data, currentValues);
 
-    setAllResponses((prev) => [...prev, ...formatedData]);
-    dispatch({type: "INCREASE_FETCH_COUNTER"});
+    dispatch({type: "SET_ALL_RESPONSES", payload: formatedData});
+    dispatch({type: "INCREASE_FETCH_COUNTER_BY_1"});
   });
 };
 //1.2
@@ -167,19 +173,16 @@ const fetching = async (url, options) => {
 };
 //1.3
 const formattingData = (companyName, data, dimension) => {
+  const {WEIGHT, LENGTH, WIDTH, HEIGHT} = dimension;
   const formatedData = [];
   switch (companyName) {
     case PARCEL2GO:
-      // console.log(`data:`, data);
       data.Quotes.forEach((item) => {
         const courierName = courierNameF(item.Service.CourierName, companyName);
         const serviceName = serviceNameF(item.Service.Name, companyName);
-
-        // console.log(`item:`, item);
         const deliveryTime = deliveryTimeF(item.Service.Classification, companyName);
         const price = item.TotalPrice.toFixed(2);
-        const url = `https://www.parcel2go.com/quotes?col=219&dest=219&mdd=0&mode=Default&p=1~${dimension.weight}|${dimension.length}|${dimension.width}|${dimension.height}&quoteType=Default`;
-
+        const url = `https://www.parcel2go.com/quotes?col=219&dest=219&mdd=0&mode=Default&p=1~${WEIGHT}|${LENGTH}|${WIDTH}|${HEIGHT}&quoteType=Default`;
         formatedData.push({
           companyName,
           courierName,

@@ -1,69 +1,77 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useReducer} from "react";
 import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime/ColumnOfDeliveryTime";
-import {VARIABLES} from "../../../store/postActionTypes";
+import {VARIABLES} from "../../../store/variables";
 import {dynamicSort} from "../../../store/functions";
-import {INITIAL_STATE, postReducer} from "../../../store/postReducer";
+import {INITIAL_STATE, allResReducer} from "../../../store/allResReducer";
+import {defaultValues} from "../../../store/couriers";
 
-const {IS_ASCENDING, SORTED_BY} = INITIAL_STATE.currentValues;
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
-const defValIsAscending = IS_ASCENDING;
-
-const defaultData = {
-  options: {
-    sortedBy: SORTED_BY,
-    isAscending: IS_ASCENDING,
-  },
-  data: [],
-};
+const {IS_ASCENDING, SORTED_BY} = defaultValues;
 
 const AllResults = ({
   allResponses,
   screenSize,
-  valueOfClickedSorting,
-  clickedBtnHasBeenFired,
+  valueClickedBtn,
+  isClickedBtn,
+  setDefaultClickedBtn,
 }) => {
-  const [dataAllResponses, setDataAllResponses] = useState(defaultData);
-  const [newFilteredData, setNewFilteredData] = useState(defaultData);
+  const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
+  const {newFilteredData, dataAllResponses, defaultData} = state;
+  const defValIsAscending = IS_ASCENDING;
 
   useEffect(() => {
     if (allResponses.length) {
-      const newData = createNewData(allResponses);
+      const newData = createNewData(allResponses, defaultValues);
       //1.
-      //create dataAllResponses with only allResponses
-      setDataAllResponses(newData);
+      //create dataAllResponses with only allResponses using default values
+      dispatch({type: "SET_DATA_ALL_RESPONSES", payload: newData});
     } else {
       //in Table.jsx for every click setNewData, setAllResponses([]) is set.
-      setDataAllResponses(defaultData);
+      dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
     }
-  }, [allResponses]);
+  }, [allResponses, defaultData]);
 
   useEffect(() => {
     //2.
     //so every time screenSize or new dataAllResponses.data is set (included sorting),
     //newFilteredData is reset with the new data.
     if (dataAllResponses.data.length) {
-      setNewFilteredData(() => {
-        const newData = filterData(dataAllResponses, screenSize);
-        return newData;
-      });
+      const newData = filterData(dataAllResponses, screenSize);
+      dispatch({type: "SET_NEW_FILTERED_DATA", payload: newData});
     }
-  }, [screenSize, dataAllResponses.data, dataAllResponses]);
+    if (dataAllResponses.data.length === 0) {
+      dispatch({type: "SET_NEW_FILTERED_DATA", payload: defaultData});
+    }
+  }, [defaultData, screenSize, dataAllResponses]);
 
   useEffect(() => {
-    if (valueOfClickedSorting !== "") {
-      setNewFilteredData((prev) =>
-        sorting(prev, defValIsAscending, valueOfClickedSorting)
-      );
+    const isTrue = isClickedBtn && valueClickedBtn !== "";
+    if (isTrue) {
+      dispatch({
+        type: "SET_NEW_FILTERED_DATA",
+        payload: sorting(newFilteredData, defValIsAscending, valueClickedBtn),
+      });
+
+      setDefaultClickedBtn();
     }
-  }, [valueOfClickedSorting, clickedBtnHasBeenFired]);
+  }, [
+    valueClickedBtn,
+    defValIsAscending,
+    isClickedBtn,
+    setDefaultClickedBtn,
+    newFilteredData,
+  ]);
 
   const handleDeliveryTime = (e, btn) => {
     e.preventDefault();
-    setNewFilteredData((prev) => {
-      const filteredAllData = prev.mergedAllData.filter((e) => e.deliveryTime === btn);
-      const newData = {...prev, ...{data: filteredAllData}};
-      const sortedData = sorting(newData, defValIsAscending);
-      return sortedData;
+    const filteredAllData = newFilteredData.mergedAllData.filter(
+      (e) => e.deliveryTime === btn
+    );
+    const newData = {...newFilteredData, ...{data: filteredAllData}};
+    const sortedData = sorting(newData, defValIsAscending);
+    dispatch({
+      type: "SET_NEW_FILTERED_DATA",
+      payload: sortedData,
     });
   };
 
@@ -115,7 +123,8 @@ const delTime = (time) => {
   if (time === ALL) return "All services";
 };
 
-const createNewData = (allResponses) => {
+const createNewData = (allResponses, defaultValues) => {
+  const {IS_ASCENDING, SORTED_BY} = defaultValues;
   //added unique ID for each entry
   const withIdTempAllRes = allResponses.map((item, id) => {
     return {...item, ...id};

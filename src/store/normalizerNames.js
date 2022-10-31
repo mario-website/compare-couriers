@@ -1,4 +1,4 @@
-import {VARIABLES} from "./postActionTypes.js";
+import {VARIABLES} from "./variables";
 const {SLOW, MEDIUM, FAST} = VARIABLES;
 // This is the function which will be called in the main file, which is server.js
 // The parameters 'name' and 'surname' will be provided inside the function

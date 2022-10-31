@@ -1,16 +1,13 @@
-import React, {useReducer} from "react";
-import {INITIAL_STATE, postReducer} from "../../store/postReducer";
+import React, {useReducer, useEffect} from "react";
 
-const InputForm = ({labelName, placeholder, name}) => {
-  const [state, dispatch] = useReducer(postReducer, INITIAL_STATE);
-
+const InputForm = ({labelName, placeholder, name, useReducerTable}) => {
   const handleChange = (e) => {
-    dispatch({
+    useReducerTable.dispatch({
       type: "CHANGE_INPUT",
       payload: {name, value: e.target.value},
     });
   };
-  console.log(`state:`, state.currentValues[name]);
+
   return (
     <div
     // className={nameClass}
@@ -21,7 +18,7 @@ const InputForm = ({labelName, placeholder, name}) => {
           type="text"
           onChange={handleChange}
           placeholder={placeholder}
-          value={state.currentValues[name]}
+          value={useReducerTable.stateCurrentValues[name]}
         />
       </label>
     </div>
