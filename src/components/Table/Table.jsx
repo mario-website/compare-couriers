@@ -20,9 +20,11 @@ const Table = () => {
     valueClickedBtn,
     isClickedBtn,
     tempController,
+    defaultData,
   } = state;
   //2.0
   const [width, height] = useWindowSize();
+  const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
 
   const setNewData = (e) => {
     e.preventDefault();
@@ -36,12 +38,12 @@ const Table = () => {
   }, [width]);
 
   const setSorting = (item) => {
-    dispatch({type: "SET_IS_CLICKED_BTN", payload: true});
+    dispatch({type: "SET_IS_CLICKED_BTN_TO_TRUE"});
     dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
   };
 
-  const setDefaultClickedBtn = () => {
-    dispatch({type: "SET_IS_CLICKED_BTN_TO_DEFAULT"});
+  const setClickedBtnToFalse = () => {
+    dispatch({type: "SET_IS_CLICKED_BTN_TO_FALSE"});
   };
 
   return (
@@ -53,7 +55,7 @@ const Table = () => {
       )}
       <div>
         <ParcelValues
-          useReducerTable={{stateCurrentValues: state.currentValues, dispatch}}
+          useReducerTable={{stateCurrentValues: currentValues, dispatch}}
           setNewData={setNewData}
         />
       </div>
@@ -61,13 +63,18 @@ const Table = () => {
         <button onClick={() => setSorting("price")}>sortByPrice</button>
         <button onClick={() => setSorting("alphabetical")}>sortByServiceName</button>
       </div>
-      <span>fetchCounter:{fetchCounter}</span>
+      <div>
+        <span>fetchCounter:{fetchCounter}</span>
+        <div>sortedBy:{currentSortingValues.sortedBy}</div>
+        <div>isAscending :{currentSortingValues.isAscending ? "true" : "false"}</div>
+      </div>
       <AllResults
         allResponses={allRes}
         screenSize={screenSize}
         valueClickedBtn={valueClickedBtn}
         isClickedBtn={isClickedBtn}
-        setDefaultClickedBtn={setDefaultClickedBtn}
+        setClickedBtnToFalse={setClickedBtnToFalse}
+        setCurrentSortingValues={setCurrentSortingValues}
       />
     </div>
   );

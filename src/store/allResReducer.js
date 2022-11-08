@@ -1,17 +1,8 @@
-import {defaultValues} from "./couriers.js";
-const {IS_ASCENDING, SORTED_BY} = defaultValues;
-
-const defaultData = {
-  options: {
-    sortedBy: SORTED_BY,
-    isAscending: IS_ASCENDING,
-  },
-  data: [],
-};
+import {defaultData} from "./couriers.js";
 
 export const INITIAL_STATE = {
   dataAllResponses: defaultData,
-  newFilteredData: defaultData,
+  filteredData: defaultData,
   defaultData,
 };
 
@@ -27,10 +18,10 @@ export const allResReducer = (state, action) => {
         ...state,
         dataAllResponses: defaultData,
       };
-    case ACTION_TYPES.SET_NEW_FILTERED_DATA:
+    case ACTION_TYPES.SET_FILTERED_DATA:
       return {
         ...state,
-        newFilteredData: action.payload,
+        filteredData: action.payload,
       };
     default:
       return state;
@@ -40,5 +31,5 @@ export const allResReducer = (state, action) => {
 const ACTION_TYPES = {
   SET_DATA_ALL_RESPONSES: "SET_DATA_ALL_RESPONSES",
   SET_DATA_ALL_RESPONSES_DEFAULT: "SET_DATA_ALL_RESPONSES_DEFAULT",
-  SET_NEW_FILTERED_DATA: "SET_NEW_FILTERED_DATA",
+  SET_FILTERED_DATA: "SET_FILTERED_DATA",
 };

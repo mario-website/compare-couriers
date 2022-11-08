@@ -1,4 +1,4 @@
-import {defaultValues, couriersNamesArr, couriersData} from "./couriers.js";
+import {defaultValues, couriersNamesArr, couriersData, defaultData} from "./couriers.js";
 
 export const INITIAL_STATE = {
   couriersData,
@@ -10,6 +10,7 @@ export const INITIAL_STATE = {
   valueClickedBtn: "",
   isClickedBtn: false,
   tempController: null,
+  defaultData,
 };
 
 export const tableReducer = (state, action) => {
@@ -51,15 +52,15 @@ export const tableReducer = (state, action) => {
         ...state,
         screenSize: action.payload,
       };
-    case ACTION_TYPES.SET_IS_CLICKED_BTN:
+    case ACTION_TYPES.SET_IS_CLICKED_BTN_TO_TRUE:
       return {
         ...state,
-        isClickedBtn: action.payload,
+        isClickedBtn: true,
       };
-    case ACTION_TYPES.SET_IS_CLICKED_BTN_TO_DEFAULT:
+    case ACTION_TYPES.SET_IS_CLICKED_BTN_TO_FALSE:
       return {
         ...state,
-        isClickedBtn: INITIAL_STATE.isClickedBtn,
+        isClickedBtn: false,
       };
     case ACTION_TYPES.SET_VALUE_CLICKED_BTN:
       return {
@@ -84,9 +85,9 @@ const ACTION_TYPES = {
   INCREASE_COUNTER_BY_1: "INCREASE_COUNTER_BY_1",
   SET_WEIGHT_VALUE: "SET_WEIGHT_VALUE",
   SET_SCREEN_SIZE: "SET_SCREEN_SIZE",
-  SET_IS_CLICKED_BTN: "SET_IS_CLICKED_BTN",
   CHANGE_INPUT: "CHANGE_INPUT",
-  SET_IS_CLICKED_BTN_TO_DEFAULT: "SET_IS_CLICKED_BTN_TO_DEFAULT",
+  SET_IS_CLICKED_BTN_TO_TRUE: "SET_IS_CLICKED_BTN_TO_TRUE",
+  SET_IS_CLICKED_BTN_TO_FALSE: "SET_IS_CLICKED_BTN_TO_FALSE",
   SET_VALUE_CLICKED_BTN: "SET_VALUE_CLICKED_BTN",
   SET_TEMP_CONTROLLER: "SET_TEMP_CONTROLLER",
 };

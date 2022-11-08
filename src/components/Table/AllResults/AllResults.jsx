@@ -6,73 +6,89 @@ import {INITIAL_STATE, allResReducer} from "../../../store/allResReducer";
 import {defaultValues} from "../../../store/couriers";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
-const {IS_ASCENDING, SORTED_BY} = defaultValues;
 
 const AllResults = ({
   allResponses,
   screenSize,
   valueClickedBtn,
   isClickedBtn,
-  setDefaultClickedBtn,
+  setClickedBtnToFalse,
+  setCurrentSortingValues,
 }) => {
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
-  const {newFilteredData, dataAllResponses, defaultData} = state;
-  const defValIsAscending = IS_ASCENDING;
+  const {defaultData, filteredData} = state;
+  const defaultOptions = defaultData.options;
+  const defValIsAscending = defaultOptions.isAscending;
+  const [workingData, setWorkingData] = useState(defaultData);
+  const [, setCurrentScreenSize] = useState(screenSize);
 
   useEffect(() => {
     if (allResponses.length) {
       const newData = createNewData(allResponses, defaultValues);
-      //1.
+      //1.0
       //create dataAllResponses with only allResponses using default values
-      dispatch({type: "SET_DATA_ALL_RESPONSES", payload: newData});
-    } else {
-      //in Table.jsx for every click setNewData, setAllResponses([]) is set.
-      dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
+      // dispatch({type: "SET_DATA_ALL_RESPONSES", payload: newData});
+      const newFilteredData = filterData(newData, defaultOptions);
+      dispatch({type: "SET_FILTERED_DATA", payload: newFilteredData});
+      return;
     }
-  }, [allResponses, defaultData]);
+    //in Table.jsx for every click setNewData, setAllResponses([]) is set.
+    dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
+    dispatch({type: "SET_FILTERED_DATA", payload: defaultData});
+    setWorkingData(defaultData);
+  }, [allResponses, defaultData, defaultOptions]);
 
   useEffect(() => {
-    //2.
-    //so every time screenSize or new dataAllResponses.data is set (included sorting),
-    //newFilteredData is reset with the new data.
-    if (dataAllResponses.data.length) {
-      const newData = filterData(dataAllResponses, screenSize);
-      dispatch({type: "SET_NEW_FILTERED_DATA", payload: newData});
+    //2.0 having filteredData.mergedAllData, I can set workingData to show all results
+    //after receiving allResponses, only workingData is sorting or filtered
+    if (filteredData.mergedAllData.length) {
+      let data = {...filteredData};
+      setWorkingData((prevWD) => {
+        setCurrentScreenSize((prevCSS) => {
+          //when screensize is changing, current workingData must be used for sorting: let data = {...filteredData};
+          //otherwise when waiting for all data from all allResponses,
+          //only filteredData.mergedAllData is set, options must be unchanged
+          if (prevCSS !== screenSize)
+            data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
+          return screenSize;
+        });
+        const newData = sorting(data, defValIsAscending, screenSize);
+        return newData;
+      });
     }
-    if (dataAllResponses.data.length === 0) {
-      dispatch({type: "SET_NEW_FILTERED_DATA", payload: defaultData});
-    }
-  }, [defaultData, screenSize, dataAllResponses]);
+  }, [screenSize, defValIsAscending, filteredData, defaultData]);
 
   useEffect(() => {
     const isTrue = isClickedBtn && valueClickedBtn !== "";
     if (isTrue) {
-      dispatch({
-        type: "SET_NEW_FILTERED_DATA",
-        payload: sorting(newFilteredData, defValIsAscending, valueClickedBtn),
+      setWorkingData((prev) => {
+        const newData = sorting(prev, defValIsAscending, screenSize, valueClickedBtn);
+        setCurrentSortingValues(newData.options);
+        return {...prev, ...newData};
       });
-
-      setDefaultClickedBtn();
+      setClickedBtnToFalse();
     }
   }, [
+    screenSize,
     valueClickedBtn,
     defValIsAscending,
     isClickedBtn,
-    setDefaultClickedBtn,
-    newFilteredData,
+    setCurrentSortingValues,
+    setClickedBtnToFalse,
   ]);
 
   const handleDeliveryTime = (e, btn) => {
     e.preventDefault();
-    const filteredAllData = newFilteredData.mergedAllData.filter(
+    const filteredAllData = workingData.mergedAllData.filter(
       (e) => e.deliveryTime === btn
     );
-    const newData = {...newFilteredData, ...{data: filteredAllData}};
+    const newData = {...workingData, ...{data: filteredAllData}};
     const sortedData = sorting(newData, defValIsAscending);
-    dispatch({
-      type: "SET_NEW_FILTERED_DATA",
-      payload: sortedData,
-    });
+    setWorkingData(sortedData);
+    // dispatch({
+    //   type: "SET_NEW_FILTERED_DATA",
+    //   payload: sortedData,
+    // });
   };
 
   return (
@@ -84,7 +100,7 @@ const AllResults = ({
       }}>
       <div>
         {screenSize === SMALL &&
-          newFilteredData.mergedAllData?.map((timeSpeed) => {
+          workingData.mergedAllData?.map((timeSpeed) => {
             const deliveryTimeBtn = timeSpeed.deliveryTime;
             return (
               <button
@@ -95,7 +111,7 @@ const AllResults = ({
             );
           })}
       </div>
-      {newFilteredData.data.map((timeSpeed) => {
+      {workingData.data.map((timeSpeed) => {
         return (
           <div
             key={timeSpeed.id}
@@ -191,7 +207,7 @@ const createNewData = (allResponses, defaultValues) => {
   return returnGetNewData;
 };
 
-const filterData = (allData, screenSize) => {
+const filterData = (allData, options) => {
   const TSD = allData.data[0].timeSpeedData;
   const unique = [...new Set(TSD.map((item) => item.deliveryTime))];
   const newData = unique.map((ele, index) => {
@@ -210,30 +226,38 @@ const filterData = (allData, screenSize) => {
   });
   newData.sort(dynamicSort("deliveryTime"));
 
-  if (screenSize === LARGE) {
-    return {...{options: allData.options}, ...{data: newData}};
-  } else {
-    //default screenSize === ALL
+  const mergedAllData = [...newData];
+  mergedAllData.push(allData.data[0]);
+  mergedAllData.sort(dynamicSort("deliveryTime"));
 
-    const mergedAllData = [...newData];
-    mergedAllData.push(allData.data[0]);
-    mergedAllData.sort(dynamicSort("deliveryTime"));
+  // const lar = {...{options: {...options}}, ...{data: newData}};
+  // console.log(`lar:`, lar);
+  // return lar;
+  // } else {
+  //default screenSize === ALL
 
-    return {
-      ...{options: allData.options},
-      ...{data: allData.data},
-      mergedAllData,
-    };
-  }
+  // }
+  return {
+    ...{options: {...options}},
+    ...{data: allData.data},
+    mergedAllData,
+  };
 };
 
-const sorting = (filteredData, defaultValueIsAscending, sortBy) => {
+const sorting = (filteredData, defaultValueIsAscending, screenSize, sortBy) => {
   //the goal is to sort via sorting button (passed sortBy) or not and
   //return in object filteredData.options current sorting
   //if sortBy is passed then is checking is previous button where the same
   //if where the same reversal sorting is doing, if not defalut sorting is doing
   //if case when not sortBy is passed, then just sort via filteredData.options
-  const {data, options} = filteredData;
+  // console.log(`filteredData:`, filteredData);
+  let data = filteredData.data;
+  if (screenSize === LARGE) {
+    data = filteredData.mergedAllData.filter((e) => e.deliveryTime !== "ALL");
+  } else if (screenSize === SMALL) {
+    data = filteredData.mergedAllData.filter((e) => e.deliveryTime === "ALL");
+  }
+  const {options} = filteredData;
   const {isAscending, sortedBy} = options;
   const isAsc = isSortedByAscending(
     isAscending,
@@ -273,6 +297,7 @@ const sorting = (filteredData, defaultValueIsAscending, sortBy) => {
     ...{data: sortedData},
   };
 
+  // console.log(`returnSorting:`, returnSorting);
   return returnSorting;
 };
 

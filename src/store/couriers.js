@@ -11,6 +11,15 @@ export const defaultValues = {
   SORTED_BY: "price",
 };
 
+export const defaultData = {
+  options: {
+    sortedBy: defaultValues.SORTED_BY,
+    isAscending: defaultValues.IS_ASCENDING,
+  },
+  data: [],
+  mergedAllData: [],
+};
+
 export const couriersNamesArr = [
   {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
   {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
