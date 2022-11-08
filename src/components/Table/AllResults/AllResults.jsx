@@ -38,6 +38,7 @@ const AllResults = ({
     setWorkingData(defaultData);
   }, [allResponses, defaultData, defaultOptions]);
 
+  const [tte, setTte] = useState([]);
   useEffect(() => {
     //2.0 having filteredData.mergedAllData, I can set workingData to show all results
     //after receiving allResponses, only workingData is sorting or filtered
@@ -50,6 +51,7 @@ const AllResults = ({
           //only filteredData.mergedAllData is set, options must be unchanged
           if (prevCSS !== screenSize)
             data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
+          setTte([...filteredData.mergedAllData].find((e) => e.deliveryTime === ALL));
           return screenSize;
         });
         const newData = sorting(data, defValIsAscending, screenSize);
@@ -82,6 +84,7 @@ const AllResults = ({
     const filteredAllData = workingData.mergedAllData.filter(
       (e) => e.deliveryTime === btn
     );
+    setTte(filteredAllData);
     const newData = {...workingData, ...{data: filteredAllData}};
     const sortedData = sorting(newData, defValIsAscending);
     setWorkingData(sortedData);
@@ -99,17 +102,45 @@ const AllResults = ({
         flexDirection: screenSize === SMALL ? "column" : "",
       }}>
       <div>
-        {screenSize === SMALL &&
-          workingData.mergedAllData?.map((timeSpeed) => {
-            const deliveryTimeBtn = timeSpeed.deliveryTime;
-            return (
-              <button
-                key={timeSpeed.id}
-                onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
-                {delTime(deliveryTimeBtn)}
-              </button>
-            );
-          })}
+        {screenSize === SMALL && (
+          <>
+            {workingData.mergedAllData?.map((timeSpeed, i, fullData) => {
+              const deliveryTimeBtn = timeSpeed.deliveryTime;
+              const currentLength = timeSpeed.timeSpeedData.length;
+              const minPrice = timeSpeed.minPrice.toFixed(2);
+              return (
+                <button
+                  key={timeSpeed.id}
+                  onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
+                  <>
+                    <p>{delTime(deliveryTimeBtn)}</p>
+                    <p>{currentLength} FROM</p>
+                    <p>£{minPrice}</p>
+                  </>
+                </button>
+              );
+            })}
+
+            {workingData.data?.map((e, i) => {
+              //when screenSize === SMALL, workingData.data have only one object
+              const allTimeSpeedArray = workingData.mergedAllData.find(
+                (e) => e.deliveryTime === ALL
+              );
+              const showingCount = workingData.data[0]?.timeSpeedData.length;
+              const allItemsCount = allTimeSpeedArray.timeSpeedData.length;
+              const isTrue = showingCount !== allItemsCount;
+              if (isTrue) {
+                return (
+                  <p key={i}>
+                    Showing {showingCount} of {allItemsCount} Services
+                  </p>
+                );
+              } else {
+                return <p key={i}>Showing {showingCount} Services</p>;
+              }
+            })}
+          </>
+        )}
       </div>
       {workingData.data.map((timeSpeed) => {
         return (
@@ -133,10 +164,10 @@ const AllResults = ({
 export default AllResults;
 
 const delTime = (time) => {
-  if (time === FAST) return "Next Day Delivery";
-  if (time === MEDIUM) return "2 Days Delivery";
-  if (time === SLOW) return "3 or more Days Delivery";
-  if (time === ALL) return "All services";
+  if (time === FAST) return "Next Day";
+  if (time === MEDIUM) return "2 Days";
+  if (time === SLOW) return "3 + Days";
+  if (time === ALL) return "All";
 };
 
 const createNewData = (allResponses, defaultValues) => {
