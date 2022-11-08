@@ -87,55 +87,54 @@ const AllResults = ({
     setWorkingData(sortedData);
   };
 
+  const columnGap = 20;
   return (
     <div
       style={{
         display: "flex",
-        columnGap: "20px",
+        columnGap: `${columnGap}px`,
         flexDirection: screenSize === SMALL || screenSize === MEDIUM ? "column" : "",
       }}>
-      <div>
-        {(screenSize === SMALL || screenSize === MEDIUM) && (
-          <>
-            {workingData.mergedAllData?.map((timeSpeed, i, fullData) => {
-              const deliveryTimeBtn = timeSpeed.deliveryTime;
-              const currentLength = timeSpeed.timeSpeedData.length;
-              const minPrice = timeSpeed.minPrice.toFixed(2);
-              return (
-                <button
-                  key={timeSpeed.id}
-                  onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
-                  <>
-                    <p>{delTime(deliveryTimeBtn)}</p>
-                    <p>
-                      {currentLength} FROM £{minPrice}
-                    </p>
-                  </>
-                </button>
-              );
-            })}
-
-            {workingData.data?.map((e, i) => {
-              //when screenSize === SMALL, workingData.data have only one object
-              const allTimeSpeedArray = workingData.mergedAllData.find(
-                (e) => e.deliveryTime === ALL
-              );
-              const showingCount = workingData.data[0]?.timeSpeedData.length;
-              const allItemsCount = allTimeSpeedArray.timeSpeedData.length;
-              const isTrue = showingCount !== allItemsCount;
-              if (isTrue) {
-                return (
-                  <p key={i}>
-                    Showing {showingCount} of {allItemsCount} Services
+      {(screenSize === SMALL || screenSize === MEDIUM) && (
+        <div>
+          {workingData.mergedAllData?.map((timeSpeed, i, fullData) => {
+            const deliveryTimeBtn = timeSpeed.deliveryTime;
+            const currentLength = timeSpeed.timeSpeedData.length;
+            const minPrice = timeSpeed.minPrice.toFixed(2);
+            return (
+              <button
+                key={timeSpeed.id}
+                onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
+                <>
+                  <p>{delTime(deliveryTimeBtn)}</p>
+                  <p>
+                    {currentLength} FROM £{minPrice}
                   </p>
-                );
-              } else {
-                return <p key={i}>Showing {showingCount} Services</p>;
-              }
-            })}
-          </>
-        )}
-      </div>
+                </>
+              </button>
+            );
+          })}
+
+          {workingData.data?.map((e, i) => {
+            //when screenSize === SMALL, workingData.data have only one object
+            const allTimeSpeedArray = workingData.mergedAllData.find(
+              (e) => e.deliveryTime === ALL
+            );
+            const showingCount = workingData.data[0]?.timeSpeedData.length;
+            const allItemsCount = allTimeSpeedArray.timeSpeedData.length;
+            const isTrue = showingCount !== allItemsCount;
+            if (isTrue) {
+              return (
+                <p key={i}>
+                  Showing {showingCount} of {allItemsCount} Services
+                </p>
+              );
+            } else {
+              return <p key={i}>Showing {showingCount} Services</p>;
+            }
+          })}
+        </div>
+      )}
       {workingData.data.map((timeSpeed) => {
         return (
           <div
@@ -144,7 +143,7 @@ const AllResults = ({
             style={{
               display: "flex",
               flexWrap: "wrap",
-              columnGap: "20px",
+              columnGap: `${columnGap}px`,
               height: "-webkit-fill-available",
               width: "-webkit-fill-available",
             }}>
@@ -159,6 +158,7 @@ const AllResults = ({
             <ColumnOfDeliveryTime
               timeSpeedData={timeSpeed.timeSpeedData}
               screenSize={screenSize}
+              columnGap={columnGap}
             />
           </div>
         );

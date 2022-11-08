@@ -4,9 +4,9 @@ import {VARIABLES} from "../../../../store/variables";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
-const ColumnOfDeliveryTime = ({timeSpeedData, screenSize}) => {
+const ColumnOfDeliveryTime = ({timeSpeedData, screenSize, columnGap}) => {
   const width = () => {
-    if (screenSize === MEDIUM) return "calc(50% - 10px)";
+    if (screenSize === MEDIUM) return `calc(50% - ${columnGap / 2}px)`;
     if (screenSize === LARGE || screenSize === SMALL) return "100%";
   };
   return (
