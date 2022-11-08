@@ -6,7 +6,7 @@ const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
 const ColumnOfDeliveryTime = ({timeSpeedData, screenSize}) => {
   const width = () => {
-    if (screenSize === MEDIUM) return "50%";
+    if (screenSize === MEDIUM) return "calc(50% - 10px)";
     if (screenSize === LARGE || screenSize === SMALL) return "100%";
   };
   return (

@@ -144,7 +144,8 @@ const AllResults = ({
             style={{
               display: "flex",
               flexWrap: "wrap",
-              height: "fit-content",
+              columnGap: "20px",
+              height: "-webkit-fill-available",
               width: "-webkit-fill-available",
             }}>
             {screenSize === LARGE && (
