@@ -38,7 +38,6 @@ const AllResults = ({
     setWorkingData(defaultData);
   }, [allResponses, defaultData, defaultOptions]);
 
-  const [tte, setTte] = useState([]);
   useEffect(() => {
     //2.0 having filteredData.mergedAllData, I can set workingData to show all results
     //after receiving allResponses, only workingData is sorting or filtered
@@ -51,7 +50,6 @@ const AllResults = ({
           //only filteredData.mergedAllData is set, options must be unchanged
           if (prevCSS !== screenSize)
             data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
-          setTte([...filteredData.mergedAllData].find((e) => e.deliveryTime === ALL));
           return screenSize;
         });
         const newData = sorting(data, defValIsAscending, screenSize);
@@ -84,14 +82,9 @@ const AllResults = ({
     const filteredAllData = workingData.mergedAllData.filter(
       (e) => e.deliveryTime === btn
     );
-    setTte(filteredAllData);
     const newData = {...workingData, ...{data: filteredAllData}};
     const sortedData = sorting(newData, defValIsAscending);
     setWorkingData(sortedData);
-    // dispatch({
-    //   type: "SET_NEW_FILTERED_DATA",
-    //   payload: sortedData,
-    // });
   };
 
   return (
@@ -99,10 +92,10 @@ const AllResults = ({
       style={{
         display: "flex",
         columnGap: "20px",
-        flexDirection: screenSize === SMALL ? "column" : "",
+        flexDirection: screenSize === SMALL || screenSize === MEDIUM ? "column" : "",
       }}>
       <div>
-        {screenSize === SMALL && (
+        {(screenSize === SMALL || screenSize === MEDIUM) && (
           <>
             {workingData.mergedAllData?.map((timeSpeed, i, fullData) => {
               const deliveryTimeBtn = timeSpeed.deliveryTime;
@@ -114,8 +107,9 @@ const AllResults = ({
                   onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
                   <>
                     <p>{delTime(deliveryTimeBtn)}</p>
-                    <p>{currentLength} FROM</p>
-                    <p>£{minPrice}</p>
+                    <p>
+                      {currentLength} FROM £{minPrice}
+                    </p>
                   </>
                 </button>
               );
@@ -149,11 +143,22 @@ const AllResults = ({
             className={timeSpeed.deliveryTime}
             style={{
               display: "flex",
-              flexDirection: "column",
+              flexWrap: "wrap",
+              height: "fit-content",
               width: "-webkit-fill-available",
             }}>
-            <span>{delTime(timeSpeed.deliveryTime)}</span>
-            <ColumnOfDeliveryTime timeSpeedData={timeSpeed.timeSpeedData} />
+            {screenSize === LARGE && (
+              <span
+                style={{
+                  margin: "0 auto",
+                }}>
+                {delTime(timeSpeed.deliveryTime)}
+              </span>
+            )}
+            <ColumnOfDeliveryTime
+              timeSpeedData={timeSpeed.timeSpeedData}
+              screenSize={screenSize}
+            />
           </div>
         );
       })}
@@ -285,7 +290,7 @@ const sorting = (filteredData, defaultValueIsAscending, screenSize, sortBy) => {
   let data = filteredData.data;
   if (screenSize === LARGE) {
     data = filteredData.mergedAllData.filter((e) => e.deliveryTime !== "ALL");
-  } else if (screenSize === SMALL) {
+  } else if (screenSize === SMALL || screenSize === MEDIUM) {
     data = filteredData.mergedAllData.filter((e) => e.deliveryTime === "ALL");
   }
   const {options} = filteredData;
