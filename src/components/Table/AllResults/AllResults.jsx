@@ -113,13 +113,19 @@ const AllResults = ({
       {(screenSize === SMALL || screenSize === MEDIUM) && (
         <div>
           {/* to show buttons deliveryTimeBtn */}
-          {workingData.mergedAllData?.map((timeSpeed, i, fullData) => {
+          {workingData.mergedAllData?.map((timeSpeed) => {
             const deliveryTimeBtn = timeSpeed.deliveryTime;
             const currentLength = timeSpeed.timeSpeedData.length;
             const minPrice = timeSpeed.minPrice.toFixed(2);
             return (
               <button
                 key={timeSpeed.id}
+                style={{
+                  backgroundColor:
+                    deliveryTimeBtn === workingData.options.deliveryTimeBtn
+                      ? "darkgray"
+                      : "",
+                }}
                 onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
                 <>
                   <p>{delTime(deliveryTimeBtn)}</p>
@@ -132,7 +138,7 @@ const AllResults = ({
           })}
 
           {/* to show how many services */}
-          {workingData.data?.map((e, i) => {
+          {workingData.data?.map((e) => {
             //when screenSize === SMALL, workingData.data have only one object
             const allTimeSpeedArray = workingData.mergedAllData.find(
               (e) => e.deliveryTime === ALL
@@ -142,12 +148,12 @@ const AllResults = ({
             const isTrue = showingCount !== allItemsCount;
             if (isTrue) {
               return (
-                <p key={i}>
+                <p key={e.id}>
                   Showing {showingCount} of {allItemsCount} Services
                 </p>
               );
             } else {
-              return <p key={i}>Showing {showingCount} Services</p>;
+              return <p key={e.id}>Showing {showingCount} Services</p>;
             }
           })}
         </div>
