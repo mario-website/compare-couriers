@@ -21,7 +21,10 @@ const AllResults = ({
   const defValIsAscending = defaultOptions.isAscending;
   const [workingData, setWorkingData] = useState(defaultData);
   const [, setCurrentScreenSize] = useState(screenSize);
-  const [delTimeBtn, setDelTimeBtn] = useState(ALL);
+
+  useEffect(() => {
+    setCurrentSortingValues(workingData.options);
+  }, [setCurrentSortingValues, workingData.options]);
 
   useEffect(() => {
     if (allResponses.length) {
@@ -53,19 +56,16 @@ const AllResults = ({
             data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
           return screenSize;
         });
-        const newData = sorting(data, defValIsAscending, screenSize, delTimeBtn);
-        setCurrentSortingValues(newData.options);
+        const newData = sorting(
+          data,
+          defValIsAscending,
+          screenSize,
+          prevWD.options.deliveryTimeBtn
+        );
         return newData;
       });
     }
-  }, [
-    screenSize,
-    defValIsAscending,
-    filteredData,
-    defaultData,
-    delTimeBtn,
-    setCurrentSortingValues,
-  ]);
+  }, [screenSize, defValIsAscending, filteredData, defaultData]);
 
   useEffect(() => {
     const isTrue = isClickedBtn && valueClickedBtn !== "";
@@ -75,10 +75,9 @@ const AllResults = ({
           prev,
           defValIsAscending,
           screenSize,
-          delTimeBtn,
+          prev.options.deliveryTimeBtn,
           valueClickedBtn
         );
-        setCurrentSortingValues(newData.options);
         return {...prev, ...newData};
       });
       setClickedBtnToFalse();
@@ -90,14 +89,10 @@ const AllResults = ({
     isClickedBtn,
     setCurrentSortingValues,
     setClickedBtnToFalse,
-    delTimeBtn,
   ]);
 
   const handleDeliveryTime = (event, deliveryTimeBtn) => {
     event.preventDefault();
-
-    setDelTimeBtn(deliveryTimeBtn);
-    console.log(`workingData:`, workingData);
     const sortedData = sorting(
       workingData,
       defValIsAscending,
@@ -105,7 +100,6 @@ const AllResults = ({
       deliveryTimeBtn
     );
     setWorkingData(sortedData);
-    console.log(`sortedData:`, sortedData);
   };
 
   const columnGap = 20;
@@ -118,6 +112,7 @@ const AllResults = ({
       }}>
       {(screenSize === SMALL || screenSize === MEDIUM) && (
         <div>
+          {/* to show buttons deliveryTimeBtn */}
           {workingData.mergedAllData?.map((timeSpeed, i, fullData) => {
             const deliveryTimeBtn = timeSpeed.deliveryTime;
             const currentLength = timeSpeed.timeSpeedData.length;
@@ -136,6 +131,7 @@ const AllResults = ({
             );
           })}
 
+          {/* to show how many services */}
           {workingData.data?.map((e, i) => {
             //when screenSize === SMALL, workingData.data have only one object
             const allTimeSpeedArray = workingData.mergedAllData.find(
@@ -306,7 +302,7 @@ const sorting = (
   filteredData,
   defaultValueIsAscending,
   screenSize,
-  deliveryTime,
+  deliveryTimeBtn,
   sortBy
 ) => {
   //1.0 if sortBy is passed then is checking is previous button where the same
@@ -314,10 +310,11 @@ const sorting = (
   //1.0.2 if not defalut sorting is doing
   //1.1 if case when not sortBy is passed, then just sort via filteredData.options
   //2. return in object returnSorting.filteredData.options current sorting
-  let data = filteredData.mergedAllData.filter((e) => e.deliveryTime === deliveryTime);
-  if (screenSize === LARGE) {
-    data = filteredData.mergedAllData.filter((e) => e.deliveryTime !== "ALL");
-  }
+  const data =
+    screenSize === LARGE
+      ? filteredData.mergedAllData.filter((e) => e.deliveryTime !== "ALL")
+      : filteredData.mergedAllData.filter((e) => e.deliveryTime === deliveryTimeBtn);
+
   const {options} = filteredData;
   const {isAscending, sortedBy} = options;
   const isAsc = isSortedByAscending(
@@ -353,6 +350,7 @@ const sorting = (
       options: {
         isAscending: isAsc,
         sortedBy: sortBy ? sortBy : sortedBy,
+        deliveryTimeBtn,
       },
     },
     ...{data: sortedData},

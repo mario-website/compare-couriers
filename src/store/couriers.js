@@ -1,5 +1,5 @@
 import {VARIABLES} from "./variables";
-const {PARCEL2GO, PARCEL_MONKEY} = VARIABLES;
+const {PARCEL2GO, PARCEL_MONKEY, ALL} = VARIABLES;
 
 export const defaultValues = {
   VALUE: 0,
@@ -15,6 +15,7 @@ export const defaultData = {
   options: {
     sortedBy: defaultValues.SORTED_BY,
     isAscending: defaultValues.IS_ASCENDING,
+    deliveryTimeBtn: ALL,
   },
   data: [],
   mergedAllData: [],
