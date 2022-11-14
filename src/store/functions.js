@@ -1,3 +1,5 @@
+import {countryCodes} from "./countryCodes";
+
 export const dynamicSort = (property) => {
   if (property === "price") {
     return (a, b) => a[property] - b[property];
@@ -29,4 +31,10 @@ export const isNumeric = (str) => {
     !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
     !isNaN(parseFloat(str))
   ); // ...and ensure strings of whitespace fail
+};
+
+export const convertIso2ToIso3 = (iso2) => {
+  if (iso2) {
+    return countryCodes.find((e) => e["ISO2 CODE"] === iso2)["ISO3 CODE"];
+  }
 };

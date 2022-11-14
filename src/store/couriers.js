@@ -1,4 +1,6 @@
 import {VARIABLES} from "./variables";
+import {convertIso2ToIso3} from "./functions";
+
 const {PARCEL2GO, PARCEL_MONKEY, ALL} = VARIABLES;
 
 export const defaultValues = {
@@ -9,6 +11,10 @@ export const defaultValues = {
   HEIGHT: 7,
   IS_ASCENDING: true,
   SORTED_BY: "price",
+  COUNTRY_FROM: "GB",
+  COUNTRY_TO: "GB",
+  POSTCODE_FROM: "BL00AA",
+  POSTCODE_TO: "BL00AA",
 };
 
 export const defaultData = {
@@ -30,7 +36,17 @@ export const getObjName = (companyName) =>
   couriersNamesArr.find((name) => name.companyName === companyName);
 
 export const couriersData = (values) => {
-  const {VALUE, WEIGHT, LENGTH, WIDTH, HEIGHT} = values;
+  const {
+    VALUE,
+    WEIGHT,
+    LENGTH,
+    WIDTH,
+    HEIGHT,
+    COUNTRY_FROM,
+    COUNTRY_TO,
+    POSTCODE_FROM,
+    POSTCODE_TO,
+  } = values;
   return [
     {
       names: getObjName(PARCEL2GO),
@@ -60,10 +76,10 @@ export const couriersData = (values) => {
           },
           body: JSON.stringify({
             CollectionAddress: {
-              Country: "GBR",
+              Country: convertIso2ToIso3(COUNTRY_FROM),
             },
             DeliveryAddress: {
-              Country: "GBR",
+              Country: convertIso2ToIso3(COUNTRY_TO),
             },
             Parcels: [
               {
@@ -90,8 +106,8 @@ export const couriersData = (values) => {
             token: process.env.REACT_APP_PARCELMONKEY_API_KEY,
           },
           body: JSON.stringify({
-            origin: "GB",
-            destination: "GB",
+            origin: COUNTRY_FROM,
+            destination: COUNTRY_TO,
             boxes: [
               {
                 length: LENGTH,
@@ -101,24 +117,24 @@ export const couriersData = (values) => {
               },
             ],
             goods_value: 0,
-            // sender: {
-            //   name: "Rich",
-            //   phone: "01234567890",
-            //   address1: "Unit 21 Tollgate",
-            //   town: "purfleet",
-            //   county: "essex",
-            //   postcode: "RM19 1ZY",
-            // },
-            // recipient: {
-            //   name: "Nicola",
-            //   phone: "01234567890",
-            //   email: "nicola@example.com",
-            //   address1: "2 Baker's Yard",
-            //   address2: "",
-            //   town: "purfleet",
-            //   county: "essex",
-            //   postcode: "RM19 1ZY",
-            // },
+            sender: {
+              name: "Rich",
+              phone: "01234567890",
+              address1: "Unit 21 Tollgate",
+              town: "Purfleet",
+              county: "essex",
+              postcode: POSTCODE_FROM,
+            },
+            recipient: {
+              name: "Nicola",
+              phone: "01234567890",
+              email: "nicola@example.com",
+              address1: "2 Baker's Yard",
+              address2: "",
+              town: "purfleet",
+              county: "essex",
+              postcode: POSTCODE_TO,
+            },
           }),
         },
       },
