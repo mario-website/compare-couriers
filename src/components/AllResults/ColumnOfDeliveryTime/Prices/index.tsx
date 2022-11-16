@@ -1,9 +1,18 @@
 import React from "react";
 
-const Prices = ({serviceData}) => {
+interface Props {
+  serviceData: []
+}
+
+const Prices: React.FC<Props> = ({serviceData}) => {
+  interface items {
+    companyName: string,
+    courierName: string,
+    price: string | number,
+  }
   return (
     <>
-      {serviceData.map((company) => {
+      {serviceData.map((company: items) => {
         const id = company.companyName + company.courierName + company.price;
         return (
           <div key={id} style={{background: "lightblue"}}>

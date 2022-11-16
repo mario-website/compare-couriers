@@ -3,15 +3,30 @@ import Prices from "./Prices";
 import {VARIABLES} from "../../../utils/variables";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
+interface Props {
+  timeSpeedData: [],
+  screenSize: string,
+  columnGap: number,
+}
 
-const ColumnOfDeliveryTime = ({timeSpeedData, screenSize, columnGap}) => {
-  const width = () => {
-    if (screenSize === MEDIUM) return `calc(50% - ${columnGap / 2}px)`;
+const ColumnOfDeliveryTime: React.FC<Props>  = ({timeSpeedData, screenSize, columnGap}) => {
+  const width = (): string => {
     if (screenSize === LARGE || screenSize === SMALL) return "100%";
+    else {
+      // if (screenSize === MEDIUM) return `calc(50% - ${columnGap / 2}px)`;
+      return `calc(50% - ${columnGap / 2}px)`
+    }
   };
+
+  interface items {
+    id: string,
+    serviceName: string,
+    serviceData: [],
+  }
+
   return (
     <>
-      {timeSpeedData.map((service) => {
+      {timeSpeedData.map((service: items) => {
         return (
           <div
             key={service.id}
