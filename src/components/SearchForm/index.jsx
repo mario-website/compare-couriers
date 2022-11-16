@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useReducer} from "react";
 import InputForm from "./InputForm";
-import {VARIABLES} from "../../utils/variables.js";
+import {VARIABLES} from "../../utils/variables.tsx";
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
 const ParcelValues = ({useReducerTable, setNewData}) => {

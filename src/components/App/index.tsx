@@ -1,13 +1,13 @@
 import React from "react";
+import Table from "../Table";
 import "./style.scss";
-import Table from "../Table/index.jsx";
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="App">
       <Table />
     </div>
   );
-}
+};
 
 export default App;

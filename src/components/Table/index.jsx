@@ -3,7 +3,7 @@ import {INITIAL_STATE, tableReducer} from "./reducer.js";
 import AllResults from "../AllResults/index.jsx";
 
 import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
-import {VARIABLES} from "../../utils/variables.js";
+import {VARIABLES} from "../../utils/variables.tsx";
 import ParcelValues from "../SearchForm/index.jsx";
 import {useBoolean} from "./hooks";
 
