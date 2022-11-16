@@ -1,5 +1,5 @@
 import {VARIABLES} from "./variables";
-import {convertIso2ToIso3} from "./functions";
+import {convertIso2ToIso3} from "./utils";
 
 const {PARCEL2GO, PARCEL_MONKEY, ALL} = VARIABLES;
 

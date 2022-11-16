@@ -1,26 +1,28 @@
 import React, {useState, useEffect, useReducer} from "react";
-import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime/ColumnOfDeliveryTime";
-import {VARIABLES} from "../../../store/variables";
-import {dynamicSort} from "../../../store/functions";
-import {INITIAL_STATE, allResReducer} from "../../../store/allResReducer";
-import {defaultValues} from "../../../store/couriers";
+import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime";
+import {VARIABLES} from "../../utils/variables";
+import {dynamicSort} from "../../utils/utils";
+import {INITIAL_STATE, allResReducer} from "./reducer";
+import {defaultValues} from "../../utils/couriersFetchData";
+import {useScreenSize} from "./hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
 const AllResults = ({
   allResponses,
-  screenSize,
   valueClickedBtn,
   isClickedBtn,
   setClickedBtnToFalse,
   setCurrentSortingValues,
 }) => {
+  const [screenSize, prevScreenSize] = useScreenSize();
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData, filteredData} = state;
   const defaultOptions = defaultData.options;
   const defValIsAscending = defaultOptions.isAscending;
   const [workingData, setWorkingData] = useState(defaultData);
   const [, setCurrentScreenSize] = useState(screenSize);
+  // const [screenSize, setScreenSize] = useState(useScreenSize);
 
   useEffect(() => {
     setCurrentSortingValues(workingData.options);

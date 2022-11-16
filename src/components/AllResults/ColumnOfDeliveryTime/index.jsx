@@ -1,6 +1,6 @@
 import React from "react";
-import Prices from "./Prices/Prices";
-import {VARIABLES} from "../../../../store/variables";
+import Prices from "./Prices";
+import {VARIABLES} from "../../../utils/variables";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 

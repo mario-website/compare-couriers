@@ -1,4 +1,9 @@
-import {defaultValues, couriersNamesArr, couriersData, defaultData} from "./couriers.js";
+import {
+  defaultValues,
+  couriersNamesArr,
+  couriersData,
+  defaultData,
+} from "../../utils/couriersFetchData.js";
 
 export const INITIAL_STATE = {
   couriersData,
@@ -6,7 +11,6 @@ export const INITIAL_STATE = {
   currentValues: defaultValues,
   fetchCounter: 0,
   allRes: [],
-  screenSize: "",
   valueClickedBtn: "",
   isClickedBtn: false,
   tempController: null,
@@ -47,11 +51,7 @@ export const tableReducer = (state, action) => {
         ...state,
         fetchCounter: state.fetchCounter + 1,
       };
-    case ACTION_TYPES.SET_SCREEN_SIZE:
-      return {
-        ...state,
-        screenSize: action.payload,
-      };
+
     case ACTION_TYPES.SET_IS_CLICKED_BTN_TO_TRUE:
       return {
         ...state,
@@ -84,7 +84,6 @@ const ACTION_TYPES = {
   INCREASE_FETCH_COUNTER_BY_1: "INCREASE_FETCH_COUNTER_BY_1",
   INCREASE_COUNTER_BY_1: "INCREASE_COUNTER_BY_1",
   SET_WEIGHT_VALUE: "SET_WEIGHT_VALUE",
-  SET_SCREEN_SIZE: "SET_SCREEN_SIZE",
   CHANGE_INPUT: "CHANGE_INPUT",
   SET_IS_CLICKED_BTN_TO_TRUE: "SET_IS_CLICKED_BTN_TO_TRUE",
   SET_IS_CLICKED_BTN_TO_FALSE: "SET_IS_CLICKED_BTN_TO_FALSE",

@@ -1,30 +1,29 @@
 import React, {useState, useReducer, useLayoutEffect, useEffect} from "react";
-import {INITIAL_STATE, tableReducer} from "../../store/tableReducer.js";
-import AllResults from "./AllResults/AllResults.jsx";
+import {INITIAL_STATE, tableReducer} from "./reducer.js";
+import AllResults from "../AllResults/index.jsx";
 
-import {courierNameF, deliveryTimeF, serviceNameF} from "../../store/normalizerNames";
-import {VARIABLES} from "../../store/variables.js";
-import ParcelValues from "./SearchForm/ParcelValues.jsx";
+import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
+import {VARIABLES} from "../../utils/variables.js";
+import ParcelValues from "../SearchForm/index.jsx";
+import {useBoolean} from "./hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
 const Table = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
   const {
-    screenSize,
     couriersData,
     currentValues,
     fetchCounter,
     allRes,
     error,
     valueClickedBtn,
-    isClickedBtn,
     tempController,
     defaultData,
   } = state;
   //2.0
-  const [width, height] = useWindowSize();
   const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
+  const isClickedBtn = useBoolean(false);
 
   const setNewData = (e) => {
     e.preventDefault();
@@ -32,18 +31,10 @@ const Table = () => {
     handleFetchNewData(tempController, dispatch, couriersData, currentValues);
   };
 
-  useEffect(() => {
-    //3.0
-    dispatch({type: "SET_SCREEN_SIZE", payload: getScreenSize(width)});
-  }, [width]);
-
   const setSorting = (item) => {
-    dispatch({type: "SET_IS_CLICKED_BTN_TO_TRUE"});
+    // dispatch({type: "SET_IS_CLICKED_BTN_TO_TRUE"});
+    isClickedBtn.setTrue();
     dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
-  };
-
-  const setClickedBtnToFalse = () => {
-    dispatch({type: "SET_IS_CLICKED_BTN_TO_FALSE"});
   };
 
   return (
@@ -65,15 +56,14 @@ const Table = () => {
       </div>
       <div>
         <span>fetchCounter:{fetchCounter}</span>
-        <div>sortedBy:{currentSortingValues.sortedBy}</div>
-        <div>isAscending :{currentSortingValues.isAscending ? "true" : "false"}</div>
+        <div>sortedBy: {currentSortingValues.sortedBy}</div>
+        <div>isAscending: {currentSortingValues.isAscending.toString()}</div>
       </div>
       <AllResults
         allResponses={allRes}
-        screenSize={screenSize}
         valueClickedBtn={valueClickedBtn}
-        isClickedBtn={isClickedBtn}
-        setClickedBtnToFalse={setClickedBtnToFalse}
+        isClickedBtn={isClickedBtn.value}
+        setClickedBtnToFalse={isClickedBtn.setFalse}
         setCurrentSortingValues={setCurrentSortingValues}
       />
     </div>
@@ -225,27 +215,4 @@ const formattingData = (companyName, data, dimension) => {
       break;
   }
   return formatedData;
-};
-//2.0
-const useWindowSize = () => {
-  const [size, setSize] = useState([0, 0]);
-  useLayoutEffect(() => {
-    //to not setSize for every window change, added small delay 100ms for
-    //reading and set curent window.innerWidth and window.innerHeight
-    //founded delay at https://stackoverflow.com/a/63010184
-    //3.1
-    const withDelayUpdate = () => {
-      setSize([window.innerWidth, window.innerHeight]);
-    };
-    withDelayUpdate();
-    window.addEventListener("resize", withDelayUpdate);
-    return () => window.removeEventListener("resize", withDelayUpdate);
-  }, []);
-  return size;
-};
-//3.0
-const getScreenSize = (width) => {
-  if (width < 650) return SMALL;
-  if (width >= 650 && width < 850) return MEDIUM;
-  if (width >= 850) return LARGE;
 };

@@ -1,4 +1,4 @@
-export const countryCodes = [
+const countryCodes = [
   {
     "OFFICIAL LANG CODE": "EN",
     "ISO2 CODE": "KH",
@@ -3383,3 +3383,4 @@ export const countryCodes = [
     geo_point_2d: "11.7639871446, 122.874831814",
   },
 ];
+export default countryCodes;

@@ -1,4 +1,4 @@
-import {countryCodes} from "./countryCodes";
+import countryCodes from "./countryCodes";
 
 export const dynamicSort = (property) => {
   if (property === "price") {

@@ -1,6 +1,6 @@
 import React from "react";
-import "./App.css";
-import Table from "./components/Table/Table.jsx";
+import "./style.scss";
+import Table from "../Table/index.jsx";
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-import {defaultData} from "./couriers.js";
+import {defaultData} from "../../utils/couriersFetchData.js";
 
 export const INITIAL_STATE = {
   dataAllResponses: defaultData,
