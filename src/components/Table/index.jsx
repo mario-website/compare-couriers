@@ -1,10 +1,10 @@
 import React, {useState, useReducer, useLayoutEffect, useEffect} from "react";
-import {INITIAL_STATE, tableReducer} from "./reducer.js";
-import AllResults from "../AllResults/index.jsx";
+import {INITIAL_STATE, tableReducer} from "./reducer";
+import AllResults from "../AllResults/index";
 
 import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
-import {VARIABLES} from "../../utils/variables.tsx";
-import ParcelValues from "../SearchForm/index.jsx";
+import {VARIABLES} from "../../utils/variables";
+import ParcelValues from "../SearchForm/index";
 import {useBoolean} from "./hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;

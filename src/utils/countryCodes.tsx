@@ -1,4 +1,20 @@
-const countryCodes = [
+interface CountryCode {
+  "OFFICIAL LANG CODE": string;
+  "ISO2 CODE": string;
+  "ISO3 CODE": string;
+  "ONU CODE": string;
+  "IS ILOMEMBER": string;
+  "IS RECEIVING QUEST": string;
+  "LABEL EN": string;
+  "LABEL FR": string;
+  "LABEL SP": string;
+  "Geo Shape"?: string;
+  geo_point_2d?: string;
+}
+
+interface CountryCodes extends Array<CountryCode> {}
+
+const countryCodes: CountryCodes = [
   {
     "OFFICIAL LANG CODE": "EN",
     "ISO2 CODE": "KH",

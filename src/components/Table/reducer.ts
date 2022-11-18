@@ -3,9 +3,25 @@ import {
   couriersNamesArr,
   couriersData,
   defaultData,
-} from "../../utils/couriersFetchData.js";
+  DefaultValues,
+  ReturnCouriersData,
+  CouriersNamesArr,
+  DefaultData,
+} from "../../utils/couriersFetchData";
 
-export const INITIAL_STATE = {
+interface Initial_State {
+  couriersData: (values: DefaultValues) => ReturnCouriersData;
+  couriersNamesArr: CouriersNamesArr;
+  currentValues: DefaultValues;
+  fetchCounter: number;
+  allRes: [];
+  valueClickedBtn: String;
+  isClickedBtn: Boolean;
+  tempController: null;
+  defaultData: DefaultData;
+}
+
+export const INITIAL_STATE: Initial_State = {
   couriersData,
   couriersNamesArr,
   currentValues: defaultValues,
@@ -17,22 +33,25 @@ export const INITIAL_STATE = {
   defaultData,
 };
 
-export const tableReducer = (state, action) => {
+export const tableReducer = (
+  state: Initial_State,
+  action: {type: string; payload: any}
+) => {
   switch (action.type) {
     case ACTION_TYPES.SET_TO_DEFAULT_FETCH_COUNTER:
       return {
         ...state,
-        fetchCounter: INITIAL_STATE.fetchCounter,
+        ...{fetchCounter: INITIAL_STATE.fetchCounter},
       };
     case ACTION_TYPES.SET_TO_DEFAULT_ALL_RES:
       return {
         ...state,
-        allRes: INITIAL_STATE.allRes,
+        ...{allRes: INITIAL_STATE.allRes},
       };
     case ACTION_TYPES.SET_ALL_RESPONSES:
       return {
         ...state,
-        allRes: [...state.allRes, ...action.payload],
+        ...{allRes: [...state.allRes, ...action.payload]},
       };
     case ACTION_TYPES.CHANGE_INPUT:
       return {
@@ -49,7 +68,7 @@ export const tableReducer = (state, action) => {
     case ACTION_TYPES.INCREASE_FETCH_COUNTER_BY_1:
       return {
         ...state,
-        fetchCounter: state.fetchCounter + 1,
+        ...{fetchCounter: state.fetchCounter + 1},
       };
 
     case ACTION_TYPES.SET_IS_CLICKED_BTN_TO_TRUE:

@@ -1,15 +1,12 @@
 import React from "react";
 
-const InputCountry = props => {
+const InputCountry = (props) => {
   return (
     <div
     // className={this.props.nameClass}
     >
       <label>{props.labelName}</label>
-      <select
-        onChange={event => props.sendValue(event.target.value)}
-        defaultValue="GB"
-      >
+      <select onChange={(event) => props.sendValue(event.target.value)} defaultValue="GB">
         <option value="AF">Afghanistan</option>
         <option value="AX">Åland Islands</option>
         <option value="AL">Albania</option>

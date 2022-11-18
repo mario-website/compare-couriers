@@ -5,7 +5,7 @@ const {SLOW, MEDIUM, FAST} = VARIABLES;
 // when the function is called in the main file.
 // Example: concatenameNames('John,'Doe');
 
-export const courierNameF = (courierName, courier) => {
+export const courierNameF = (courierName: string, courier: string) => {
   let output = "";
 
   if (["MyHermes", "Hermes"].includes(courierName)) {
@@ -94,7 +94,7 @@ export const courierNameF = (courierName, courier) => {
   return output;
 };
 
-export const deliveryTimeF = (deliveryTime, courier) => {
+export const deliveryTimeF = (deliveryTime: string, courier: string) => {
   let output = "";
 
   if (
@@ -153,7 +153,7 @@ export const deliveryTimeF = (deliveryTime, courier) => {
   }
   return output;
 };
-export const serviceNameF = (serviceName, courier) => {
+export const serviceNameF = (serviceName: string, courier: string) => {
   let output = "";
 
   if (
@@ -440,7 +440,7 @@ export const serviceNameF = (serviceName, courier) => {
   }
   return output;
 };
-export const courierNameP4D = (courierName) => {
+export const courierNameP4D = (courierName: string) => {
   let output = "";
 
   if (

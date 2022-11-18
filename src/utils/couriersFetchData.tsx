@@ -2,8 +2,21 @@ import {VARIABLES} from "./variables";
 import {convertIso2ToIso3} from "./utils";
 
 const {PARCEL2GO, PARCEL_MONKEY, ALL} = VARIABLES;
+export interface DefaultValues {
+  VALUE: number;
+  WEIGHT: number;
+  LENGTH: number;
+  WIDTH: number;
+  HEIGHT: number;
+  IS_ASCENDING: boolean;
+  SORTED_BY: string;
+  COUNTRY_FROM: string;
+  COUNTRY_TO: string;
+  POSTCODE_FROM: string;
+  POSTCODE_TO: string;
+}
 
-export const defaultValues = {
+export const defaultValues: DefaultValues = {
   VALUE: 0,
   WEIGHT: 10,
   LENGTH: 9,
@@ -17,7 +30,17 @@ export const defaultValues = {
   POSTCODE_TO: "BL00AA",
 };
 
-export const defaultData = {
+export interface DefaultData {
+  options: {
+    sortedBy: string;
+    isAscending: boolean;
+    deliveryTimeBtn: string;
+  };
+  data: [];
+  mergedAllData: [];
+}
+
+export const defaultData: DefaultData = {
   options: {
     sortedBy: defaultValues.SORTED_BY,
     isAscending: defaultValues.IS_ASCENDING,
@@ -26,16 +49,47 @@ export const defaultData = {
   data: [],
   mergedAllData: [],
 };
+interface CouriersNames {
+  apiUrl: string;
+  companyName: string;
+}
+export interface CouriersNamesArr extends Array<CouriersNames> {}
 
-export const couriersNamesArr = [
+export const couriersNamesArr: CouriersNamesArr = [
   {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
   {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
 ];
 
-export const getObjName = (companyName) =>
+export const getObjName = (companyName: string) =>
   couriersNamesArr.find((name) => name.companyName === companyName);
 
-export const couriersData = (values) => {
+interface CourierData {
+  names: CouriersNames | undefined;
+  getToken?: {
+    url: string;
+    options: {
+      method: string;
+      headers: {
+        Accept: string;
+        "User-Agent": string;
+        "Content-Type": string;
+      };
+      body: string;
+    };
+  };
+  getData: {
+    url: string;
+    options: {
+      method: string;
+      headers: {};
+      body: string;
+    };
+  };
+}
+
+export interface ReturnCouriersData extends Array<CourierData> {}
+
+export const couriersData = (values: DefaultValues) => {
   const {
     VALUE,
     WEIGHT,
@@ -47,7 +101,8 @@ export const couriersData = (values) => {
     POSTCODE_FROM,
     POSTCODE_TO,
   } = values;
-  return [
+
+  const returnCouriersData: ReturnCouriersData = [
     {
       names: getObjName(PARCEL2GO),
       getToken: {
@@ -140,4 +195,5 @@ export const couriersData = (values) => {
       },
     },
   ];
+  return returnCouriersData;
 };

@@ -1,23 +1,23 @@
 import React, {useReducer, useEffect} from "react";
 
 interface Dispatch {
-  type: string,
+  type: string;
   payload: {
-    name: string,
-    value: string | number
-  }
+    name: string;
+    value: string | number;
+  };
 }
 
 interface Props {
-  labelName: string,
-  placeholder: string,
-  name: string,
+  labelName: string;
+  placeholder: string;
+  name: string;
   useReducerTable: {
-    dispatch: ({type, payload}: Dispatch) => void,
-    stateCurrentValues: {[key: string]: any}
-  } 
+    dispatch: ({type, payload}: Dispatch) => void;
+    stateCurrentValues: {[key: string]: any};
+  };
 }
-const InputForm : React.FC<Props> = ({labelName, placeholder, name, useReducerTable}) => {
+const InputForm: React.FC<Props> = ({labelName, placeholder, name, useReducerTable}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     useReducerTable.dispatch({
       type: "CHANGE_INPUT",
@@ -33,7 +33,7 @@ const InputForm : React.FC<Props> = ({labelName, placeholder, name, useReducerTa
         {labelName}
         <input
           type="text"
-          onChange={(e) =>handleChange(e)}
+          onChange={(e) => handleChange(e)}
           placeholder={placeholder}
           value={useReducerTable.stateCurrentValues[name]}
         />
