@@ -63,7 +63,6 @@ const Table = () => {
         allResponses={allRes}
         valueClickedBtn={valueClickedBtn}
         isClickedBtn={isClickedBtn.value}
-        setClickedBtnToFalse={isClickedBtn.setFalse}
         setCurrentSortingValues={setCurrentSortingValues}
       />
     </div>

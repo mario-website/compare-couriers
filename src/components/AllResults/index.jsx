@@ -12,7 +12,6 @@ const AllResults = ({
   allResponses,
   valueClickedBtn,
   isClickedBtn,
-  setClickedBtnToFalse,
   setCurrentSortingValues,
 }) => {
   const [screenSize, prevScreenSize] = useScreenSize();
@@ -90,7 +89,6 @@ const AllResults = ({
     defaultData,
     isClickedBtn,
     valueClickedBtn,
-    setClickedBtnToFalse,
   ]);
 
   // useEffect(() => {
