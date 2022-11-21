@@ -33,7 +33,7 @@ const Table = () => {
 
   const setSorting = (item) => {
     // dispatch({type: "SET_IS_CLICKED_BTN_TO_TRUE"});
-    isClickedBtn.setTrue();
+    isClickedBtn.toggle();
     dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
   };
 

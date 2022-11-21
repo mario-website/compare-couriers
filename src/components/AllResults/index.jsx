@@ -47,9 +47,11 @@ const AllResults = ({
   useEffect(() => {
     //2.0 having filteredData.mergedAllData, I can set workingData to show all results
     //after receiving allResponses, only workingData is sorting or filtered
+    const isTrue = isClickedBtn && valueClickedBtn !== "";
+
     if (filteredData.mergedAllData.length) {
-      let data = {...filteredData};
       setWorkingData((prevWD) => {
+        let data = {...filteredData};
         setCurrentScreenSize((prevCSS) => {
           //when screensize is changing, current workingData must be used for sorting: let data = {...filteredData};
           //otherwise when waiting for all data from all allResponses,
@@ -58,39 +60,48 @@ const AllResults = ({
             data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
           return screenSize;
         });
+        // if (isTrue) {
+        //   setWorkingData((prev) => {
+        //     const newData = sorting(
+        //       prev,
+        //       defValIsAscending,
+        //       screenSize,
+        //       prev.options.deliveryTimeBtn,
+        //       valueClickedBtn,
+        //     );
+        //     return newData;
+        //   });
+        // }
+        // isTrue && setClickedBtnToFalse();
         const newData = sorting(
           data,
           defValIsAscending,
           screenSize,
-          prevWD.options.deliveryTimeBtn
+          prevWD.options.deliveryTimeBtn,
+          isTrue ? valueClickedBtn : null
         );
         return newData;
       });
-    }
-  }, [defValIsAscending, filteredData, defaultData]);
-
-  useEffect(() => {
-    const isTrue = isClickedBtn && valueClickedBtn !== "";
-    if (isTrue) {
-      setWorkingData((prev) => {
-        const newData = sorting(
-          prev,
-          defValIsAscending,
-          screenSize,
-          prev.options.deliveryTimeBtn,
-          valueClickedBtn
-        );
-        return newData;
-      });
-      setClickedBtnToFalse();
     }
   }, [
     screenSize,
-    valueClickedBtn,
     defValIsAscending,
+    filteredData,
+    defaultData,
     isClickedBtn,
+    valueClickedBtn,
     setClickedBtnToFalse,
   ]);
+
+  // useEffect(() => {
+
+  // }, [
+  //   screenSize,
+  //   valueClickedBtn,
+  //   defValIsAscending,
+  //   isClickedBtn,
+  //   setClickedBtnToFalse,
+  // ]);
 
   const handleDeliveryTime = (event, deliveryTimeBtn) => {
     event.preventDefault();
