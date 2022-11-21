@@ -90,7 +90,6 @@ const AllResults = ({
     defValIsAscending,
     isClickedBtn,
     setCurrentSortingValues,
-    setClickedBtnToFalse,
   ]);
 
   const handleDeliveryTime = (event, deliveryTimeBtn) => {
