@@ -67,7 +67,7 @@ const AllResults = ({
         return newData;
       });
     }
-  }, [screenSize, defValIsAscending, filteredData, defaultData]);
+  }, [defValIsAscending, filteredData, defaultData]);
 
   useEffect(() => {
     const isTrue = isClickedBtn && valueClickedBtn !== "";
