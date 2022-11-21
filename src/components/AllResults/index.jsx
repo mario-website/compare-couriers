@@ -80,7 +80,7 @@ const AllResults = ({
           prev.options.deliveryTimeBtn,
           valueClickedBtn
         );
-        return {...prev, ...newData};
+        return newData;
       });
       setClickedBtnToFalse();
     }
@@ -89,7 +89,7 @@ const AllResults = ({
     valueClickedBtn,
     defValIsAscending,
     isClickedBtn,
-    setCurrentSortingValues,
+    setClickedBtnToFalse,
   ]);
 
   const handleDeliveryTime = (event, deliveryTimeBtn) => {
