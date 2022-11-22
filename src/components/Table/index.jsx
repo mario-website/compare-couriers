@@ -24,7 +24,7 @@ const Table = () => {
   //2.0
   const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
   const isClickedBtn = useBoolean(false);
-
+  const [valClickedSoring, setValClickedSoring] = useState("");
   const setNewData = (e) => {
     e.preventDefault();
     //1.0
@@ -32,9 +32,12 @@ const Table = () => {
   };
 
   const setSorting = (item) => {
+    // e.preventDefault();
+    setValClickedSoring(item);
+
     // dispatch({type: "SET_IS_CLICKED_BTN_TO_TRUE"});
-    isClickedBtn.toggle();
-    dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
+    isClickedBtn.setTrue();
+    // dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
   };
 
   return (
@@ -62,7 +65,9 @@ const Table = () => {
       <AllResults
         allResponses={allRes}
         valueClickedBtn={valueClickedBtn}
-        isClickedBtn={isClickedBtn.value}
+        isClickedBtnValue={isClickedBtn.value}
+        isClickedBtn={isClickedBtn}
+        valClickedSoring={valClickedSoring}
         setCurrentSortingValues={setCurrentSortingValues}
       />
     </div>

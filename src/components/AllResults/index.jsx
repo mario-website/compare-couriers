@@ -10,17 +10,18 @@ const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
 const AllResults = ({
   allResponses,
-  valueClickedBtn,
-  isClickedBtn,
+  isClickedBtnValue,
   setCurrentSortingValues,
+  valClickedSoring,
+  isClickedBtn,
 }) => {
-  const [screenSize, prevScreenSize] = useScreenSize();
+  const [screenSize] = useScreenSize();
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData, filteredData} = state;
   const defaultOptions = defaultData.options;
   const defValIsAscending = defaultOptions.isAscending;
   const [workingData, setWorkingData] = useState(defaultData);
-  const [, setCurrentScreenSize] = useState(screenSize);
+  const [currentScreenSize, setCurrentScreenSize] = useState(screenSize);
   // const [screenSize, setScreenSize] = useState(useScreenSize);
 
   useEffect(() => {
@@ -35,61 +36,108 @@ const AllResults = ({
       // dispatch({type: "SET_DATA_ALL_RESPONSES", payload: newData});
       const newFilteredData = filterData(newData, defaultOptions);
       dispatch({type: "SET_FILTERED_DATA", payload: newFilteredData});
+      setWorkingData(newFilteredData);
       return;
     }
     //in Table.jsx for every click setNewData, setAllResponses([]) is set.
-    dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
+    // dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
     dispatch({type: "SET_FILTERED_DATA", payload: defaultData});
     setWorkingData(defaultData);
   }, [allResponses, defaultData, defaultOptions]);
 
-  useEffect(() => {
-    //2.0 having filteredData.mergedAllData, I can set workingData to show all results
-    //after receiving allResponses, only workingData is sorting or filtered
-    const isTrue = isClickedBtn && valueClickedBtn !== "";
+  // useEffect(() => {
+  //   console.log(`filteredData:`, filteredData);
+  // }, [filteredData]);
 
-    if (filteredData.mergedAllData.length) {
-      setWorkingData((prevWD) => {
-        let data = {...filteredData};
-        setCurrentScreenSize((prevCSS) => {
-          //when screensize is changing, current workingData must be used for sorting: let data = {...filteredData};
-          //otherwise when waiting for all data from all allResponses,
-          //only filteredData.mergedAllData is set, options must be unchanged
-          if (prevCSS !== screenSize)
-            data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
-          return screenSize;
-        });
-        // if (isTrue) {
-        //   setWorkingData((prev) => {
-        //     const newData = sorting(
-        //       prev,
-        //       defValIsAscending,
-        //       screenSize,
-        //       prev.options.deliveryTimeBtn,
-        //       valueClickedBtn,
-        //     );
-        //     return newData;
-        //   });
-        // }
-        // isTrue && setClickedBtnToFalse();
-        const newData = sorting(
-          data,
+  // useEffect(() => {
+  //   console.log(`valClickedSoring:`, valClickedSoring);
+  // }, [valClickedSoring, isClickedBtn]);
+
+  useEffect(() => {
+    if (isClickedBtn.value) {
+      setWorkingData((prev) => {
+        const sortedData = sorting(
+          prev,
           defValIsAscending,
           screenSize,
-          prevWD.options.deliveryTimeBtn,
-          isTrue ? valueClickedBtn : null
+          prev.options.deliveryTimeBtn,
+          valClickedSoring
         );
-        return newData;
+        return sortedData;
       });
+      isClickedBtn.setFalse();
+    } else {
+      // if (screenSize) {
+      //   console.log(`isClickedBtn.value:`, isClickedBtn.value);
+      //   console.log(`screenSize:`, screenSize);
+      // }
+      if (currentScreenSize !== screenSize) {
+        setWorkingData((prev) => {
+          const sortedData = sorting(
+            prev,
+            defValIsAscending,
+            screenSize,
+            prev.options.deliveryTimeBtn
+          );
+          return sortedData;
+        });
+        setCurrentScreenSize(screenSize);
+      }
     }
-  }, [
-    screenSize,
-    defValIsAscending,
-    filteredData,
-    defaultData,
-    isClickedBtn,
-    valueClickedBtn,
-  ]);
+  }, [defValIsAscending, screenSize, valClickedSoring, isClickedBtn, currentScreenSize]);
+
+  // useEffect(() => {
+  //   console.log(`workingData:`, workingData);
+  // }, [workingData]);
+  // useEffect(() => {
+  //   //2.0 having filteredData.mergedAllData, I can set workingData to show all results
+  //   //after receiving allResponses, only workingData is sorting or filtered
+  //   const isValueClickedBtnNotEmptyString = valueClickedBtn !== "";
+  //   console.log(`filteredData.mergedAllData.length:`, filteredData);
+  //   if (filteredData.mergedAllData.length && filteredData.data.length) {
+  //     setWorkingData((prevWD) => {
+  //       let data = {...filteredData};
+  //       setCurrentScreenSize((prevCSS) => {
+  //         //when screensize is changing, current workingData must be used for sorting: let data = {...filteredData};
+  //         //otherwise when waiting for all data from all allResponses,
+  //         //only filteredData.mergedAllData is set, options must be unchanged
+  //         if (prevCSS !== screenSize)
+  //           data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
+  //         return screenSize;
+  //       });
+  //       // if (isTrue) {
+  //       //   setWorkingData((prev) => {
+  //       //     const newData = sorting(
+  //       //       prev,
+  //       //       defValIsAscending,
+  //       //       screenSize,
+  //       //       prev.options.deliveryTimeBtn,
+  //       //       valueClickedBtn,
+  //       //     );
+  //       //     return newData;
+  //       //   });
+  //       // }
+  //       // isTrue && setClickedBtnToFalse();
+  //       const newData = sorting(
+  //         isValueClickedBtnNotEmptyString ? prevWD : data,
+  //         defValIsAscending,
+  //         screenSize,
+  //         prevWD.options.deliveryTimeBtn,
+  //         isValueClickedBtnNotEmptyString ? valueClickedBtn : null
+  //       );
+  //       return newData;
+  //     });
+  //   } else {
+  //     setWorkingData(defaultData);
+  //   }
+  // }, [
+  //   screenSize,
+  //   defValIsAscending,
+  //   filteredData,
+  //   defaultData,
+  //   isClickedBtn,
+  //   valueClickedBtn,
+  // ]);
 
   // useEffect(() => {
 
@@ -168,7 +216,7 @@ const AllResults = ({
           })}
         </div>
       )}
-      {workingData.data.map((timeSpeed) => {
+      {workingData.data?.map((timeSpeed) => {
         return (
           <div
             key={timeSpeed.id}
@@ -389,13 +437,9 @@ const isSortedByAscending = (isAscending, defaultValueIsAscending, sortedBy, sor
 };
 
 const setSortingBy = (isAscending, options, sortBy) => {
-  if (sortBy) {
-    const isTrue = sortBy === "price";
-    return getServiceValue(isTrue, isAscending);
-  }
-  //if this sorting is not clicked with value of variable sortBy
-  const isTrue = options.sortedBy === "price";
+  const isTrue = sortBy ? sortBy === "price" : options.sortedBy === "price";
   return getServiceValue(isTrue, isAscending);
+  //if this sorting is not clicked with value of variable sortBy
 };
 
 const getServiceValue = (isTrue, isAscending) => {
