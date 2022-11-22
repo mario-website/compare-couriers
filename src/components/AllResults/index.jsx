@@ -35,15 +35,21 @@ const AllResults = ({
       //create dataAllResponses with only allResponses using default values
       // dispatch({type: "SET_DATA_ALL_RESPONSES", payload: newData});
       const newFilteredData = filterData(newData, defaultOptions);
-      dispatch({type: "SET_FILTERED_DATA", payload: newFilteredData});
-      setWorkingData(newFilteredData);
+      const sortedFD = sorting(
+        newFilteredData,
+        defValIsAscending,
+        screenSize,
+        newFilteredData.options.deliveryTimeBtn
+      );
+      dispatch({type: "SET_FILTERED_DATA", payload: sortedFD});
+      setWorkingData(sortedFD);
       return;
     }
     //in Table.jsx for every click setNewData, setAllResponses([]) is set.
     // dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
     dispatch({type: "SET_FILTERED_DATA", payload: defaultData});
     setWorkingData(defaultData);
-  }, [allResponses, defaultData, defaultOptions]);
+  }, [allResponses, defValIsAscending, defaultData, defaultOptions, screenSize]);
 
   // useEffect(() => {
   //   console.log(`filteredData:`, filteredData);
