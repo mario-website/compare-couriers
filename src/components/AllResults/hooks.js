@@ -34,7 +34,7 @@ const useWindowSize = () => {
   return size;
 };
 //3.0
-const getScreenSize = (width) => {
+export const getScreenSize = (width) => {
   if (width < 650) return SMALL;
   if (width >= 650 && width < 850) return MEDIUM;
   if (width >= 850) return LARGE;

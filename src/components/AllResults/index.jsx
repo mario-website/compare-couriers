@@ -4,7 +4,7 @@ import {VARIABLES} from "../../utils/variables";
 import {dynamicSort} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
 import {defaultValues} from "../../utils/couriersFetchData";
-import {useScreenSize} from "./hooks";
+import {useScreenSize, getScreenSize} from "./hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
@@ -39,18 +39,11 @@ const AllResults = ({
       const sortedFD = sorting(
         newFilteredData,
         defValIsAscending,
-        screenSize,
+        getScreenSize(window.innerWidth),
         newFilteredData.options.deliveryTimeBtn
       );
       dispatch({type: "SET_FILTERED_DATA", payload: sortedFD});
-      setWorkingData((prev) => {
-        console.log(`prev:`, prev);
-        if (prev.data.length === 0) {
-          return sortedFD;
-        } else {
-          return prev;
-        }
-      });
+      setWorkingData(sortedFD);
       return;
     }
 
@@ -58,7 +51,7 @@ const AllResults = ({
     // dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
     dispatch({type: "SET_FILTERED_DATA", payload: defaultData});
     setWorkingData(defaultData);
-  }, [allResponses, defValIsAscending, defaultData, defaultOptions, screenSize]);
+  }, [allResponses, defValIsAscending, defaultData, defaultOptions]);
 
   // useEffect(() => {
   //   console.log(`filteredData:`, filteredData);
