@@ -29,6 +29,7 @@ const AllResults = ({
   }, [setCurrentSortingValues, workingData.options]);
 
   useEffect(() => {
+    console.log(`allResponses.length:`, allResponses.length);
     if (allResponses.length) {
       const newData = createNewData(allResponses, defaultValues);
       //1.0
@@ -42,9 +43,17 @@ const AllResults = ({
         newFilteredData.options.deliveryTimeBtn
       );
       dispatch({type: "SET_FILTERED_DATA", payload: sortedFD});
-      setWorkingData(sortedFD);
+      setWorkingData((prev) => {
+        console.log(`prev:`, prev);
+        if (prev.data.length === 0) {
+          return sortedFD;
+        } else {
+          return prev;
+        }
+      });
       return;
     }
+
     //in Table.jsx for every click setNewData, setAllResponses([]) is set.
     // dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
     dispatch({type: "SET_FILTERED_DATA", payload: defaultData});
