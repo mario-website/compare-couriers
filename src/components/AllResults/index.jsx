@@ -4,7 +4,7 @@ import {VARIABLES} from "../../utils/variables";
 import {dynamicSort} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
 import {defaultValues} from "../../utils/couriersFetchData";
-import {useScreenSize, getScreenSize} from "./hooks";
+import {useScreenSize, getScreenSize, usePrevious} from "./hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
@@ -18,18 +18,21 @@ const AllResults = ({
   const [screenSize] = useScreenSize();
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData, filteredData} = state;
+  const prevFilteredData = usePrevious(filteredData);
   const defaultOptions = defaultData.options;
   const defValIsAscending = defaultOptions.isAscending;
-  const [workingData, setWorkingData] = useState(defaultData);
+  // const [workingData, setWorkingData] = useState(defaultData);
+  // const prevWorkingData = usePrevious(workingData);
   const [currentScreenSize, setCurrentScreenSize] = useState(screenSize);
   // const [screenSize, setScreenSize] = useState(useScreenSize);
 
   useEffect(() => {
-    setCurrentSortingValues(workingData.options);
-  }, [setCurrentSortingValues, workingData.options]);
+    setCurrentSortingValues(filteredData.options);
+  }, [setCurrentSortingValues, filteredData.options]);
 
+  //this useEffect is working when new data is received from another courier
   useEffect(() => {
-    console.log(`allResponses.length:`, allResponses.length);
+    //when new courier data received...
     if (allResponses.length) {
       const newData = createNewData(allResponses, defaultValues);
       //1.0
@@ -43,14 +46,15 @@ const AllResults = ({
         newFilteredData.options.deliveryTimeBtn
       );
       dispatch({type: "SET_FILTERED_DATA", payload: sortedFD});
-      setWorkingData(sortedFD);
+      // setWorkingData(sortedFD);
       return;
     }
 
-    //in Table.jsx for every click setNewData, setAllResponses([]) is set.
-    // dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
+    // in Table.jsx for every click setNewData, setAllResponses([]) is set.
+    dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
+    //when new courier data received and do not contain any data then all is set to default...
     dispatch({type: "SET_FILTERED_DATA", payload: defaultData});
-    setWorkingData(defaultData);
+    // setWorkingData(defaultData);
   }, [allResponses, defValIsAscending, defaultData, defaultOptions]);
 
   // useEffect(() => {
@@ -63,16 +67,24 @@ const AllResults = ({
 
   useEffect(() => {
     if (isClickedBtn.value) {
-      setWorkingData((prev) => {
-        const sortedData = sorting(
-          prev,
-          defValIsAscending,
-          screenSize,
-          prev.options.deliveryTimeBtn,
-          valClickedSoring
-        );
-        return sortedData;
-      });
+      // setWorkingData((prev) => {
+      //   const sortedData = sorting(
+      //     prev,
+      //     defValIsAscending,
+      //     screenSize,
+      //     prev.options.deliveryTimeBtn,
+      //     valClickedSoring
+      //   );
+      //   return sortedData;
+      // });
+      const st = sorting(
+        prevFilteredData,
+        defValIsAscending,
+        screenSize,
+        prevFilteredData.options.deliveryTimeBtn,
+        valClickedSoring
+      );
+      dispatch({type: "SET_FILTERED_DATA", payload: st});
       isClickedBtn.setFalse();
     } else {
       // if (screenSize) {
@@ -80,19 +92,35 @@ const AllResults = ({
       //   console.log(`screenSize:`, screenSize);
       // }
       if (currentScreenSize !== screenSize) {
-        setWorkingData((prev) => {
-          const sortedData = sorting(
-            prev,
-            defValIsAscending,
-            screenSize,
-            prev.options.deliveryTimeBtn
-          );
-          return sortedData;
-        });
+        // setWorkingData((prev) => {
+        //   const sortedData = sorting(
+        //     prev,
+        //     defValIsAscending,
+        //     screenSize,
+        //     prev.options.deliveryTimeBtn
+        //   );
+        //   return sortedData;
+        // });
+        const st = sorting(
+          prevFilteredData,
+          defValIsAscending,
+          screenSize,
+          prevFilteredData.options.deliveryTimeBtn,
+          valClickedSoring
+        );
+        dispatch({type: "SET_FILTERED_DATA", payload: st});
         setCurrentScreenSize(screenSize);
       }
     }
-  }, [defValIsAscending, screenSize, valClickedSoring, isClickedBtn, currentScreenSize]);
+  }, [
+    defValIsAscending,
+    screenSize,
+    valClickedSoring,
+    isClickedBtn,
+    currentScreenSize,
+    prevFilteredData,
+    filteredData,
+  ]);
 
   // useEffect(() => {
   //   console.log(`workingData:`, workingData);
@@ -159,13 +187,15 @@ const AllResults = ({
 
   const handleDeliveryTime = (event, deliveryTimeBtn) => {
     event.preventDefault();
-    const sortedData = sorting(
-      workingData,
-      defValIsAscending,
-      screenSize,
-      deliveryTimeBtn
-    );
-    setWorkingData(sortedData);
+    // const sortedData = sorting(
+    //   workingData,
+    //   defValIsAscending,
+    //   screenSize,
+    //   deliveryTimeBtn
+    // );
+    const st = sorting(filteredData, defValIsAscending, screenSize, deliveryTimeBtn);
+    dispatch({type: "SET_FILTERED_DATA", payload: st});
+    // setWorkingData(sortedData);
   };
 
   const columnGap = 20;
@@ -179,7 +209,7 @@ const AllResults = ({
       {(screenSize === SMALL || screenSize === MEDIUM) && (
         <div>
           {/* to show buttons deliveryTimeBtn */}
-          {workingData.mergedAllData?.map((timeSpeed) => {
+          {filteredData.mergedAllData?.map((timeSpeed) => {
             const deliveryTimeBtn = timeSpeed.deliveryTime;
             const currentLength = timeSpeed.timeSpeedData.length;
             const minPrice = timeSpeed.minPrice.toFixed(2);
@@ -188,7 +218,7 @@ const AllResults = ({
                 key={timeSpeed.id}
                 style={{
                   backgroundColor:
-                    deliveryTimeBtn === workingData.options.deliveryTimeBtn
+                    deliveryTimeBtn === filteredData.options.deliveryTimeBtn
                       ? "darkgray"
                       : "",
                 }}
@@ -204,12 +234,12 @@ const AllResults = ({
           })}
 
           {/* to show how many services */}
-          {workingData.data?.map((e) => {
-            //when screenSize === SMALL, workingData.data have only one object
-            const allTimeSpeedArray = workingData.mergedAllData.find(
+          {filteredData.data?.map((e) => {
+            //when screenSize === SMALL, filteredData.data have only one object
+            const allTimeSpeedArray = filteredData.mergedAllData.find(
               (e) => e.deliveryTime === ALL
             );
-            const showingCount = workingData.data[0]?.timeSpeedData.length;
+            const showingCount = filteredData.data[0]?.timeSpeedData.length;
             const allItemsCount = allTimeSpeedArray.timeSpeedData.length;
             const isTrue = showingCount !== allItemsCount;
             if (isTrue) {
@@ -224,7 +254,7 @@ const AllResults = ({
           })}
         </div>
       )}
-      {workingData.data?.map((timeSpeed) => {
+      {filteredData.data?.map((timeSpeed) => {
         return (
           <div
             key={timeSpeed.id}

@@ -65,7 +65,6 @@ const Table = () => {
       <AllResults
         allResponses={allRes}
         valueClickedBtn={valueClickedBtn}
-        isClickedBtnValue={isClickedBtn.value}
         isClickedBtn={isClickedBtn}
         valClickedSoring={valClickedSoring}
         setCurrentSortingValues={setCurrentSortingValues}

@@ -1,4 +1,4 @@
-import {useEffect, useState, useLayoutEffect} from "react";
+import {useEffect, useState, useLayoutEffect, useRef} from "react";
 import {VARIABLES} from "../../utils/variables";
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
@@ -39,3 +39,11 @@ export const getScreenSize = (width) => {
   if (width >= 650 && width < 850) return MEDIUM;
   if (width >= 850) return LARGE;
 };
+
+export function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
