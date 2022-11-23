@@ -1,5 +1,5 @@
 import React, {useState, useReducer, useLayoutEffect, useEffect} from "react";
-import {INITIAL_STATE, tableReducer} from "./reducer";
+import {INITIAL_STATE, tableReducer, Initial_State} from "./reducer";
 import AllResults from "../AllResults/index";
 
 import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
@@ -9,7 +9,7 @@ import {useBoolean} from "./hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
-const Table = () => {
+const Table: React.FC = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
   const {
     couriersData,
@@ -17,7 +17,6 @@ const Table = () => {
     fetchCounter,
     allRes,
     error,
-    valueClickedBtn,
     tempController,
     defaultData,
   } = state;
@@ -25,13 +24,13 @@ const Table = () => {
   const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
   const isClickedBtn = useBoolean(false);
   const [valClickedSoring, setValClickedSoring] = useState("");
-  const setNewData = (e) => {
+  const setNewData = (e: any) => {
     e.preventDefault();
     //1.0
     handleFetchNewData(tempController, dispatch, couriersData, currentValues);
   };
 
-  const setSorting = (item) => {
+  const setSorting = (item: string) => {
     // e.preventDefault();
     setValClickedSoring(item);
 
@@ -64,7 +63,6 @@ const Table = () => {
       </div>
       <AllResults
         allResponses={allRes}
-        valueClickedBtn={valueClickedBtn}
         isClickedBtn={isClickedBtn}
         valClickedSoring={valClickedSoring}
         setCurrentSortingValues={setCurrentSortingValues}
@@ -75,7 +73,15 @@ const Table = () => {
 export default Table;
 
 //1.0
-const handleFetchNewData = (tempController, dispatch, couriersData, currentValues) => {
+const handleFetchNewData = (
+  tempController: any,
+  dispatch: React.Dispatch<{
+    type: string;
+    payload?: any;
+  }>,
+  couriersData: (values: any) => any,
+  currentValues: any
+) => {
   const controller = new AbortController();
   const {signal} = controller;
   //for any new fetch I need to cancell all current fetching in asyc functions
@@ -90,10 +96,13 @@ const handleFetchNewData = (tempController, dispatch, couriersData, currentValue
 };
 //1.1
 const fetchDataFromAllCouriers = async (
-  signal,
-  dispatch,
-  couriersData,
-  currentValues
+  signal: AbortSignal,
+  dispatch: React.Dispatch<{
+    type: string;
+    payload?: any;
+  }>,
+  couriersData: {(values: any): any; (arg0: any): any[]},
+  currentValues: any
 ) => {
   //every time when starting fetching new data, reset to default values
   dispatch({type: "SET_TO_DEFAULT_FETCH_COUNTER"});
@@ -101,20 +110,25 @@ const fetchDataFromAllCouriers = async (
 
   // const {couriersData, currentValues} = state;
   //I might use Promise.all() but I want to do display new results after each response
-  couriersData(currentValues).forEach(async (courierData) => {
-    //1.2
-    const data = await getData(courierData, signal);
-    //todo: Change to try/catch and then prompt error if occured
-    const {companyName} = courierData.names;
-    //1.3
-    const formatedData = formattingData(companyName, data, currentValues);
+  couriersData(currentValues).forEach(
+    async (courierData: {names: {companyName: string}}) => {
+      //1.2
+      const data = await getData(courierData, signal);
+      //todo: Change to try/catch and then prompt error if occured
+      const {companyName} = courierData.names;
+      //1.3
+      const formatedData = formattingData(companyName, data, currentValues);
 
-    dispatch({type: "SET_ALL_RESPONSES", payload: formatedData});
-    dispatch({type: "INCREASE_FETCH_COUNTER_BY_1"});
-  });
+      dispatch({type: "SET_ALL_RESPONSES", payload: formatedData});
+      dispatch({type: "INCREASE_FETCH_COUNTER_BY_1"});
+    }
+  );
 };
 //1.2
-const getData = async (courierData, signal) => {
+const getData = async (
+  courierData: {names: any; getToken?: any; getData?: any},
+  signal: AbortSignal
+) => {
   let optionsData = {};
   if (courierData.getToken) {
     const optionsToken = {
@@ -157,7 +171,7 @@ const getData = async (courierData, signal) => {
   return data;
 };
 //1.2.1
-const fetching = async (url, options) => {
+const fetching = async (url: RequestInfo | URL, options: RequestInit | undefined) => {
   // console.log(`url, options:`, url, options);
   const fetchRes = await fetch(url, options)
     .then((res) => res.json())
@@ -172,9 +186,20 @@ const fetching = async (url, options) => {
   return fetchRes;
 };
 //1.3
-const formattingData = (companyName, data, dimension) => {
+const formattingData = (
+  companyName: string,
+  data: {Quotes: any[]; forEach: (arg0: (item: any) => void) => void},
+  dimension: {WEIGHT: any; LENGTH: any; WIDTH: any; HEIGHT: any}
+) => {
   const {WEIGHT, LENGTH, WIDTH, HEIGHT} = dimension;
-  const formatedData = [];
+  const formatedData: {
+    companyName: string;
+    courierName: string;
+    serviceName: string;
+    price: any;
+    deliveryTime: string;
+    url: string;
+  }[] = [];
   switch (companyName) {
     case PARCEL2GO:
       data.Quotes.forEach((item) => {

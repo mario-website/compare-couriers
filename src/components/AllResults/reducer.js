@@ -6,25 +6,25 @@ export const INITIAL_STATE = {
   defaultData,
 };
 
-export const allResReducer = (state, action) => {
+export const allResReducer = (INITIAL_STATE, action) => {
   switch (action.type) {
     case ACTION_TYPES.SET_DATA_ALL_RESPONSES:
       return {
-        ...state,
+        ...INITIAL_STATE,
         dataAllResponses: action.payload,
       };
     case ACTION_TYPES.SET_DATA_ALL_RESPONSES_DEFAULT:
       return {
-        ...state,
+        ...INITIAL_STATE,
         dataAllResponses: defaultData,
       };
     case ACTION_TYPES.SET_FILTERED_DATA:
       return {
-        ...state,
+        ...INITIAL_STATE,
         filteredData: action.payload,
       };
     default:
-      return state;
+      return INITIAL_STATE;
   }
 };
 

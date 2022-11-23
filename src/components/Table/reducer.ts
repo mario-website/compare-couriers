@@ -9,16 +9,17 @@ import {
   DefaultData,
 } from "../../utils/couriersFetchData";
 
-interface Initial_State {
+export interface Initial_State {
   couriersData: (values: DefaultValues) => ReturnCouriersData;
   couriersNamesArr: CouriersNamesArr;
   currentValues: DefaultValues;
   fetchCounter: number;
-  allRes: [];
-  valueClickedBtn: String;
+  allRes: any[];
+  valueClickedBtn: string;
   isClickedBtn: Boolean;
   tempController: null;
   defaultData: DefaultData;
+  error: {message: string; stack: string};
 }
 
 export const INITIAL_STATE: Initial_State = {
@@ -31,12 +32,15 @@ export const INITIAL_STATE: Initial_State = {
   isClickedBtn: false,
   tempController: null,
   defaultData,
+  error: {message: "", stack: ""},
 };
 
-export const tableReducer = (
-  state: Initial_State,
-  action: {type: string; payload: any}
-) => {
+export interface TableReducer {
+  state: Initial_State;
+  action: {type: string; payload?: any};
+}
+
+export const tableReducer = (state = INITIAL_STATE, action: TableReducer["action"]) => {
   switch (action.type) {
     case ACTION_TYPES.SET_TO_DEFAULT_FETCH_COUNTER:
       return {

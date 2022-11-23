@@ -3,28 +3,32 @@ import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime";
 import {VARIABLES} from "../../utils/variables";
 import {dynamicSort} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
-import {defaultValues} from "../../utils/couriersFetchData";
-import {useScreenSize, getScreenSize, usePrevious} from "./hooks";
+import {defaultValues, DefaultData, DefaultValues} from "../../utils/couriersFetchData";
+import {useScreenSize, getScreenSize} from "./hooks";
+import {ReturnUseBoolean} from "../Table/hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
-const AllResults = ({
+interface Props {
+  allResponses: any[];
+  setCurrentSortingValues: React.Dispatch<React.SetStateAction<DefaultData["options"]>>;
+  valClickedSoring: string;
+  isClickedBtn: ReturnUseBoolean;
+}
+
+const AllResults: React.FC<Props> = ({
   allResponses,
-  isClickedBtnValue,
   setCurrentSortingValues,
   valClickedSoring,
   isClickedBtn,
 }) => {
-  const [screenSize] = useScreenSize();
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
-  const {defaultData, filteredData} = state;
-  const prevFilteredData = usePrevious(filteredData);
+  const {defaultData} = state;
   const defaultOptions = defaultData.options;
   const defValIsAscending = defaultOptions.isAscending;
-  const [workingData, setWorkingData] = useState(defaultData);
-  // const prevWorkingData = usePrevious(workingData);
-  const [currentScreenSize, setCurrentScreenSize] = useState(screenSize);
-  // const [screenSize, setScreenSize] = useState(useScreenSize);
+  const [screenSize] = useScreenSize();
+  const [workingData, setWorkingData] = useState<DefaultData>(defaultData);
+  const [currentScreenSize, setCurrentScreenSize] = useState<string>(screenSize);
 
   useEffect(() => {
     setCurrentSortingValues(workingData.options);
@@ -32,12 +36,11 @@ const AllResults = ({
 
   //this useEffect is working when new data is received from another courier
   useEffect(() => {
-    //when new courier data received...
+    //when from new courier data received...
     if (allResponses.length) {
       const newData = createNewData(allResponses, defaultValues);
       //1.0
       //create dataAllResponses with only allResponses using default values
-      // dispatch({type: "SET_DATA_ALL_RESPONSES", payload: newData});
       const newFilteredData = filterData(newData, defaultOptions);
       const sortedFD = sorting(
         newFilteredData,
@@ -45,25 +48,13 @@ const AllResults = ({
         getScreenSize(window.innerWidth),
         newFilteredData.options.deliveryTimeBtn
       );
-      // dispatch({type: "SET_FILTERED_DATA", payload: sortedFD});
       setWorkingData(sortedFD);
       return;
     }
 
-    // in Table.jsx for every click setNewData, setAllResponses([]) is set.
-    dispatch({type: "SET_DATA_ALL_RESPONSES_DEFAULT"});
     //when new courier data received and do not contain any data then all is set to default...
-    // dispatch({type: "SET_FILTERED_DATA", payload: defaultData});
     setWorkingData(defaultData);
   }, [allResponses, defValIsAscending, defaultData, defaultOptions]);
-
-  // useEffect(() => {
-  //   console.log(`filteredData:`, filteredData);
-  // }, [filteredData]);
-
-  // useEffect(() => {
-  //   console.log(`valClickedSoring:`, valClickedSoring);
-  // }, [valClickedSoring, isClickedBtn]);
 
   useEffect(() => {
     if (isClickedBtn.value) {
@@ -77,20 +68,8 @@ const AllResults = ({
         );
         return sortedData;
       });
-      // const st = sorting(
-      //   prevFilteredData,
-      //   defValIsAscending,
-      //   screenSize,
-      //   prevFilteredData.options.deliveryTimeBtn,
-      //   valClickedSoring
-      // );
-      // dispatch({type: "SET_FILTERED_DATA", payload: st});
       isClickedBtn.setFalse();
     } else {
-      // if (screenSize) {
-      //   console.log(`isClickedBtn.value:`, isClickedBtn.value);
-      //   console.log(`screenSize:`, screenSize);
-      // }
       if (currentScreenSize !== screenSize) {
         setWorkingData((prev) => {
           const sortedData = sorting(
@@ -101,91 +80,15 @@ const AllResults = ({
           );
           return sortedData;
         });
-        // const st = sorting(
-        //   prevFilteredData,
-        //   defValIsAscending,
-        //   screenSize,
-        //   prevFilteredData.options.deliveryTimeBtn,
-        //   valClickedSoring
-        // );
-        // dispatch({type: "SET_FILTERED_DATA", payload: st});
         setCurrentScreenSize(screenSize);
       }
     }
-  }, [
-    defValIsAscending,
-    screenSize,
-    valClickedSoring,
-    isClickedBtn,
-    currentScreenSize,
-    prevFilteredData,
-    filteredData,
-  ]);
+  }, [defValIsAscending, screenSize, valClickedSoring, isClickedBtn, currentScreenSize]);
 
-  // useEffect(() => {
-  //   console.log(`workingData:`, workingData);
-  // }, [workingData]);
-  // useEffect(() => {
-  //   //2.0 having filteredData.mergedAllData, I can set workingData to show all results
-  //   //after receiving allResponses, only workingData is sorting or filtered
-  //   const isValueClickedBtnNotEmptyString = valueClickedBtn !== "";
-  //   console.log(`filteredData.mergedAllData.length:`, filteredData);
-  //   if (filteredData.mergedAllData.length && filteredData.data.length) {
-  //     setWorkingData((prevWD) => {
-  //       let data = {...filteredData};
-  //       setCurrentScreenSize((prevCSS) => {
-  //         //when screensize is changing, current workingData must be used for sorting: let data = {...filteredData};
-  //         //otherwise when waiting for all data from all allResponses,
-  //         //only filteredData.mergedAllData is set, options must be unchanged
-  //         if (prevCSS !== screenSize)
-  //           data = {...prevWD, ...{mergedAllData: [...filteredData.mergedAllData]}};
-  //         return screenSize;
-  //       });
-  //       // if (isTrue) {
-  //       //   setWorkingData((prev) => {
-  //       //     const newData = sorting(
-  //       //       prev,
-  //       //       defValIsAscending,
-  //       //       screenSize,
-  //       //       prev.options.deliveryTimeBtn,
-  //       //       valueClickedBtn,
-  //       //     );
-  //       //     return newData;
-  //       //   });
-  //       // }
-  //       // isTrue && setClickedBtnToFalse();
-  //       const newData = sorting(
-  //         isValueClickedBtnNotEmptyString ? prevWD : data,
-  //         defValIsAscending,
-  //         screenSize,
-  //         prevWD.options.deliveryTimeBtn,
-  //         isValueClickedBtnNotEmptyString ? valueClickedBtn : null
-  //       );
-  //       return newData;
-  //     });
-  //   } else {
-  //     setWorkingData(defaultData);
-  //   }
-  // }, [
-  //   screenSize,
-  //   defValIsAscending,
-  //   filteredData,
-  //   defaultData,
-  //   isClickedBtn,
-  //   valueClickedBtn,
-  // ]);
-
-  // useEffect(() => {
-
-  // }, [
-  //   screenSize,
-  //   valueClickedBtn,
-  //   defValIsAscending,
-  //   isClickedBtn,
-  //   setClickedBtnToFalse,
-  // ]);
-
-  const handleDeliveryTime = (event, deliveryTimeBtn) => {
+  const handleDeliveryTime = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    deliveryTimeBtn: string
+  ) => {
     event.preventDefault();
     const sortedData = sorting(
       workingData,
@@ -193,8 +96,6 @@ const AllResults = ({
       screenSize,
       deliveryTimeBtn
     );
-    // const st = sorting(filteredData, defValIsAscending, screenSize, deliveryTimeBtn);
-    // dispatch({type: "SET_FILTERED_DATA", payload: st});
     setWorkingData(sortedData);
   };
 
@@ -204,7 +105,8 @@ const AllResults = ({
       style={{
         display: "flex",
         columnGap: `${columnGap}px`,
-        flexDirection: screenSize === SMALL || screenSize === MEDIUM ? "column" : "",
+        flexDirection:
+          screenSize === SMALL || screenSize === MEDIUM ? "column" : undefined,
       }}>
       {(screenSize === SMALL || screenSize === MEDIUM) && (
         <div>
@@ -288,25 +190,20 @@ const AllResults = ({
 
 export default AllResults;
 
-const delTime = (time) => {
+const delTime = (time: string) => {
   if (time === FAST) return "Next Day";
   if (time === MEDIUM) return "2 Days";
   if (time === SLOW) return "3 + Days";
   if (time === ALL) return "All";
 };
 
-const createNewData = (allResponses, defaultValues) => {
+const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
   const {IS_ASCENDING, SORTED_BY} = defaultValues;
   //added unique ID for each entry
   const withIdTempAllRes = allResponses.map((item, id) => {
-    return {...item, ...id};
+    return {...item, id};
   });
-  // console.log(`withIdTempAllRes:`, withIdTempAllRes);
-  //looking for all objects who is the same as deliveryTime
-  // const filteredWithDelTime = withIdTempAllRes.filter(
-  //   (singleData) => singleData.deliveryTime === deliveryTime
-  // );
-  const allServicesNames = [];
+  const allServicesNames: any[] = [];
 
   withIdTempAllRes.forEach((singleData) => {
     if (
@@ -363,15 +260,21 @@ const createNewData = (allResponses, defaultValues) => {
   return returnGetNewData;
 };
 
-const filterData = (allData, options) => {
+const filterData = (
+  allData: {options?: {sortedBy: string; isAscending: boolean}; data: any},
+  options: DefaultData["options"]
+) => {
   const TSD = allData.data[0].timeSpeedData;
-  const unique = [...new Set(TSD.map((item) => item.deliveryTime))];
-  const newData = unique.map((ele, index) => {
+  const unique = Array.from(
+    new Set(TSD.map((item: {deliveryTime: any}) => item.deliveryTime))
+  );
+  console.log(`unique:`, unique);
+  const newData = unique.map((ele: any, index) => {
     const filteredWithDelTime = TSD.filter(
-      (singleData) => singleData.deliveryTime === ele
+      (singleData: {deliveryTime: unknown}) => singleData.deliveryTime === ele
     );
-    const minPrice = Math.min(...filteredWithDelTime.map((item) => item.min));
-    const maxPrice = Math.max(...filteredWithDelTime.map((item) => item.max));
+    const minPrice = Math.min(...filteredWithDelTime.map((item: {min: any}) => item.min));
+    const maxPrice = Math.max(...filteredWithDelTime.map((item: {max: any}) => item.max));
     return {
       id: index + ele,
       deliveryTime: ele,
@@ -386,13 +289,6 @@ const filterData = (allData, options) => {
   mergedAllData.push(allData.data[0]);
   mergedAllData.sort(dynamicSort("deliveryTime"));
 
-  // const lar = {...{options: {...options}}, ...{data: newData}};
-  // console.log(`lar:`, lar);
-  // return lar;
-  // } else {
-  //default screenSize === ALL
-
-  // }
   return {
     ...{options: {...options}},
     ...{data: allData.data},
@@ -401,11 +297,11 @@ const filterData = (allData, options) => {
 };
 
 const sorting = (
-  filteredData,
-  defaultValueIsAscending,
-  screenSize,
-  deliveryTimeBtn,
-  sortBy
+  filteredData: DefaultData,
+  defaultValueIsAscending: boolean,
+  screenSize: string,
+  deliveryTimeBtn: string,
+  sortBy?: string
 ) => {
   //1.0 if sortBy is passed then is checking is previous button where the same
   //1.0.1 if where the same reversal sorting is doing,
@@ -458,11 +354,15 @@ const sorting = (
     ...{data: sortedData},
   };
 
-  // console.log(`returnSorting:`, returnSorting);
   return returnSorting;
 };
 
-const isSortedByAscending = (isAscending, defaultValueIsAscending, sortedBy, sortBy) => {
+const isSortedByAscending = (
+  isAscending: boolean,
+  defaultValueIsAscending: boolean,
+  sortedBy: string,
+  sortBy: string | undefined
+) => {
   if (sortBy) {
     //when clicking button sorting, I check if fired button is the same as current sorting
     //if yes, I need to revert value isAscending as I want to revert value when click button,
@@ -474,13 +374,17 @@ const isSortedByAscending = (isAscending, defaultValueIsAscending, sortedBy, sor
   }
 };
 
-const setSortingBy = (isAscending, options, sortBy) => {
+const setSortingBy = (
+  isAscending: boolean,
+  options: {sortedBy: any; isAscending?: boolean; deliveryTimeBtn?: string},
+  sortBy: string | undefined
+) => {
   const isTrue = sortBy ? sortBy === "price" : options.sortedBy === "price";
   return getServiceValue(isTrue, isAscending);
   //if this sorting is not clicked with value of variable sortBy
 };
 
-const getServiceValue = (isTrue, isAscending) => {
+const getServiceValue = (isTrue: boolean, isAscending: boolean) => {
   return isTrue
     ? isAscending
       ? "min"
@@ -490,9 +394,9 @@ const getServiceValue = (isTrue, isAscending) => {
     : "-serviceName";
 };
 
-const getSortValSD = (isAscending, sortedBy) => {
+const getSortValSD = (isAscending: boolean, sortedBy: string) => {
   if (sortedBy === "price") return isAscending ? "price" : "-price";
   //if condition where not matched then default value is returned
-  //like if clicked sorting("alphabetical") by default sorting is "price" by ascending
+  //like if clicked setSorting("alphabetical") by default sorting is "price" by ascending
   return "price";
 };

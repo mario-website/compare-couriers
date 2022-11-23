@@ -30,14 +30,29 @@ export const defaultValues: DefaultValues = {
   POSTCODE_TO: "BL00AA",
 };
 
+export interface TimeSpeedData {
+  id: string;
+  min: number | string;
+  max: number | string;
+  deliveryTime: any;
+  serviceData: any;
+  serviceName: any;
+}
+
 export interface DefaultData {
   options: {
     sortedBy: string;
     isAscending: boolean;
     deliveryTimeBtn: string;
   };
-  data: [];
-  mergedAllData: [];
+  data: {
+    id: string;
+    deliveryTime: string;
+    minPrice: number;
+    maxPrice: number;
+    timeSpeedData: TimeSpeedData[];
+  }[];
+  mergedAllData: any[];
 }
 
 export const defaultData: DefaultData = {
