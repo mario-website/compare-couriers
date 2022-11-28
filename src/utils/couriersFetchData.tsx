@@ -70,7 +70,7 @@ interface CouriersNames {
 }
 export interface CouriersNamesArr extends Array<CouriersNames> {}
 
-export const couriersNamesArr: CouriersNamesArr = [
+export const couriersNamesArr: CouriersNames[] = [
   {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
   {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
 ];
@@ -117,7 +117,7 @@ export const couriersData = (values: DefaultValues) => {
     POSTCODE_TO,
   } = values;
 
-  const returnCouriersData: ReturnCouriersData = [
+  const returnCouriersData: CourierData[] = [
     {
       names: getObjName(PARCEL2GO),
       getToken: {

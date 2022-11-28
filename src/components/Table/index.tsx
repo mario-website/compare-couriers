@@ -9,7 +9,7 @@ import {useBoolean} from "./hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
-const Table: React.FC = () => {
+const Table = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
   const {
     couriersData,
@@ -185,6 +185,30 @@ const fetching = async (url: RequestInfo | URL, options: RequestInit | undefined
     });
   return fetchRes;
 };
+
+interface SingleFormatedItem {
+  companyName: string;
+  courierName: string;
+  serviceName: string;
+  price: any;
+  deliveryTime: string;
+  url: string;
+}
+
+const isUniqueObjectFromArray = (
+  objectToCheck: SingleFormatedItem,
+  arrayData: SingleFormatedItem[]
+) => {
+  const foundInArray = arrayData.find(
+    (ele) =>
+      ele.companyName === objectToCheck.companyName &&
+      ele.courierName === objectToCheck.courierName &&
+      ele.serviceName === objectToCheck.serviceName &&
+      ele.price === objectToCheck.price &&
+      ele.deliveryTime === objectToCheck.deliveryTime
+  );
+  return foundInArray ? false : true;
+};
 //1.3
 const formattingData = (
   companyName: string,
@@ -192,14 +216,7 @@ const formattingData = (
   dimension: {WEIGHT: any; LENGTH: any; WIDTH: any; HEIGHT: any}
 ) => {
   const {WEIGHT, LENGTH, WIDTH, HEIGHT} = dimension;
-  const formatedData: {
-    companyName: string;
-    courierName: string;
-    serviceName: string;
-    price: any;
-    deliveryTime: string;
-    url: string;
-  }[] = [];
+  const formatedData: SingleFormatedItem[] = [];
   switch (companyName) {
     case PARCEL2GO:
       data.Quotes.forEach((item) => {
@@ -208,14 +225,17 @@ const formattingData = (
         const deliveryTime = deliveryTimeF(item.Service.Classification, companyName);
         const price = item.TotalPrice.toFixed(2);
         const url = `https://www.parcel2go.com/quotes?col=219&dest=219&mdd=0&mode=Default&p=1~${WEIGHT}|${LENGTH}|${WIDTH}|${HEIGHT}&quoteType=Default`;
-        formatedData.push({
+        const objectToCheck: SingleFormatedItem = {
           companyName,
           courierName,
           serviceName,
           price,
           deliveryTime,
           url,
-        });
+        };
+
+        if (isUniqueObjectFromArray(objectToCheck, formatedData))
+          formatedData.push(objectToCheck);
       });
       break;
 
@@ -228,14 +248,17 @@ const formattingData = (
         const deliveryTime = deliveryTimeF(item.service_name, companyName);
         const price = item.total_price_gross;
         const url = "https://www.parcelmonkey.co.uk/";
-        formatedData.push({
+        const objectToCheck: SingleFormatedItem = {
           companyName,
           courierName,
           serviceName,
           price,
           deliveryTime,
           url,
-        });
+        };
+
+        if (isUniqueObjectFromArray(objectToCheck, formatedData))
+          formatedData.push(objectToCheck);
       });
       break;
 

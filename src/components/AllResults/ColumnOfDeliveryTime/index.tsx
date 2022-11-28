@@ -5,16 +5,14 @@ import {TimeSpeedData} from "../../../utils/couriersFetchData";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
-interface Props {
-  timeSpeedData: TimeSpeedData[];
-  screenSize: string;
-  columnGap: number;
-}
-
-const ColumnOfDeliveryTime: React.FC<Props> = ({
+const ColumnOfDeliveryTime = ({
   timeSpeedData,
   screenSize,
   columnGap,
+}: {
+  timeSpeedData: TimeSpeedData[];
+  screenSize: string;
+  columnGap: number;
 }) => {
   const width = (): string => {
     if (screenSize === LARGE || screenSize === SMALL) return "100%";

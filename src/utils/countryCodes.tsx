@@ -12,9 +12,7 @@ interface CountryCode {
   geo_point_2d?: string;
 }
 
-interface CountryCodes extends Array<CountryCode> {}
-
-const countryCodes: CountryCodes = [
+const countryCodes: CountryCode[] = [
   {
     "OFFICIAL LANG CODE": "EN",
     "ISO2 CODE": "KH",

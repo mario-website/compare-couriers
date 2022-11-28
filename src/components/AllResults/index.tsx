@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useReducer} from "react";
 import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime";
 import {VARIABLES} from "../../utils/variables";
-import {dynamicSort} from "../../utils/utils";
+import {dynamicSort, generateUUID} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
 import {defaultValues, DefaultData, DefaultValues} from "../../utils/couriersFetchData";
 import {useScreenSize, getScreenSize} from "./hooks";
@@ -9,18 +9,16 @@ import {ReturnUseBoolean} from "../Table/hooks";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
-interface Props {
-  allResponses: any[];
-  setCurrentSortingValues: React.Dispatch<React.SetStateAction<DefaultData["options"]>>;
-  valClickedSoring: string;
-  isClickedBtn: ReturnUseBoolean;
-}
-
-const AllResults: React.FC<Props> = ({
+const AllResults = ({
   allResponses,
   setCurrentSortingValues,
   valClickedSoring,
   isClickedBtn,
+}: {
+  allResponses: any[];
+  setCurrentSortingValues: React.Dispatch<React.SetStateAction<DefaultData["options"]>>;
+  valClickedSoring: string;
+  isClickedBtn: ReturnUseBoolean;
 }) => {
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData} = state;
@@ -136,7 +134,7 @@ const AllResults: React.FC<Props> = ({
           })}
 
           {/* to show how many services */}
-          {workingData.data?.map((e) => {
+          {workingData.data?.map((timeSpeed) => {
             //when screenSize === SMALL, workingData.data have only one object
             const allTimeSpeedArray = workingData.mergedAllData.find(
               (e) => e.deliveryTime === ALL
@@ -146,12 +144,12 @@ const AllResults: React.FC<Props> = ({
             const isTrue = showingCount !== allItemsCount;
             if (isTrue) {
               return (
-                <p key={e.id}>
+                <p key={timeSpeed.id}>
                   Showing {showingCount} of {allItemsCount} Services
                 </p>
               );
             } else {
-              return <p key={e.id}>Showing {showingCount} Services</p>;
+              return <p key={timeSpeed.id}>Showing {showingCount} Services</p>;
             }
           })}
         </div>
@@ -200,8 +198,8 @@ const delTime = (time: string) => {
 const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
   const {IS_ASCENDING, SORTED_BY} = defaultValues;
   //added unique ID for each entry
-  const withIdTempAllRes = allResponses.map((item, id) => {
-    return {...item, id};
+  const withIdTempAllRes = allResponses.map((item) => {
+    return {...item, id: generateUUID()};
   });
   const allServicesNames: any[] = [];
 
@@ -216,7 +214,7 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
   });
 
   //after having all uniques serviceName, I can start to create tempData
-  const tempData = allServicesNames.map((serviceName, idService) => {
+  const tempData = allServicesNames.map((serviceName) => {
     //looking for all objects who is the same as serviceName
     const filteredWithServiceName = withIdTempAllRes.filter(
       (item) => item.serviceName === serviceName
@@ -226,7 +224,7 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
     const min = Math.min(...filteredWithServiceName.map((item) => item.price));
     const max = Math.max(...filteredWithServiceName.map((item) => item.price));
     const returnTempData = {
-      id: idService + serviceName,
+      id: generateUUID(),
       min,
       max,
       deliveryTime,
@@ -243,7 +241,7 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
 
   const returnNewData = [
     {
-      id: 0 + ALL,
+      id: generateUUID(),
       deliveryTime: ALL,
       minPrice,
       maxPrice,
@@ -268,7 +266,7 @@ const filterData = (
   const unique = Array.from(
     new Set(TSD.map((item: {deliveryTime: any}) => item.deliveryTime))
   );
-  console.log(`unique:`, unique);
+
   const newData = unique.map((ele: any, index) => {
     const filteredWithDelTime = TSD.filter(
       (singleData: {deliveryTime: unknown}) => singleData.deliveryTime === ele
@@ -276,7 +274,7 @@ const filterData = (
     const minPrice = Math.min(...filteredWithDelTime.map((item: {min: any}) => item.min));
     const maxPrice = Math.max(...filteredWithDelTime.map((item: {max: any}) => item.max));
     return {
-      id: index + ele,
+      id: generateUUID(),
       deliveryTime: ele,
       minPrice,
       maxPrice,
