@@ -165,6 +165,7 @@ const AllResults = ({
               columnGap: `${columnGap}px`,
               height: "-webkit-fill-available",
               width: "-webkit-fill-available",
+              alignContent: "flex-start",
             }}>
             {screenSize === LARGE && (
               <span
