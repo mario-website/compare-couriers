@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "concurrently \"react-scripts start\" \"npm run server\"",
-    "server": "nodemon server/server.js",
+    "server": "nodemon server.js",
     "build": "react-scripts build",
     "vercel-build": "react-scripts build",
     "test": "react-scripts test",
