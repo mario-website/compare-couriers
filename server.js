@@ -22,7 +22,9 @@ app.use(express.static("build"));
 const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 
 // app.use(express.static("public"));
+app.use(express.json());
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({extended: true}));
 // app.set("view engine", "ejs");
 // app.use(bodyParser.urlencoded({extended: true}));
