@@ -14,6 +14,7 @@ const couriersNamesArr = [
 const fetch = (...args) =>
   import("node-fetch").then(({default: fetch}) => fetch(...args));
 require("dotenv").config();
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
@@ -23,6 +24,7 @@ const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 // app.use(bodyParser.urlencoded({extended: true}));
 // app.set("view engine", "ejs");
 // app.use(bodyParser.json());
+
 // app.use(bodyParser.urlencoded({extended: true}));
 
 couriersNamesArr.forEach((courier) => {

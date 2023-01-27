@@ -1,23 +1,23 @@
 import countryCodes from "./countryCodes";
 
-export const dynamicSort = (property: string) => {
-  interface AB {
-    [x: string]: number;
-  }
+export const dynamicSort = (property) => {
+  // interface AB {
+  //   [x: string]: number;
+  // }
 
   if (property === "price") {
-    return (a: AB, b: AB) => a[property] - b[property];
+    return (a, b) => a[property] - b[property];
   }
   if (property === "-price") {
     property = property.slice(1);
-    return (a: AB, b: AB) => b[property] - a[property];
+    return (a, b) => b[property] - a[property];
   }
   let sortOrder = 1;
   if (property[0] === "-") {
     sortOrder = -1;
     property = property.slice(1);
   }
-  return (a: AB, b: AB) => {
+  return (a, b) => {
     /* next line works with strings and numbers,
      * and you may want to customize it to your needs
      */
@@ -29,11 +29,11 @@ export const dynamicSort = (property: string) => {
 //znalazłem taki validator aby sprawdzić wszystkie mozliwości czy ciąg znaków jest liczbą -
 //(tak mówią na stacku przynajmniej :) ):
 //https://stackoverflow.com/questions/175739/how-can-i-check-if-a-string-is-a-valid-number
-export const isNumeric = (num: any) =>
+export const isNumeric = (num) =>
   (typeof num === "number" || (typeof num === "string" && num.trim() !== "")) &&
-  !isNaN(num as number);
+  !isNaN(num);
 
-export const convertIso2ToIso3 = (iso2: string) => {
+export const convertIso2ToIso3 = (iso2) => {
   if (iso2) {
     const foundCountryCoude = countryCodes.find((e) => e["ISO2 CODE"] === iso2);
     if (foundCountryCoude) return foundCountryCoude["ISO3 CODE"];

@@ -19,16 +19,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    // "strictNullChecks":false,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["src/*"],
-      "test/*": ["test/*"],
-      "underscore": ["lodash"]
-    }
+    "jsx": "preserve"
   },
   "include": [
-    // "src"
+    "src"
   ]
 }
