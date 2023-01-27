@@ -26,7 +26,7 @@
   },
   "engines": {
     "node": "18.12.1",
-    "npm": "8.19.2"
+    "npm": "9.3.0"
   },
   "proxy": "http://localhost:3001",
   "devDependencies": {
@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "concurrently \"react-scripts start\" \"npm run server\"",
-    "server": "nodemon server/server.js",
+    "server": "nodemon server.js",
     "build": "react-scripts build",
     "vercel-build": "react-scripts build",
     "test": "react-scripts test",
