@@ -5,7 +5,8 @@ import {dynamicSort, generateUUID} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
 import {defaultValues, DefaultData, DefaultValues} from "../../utils/couriersFetchData";
 import {useScreenSize, getScreenSize} from "./hooks";
-import {ReturnUseBoolean} from "../Table/hooks";
+import {ReturnUseBoolean} from "../Main/hooks";
+import "./style.scss";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
@@ -97,15 +98,10 @@ const AllResults = ({
     setWorkingData(sortedData);
   };
 
-  const columnGap = 20;
+  //columnGap is in unit rem
+  const columnGap = 0.5;
   return (
-    <div
-      style={{
-        display: "flex",
-        columnGap: `${columnGap}px`,
-        flexDirection:
-          screenSize === SMALL || screenSize === MEDIUM ? "column" : undefined,
-      }}>
+    <section>
       {(screenSize === SMALL || screenSize === MEDIUM) && (
         <div>
           {/* to show buttons deliveryTimeBtn */}
@@ -154,36 +150,74 @@ const AllResults = ({
           })}
         </div>
       )}
-      {workingData.data?.map((timeSpeed) => {
-        return (
-          <div
-            key={timeSpeed.id}
-            className={timeSpeed.deliveryTime}
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              columnGap: `${columnGap}px`,
-              height: "-webkit-fill-available",
-              width: "-webkit-fill-available",
-              alignContent: "flex-start",
-            }}>
-            {screenSize === LARGE && (
-              <span
-                style={{
-                  margin: "0 auto",
-                }}>
-                {delTime(timeSpeed.deliveryTime)}
-              </span>
-            )}
-            <ColumnOfDeliveryTime
-              timeSpeedData={timeSpeed.timeSpeedData}
-              screenSize={screenSize}
-              columnGap={columnGap}
-            />
-          </div>
-        );
-      })}
-    </div>
+      <table
+        style={
+          {
+            // width: "100%",
+            // display: "flex",
+            // columnGap: `${columnGap}px`,
+            // flexDirection:
+            //   screenSize === SMALL || screenSize === MEDIUM ? "column" : undefined,
+          }
+        }>
+        <thead>
+          <tr>
+            {workingData.data?.map((timeSpeed) => {
+              return (
+                <th
+                  style={{
+                    margin: "0 auto",
+                  }}>
+                  {delTime(timeSpeed.deliveryTime)}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            style={
+              screenSize === LARGE
+                ? {
+                    // display: "flex",
+                    // flexWrap: "wrap",
+                    // columnGap: `${columnGap}rem`,
+                    // border: "1px solid black",
+                    // height: "-webkit-fill-available",
+                    // width: "-webkit-fill-available",
+                    // alignContent: "flex-start",
+                  }
+                : {}
+            }>
+            {workingData.data?.map((timeSpeed) => {
+              return (
+                <td
+                  key={timeSpeed.id}
+                  className={timeSpeed.deliveryTime}
+                  style={
+                    screenSize === MEDIUM
+                      ? {
+                          display: "flex",
+                          flexWrap: "wrap",
+                          columnGap: `${columnGap}rem`,
+                          height: "-webkit-fill-available",
+                          width: "-webkit-fill-available",
+                          alignContent: "flex-start",
+                        }
+                      : {}
+                  }>
+                  <ColumnOfDeliveryTime
+                    timeSpeedData={timeSpeed.timeSpeedData}
+                    screenSize={screenSize}
+                    columnGap={columnGap}
+                  />
+                </td>
+              );
+            })}
+          </tr>
+        </tbody>
+      </table>
+    </section>
   );
 };
 

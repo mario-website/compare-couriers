@@ -11,7 +11,7 @@ const Prices = ({serviceData}: {serviceData: []}) => {
     <>
       {serviceData.map((company: items) => {
         return (
-          <div key={company.id} style={{background: "lightblue"}}>
+          <div key={company.id}>
             <span>{company.companyName}</span>
             <span>price: {company.price}</span>
           </div>
