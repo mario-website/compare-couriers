@@ -1,9 +1,24 @@
-// th,
-// td {
-//   padding-right: 15px;
-// }
+@import "../../scss/globals/variables.scss";
 
-// th,
-// td:last-child {
-//   padding-right: 0;
-// }
+.Results {
+  &-FilterButtons {
+    &_isSelected {
+      background-color: darkgray;
+    }
+  }
+
+  &-Table {
+    &_th {
+      // margin: 0 auto;
+    }
+
+    &_isMedium {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: $gridGap;
+      height: -webkit-fill-available;
+      width: -webkit-fill-available;
+      align-content: flex-start;
+    }
+  }
+}

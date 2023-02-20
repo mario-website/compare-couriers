@@ -98,12 +98,14 @@ const AllResults = ({
     setWorkingData(sortedData);
   };
 
-  //columnGap is in unit rem
-  const columnGap = 0.5;
+  const getClassName = (isTrue: boolean, className: string) => {
+    if (isTrue) return className;
+  };
+
   return (
-    <section>
+    <section className="Results">
       {(screenSize === SMALL || screenSize === MEDIUM) && (
-        <div>
+        <div className="Results-FilterButtons">
           {/* to show buttons deliveryTimeBtn */}
           {workingData.mergedAllData?.map((timeSpeed) => {
             const deliveryTimeBtn = timeSpeed.deliveryTime;
@@ -112,19 +114,15 @@ const AllResults = ({
             return (
               <button
                 key={timeSpeed.id}
-                style={{
-                  backgroundColor:
-                    deliveryTimeBtn === workingData.options.deliveryTimeBtn
-                      ? "darkgray"
-                      : "",
-                }}
+                className={getClassName(
+                  deliveryTimeBtn === workingData.options.deliveryTimeBtn,
+                  "Results-FilterButtons_isSelected"
+                )}
                 onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
-                <>
-                  <p>{delTime(deliveryTimeBtn)}</p>
-                  <p>
-                    {currentLength} FROM £{minPrice}
-                  </p>
-                </>
+                <p>{delTime(deliveryTimeBtn)}</p>
+                <p>
+                  {currentLength} FROM £{minPrice}
+                </p>
               </button>
             );
           })}
@@ -150,24 +148,12 @@ const AllResults = ({
           })}
         </div>
       )}
-      <table
-        style={
-          {
-            // width: "100%",
-            // display: "flex",
-            // columnGap: `${columnGap}px`,
-            // flexDirection:
-            //   screenSize === SMALL || screenSize === MEDIUM ? "column" : undefined,
-          }
-        }>
+      <table>
         <thead>
           <tr>
             {workingData.data?.map((timeSpeed) => {
               return (
-                <th
-                  style={{
-                    margin: "0 auto",
-                  }}>
+                <th key={"th" + timeSpeed.id} className="Results-Table_th">
                   {delTime(timeSpeed.deliveryTime)}
                 </th>
               );
@@ -175,41 +161,18 @@ const AllResults = ({
           </tr>
         </thead>
         <tbody>
-          <tr
-            style={
-              screenSize === LARGE
-                ? {
-                    // display: "flex",
-                    // flexWrap: "wrap",
-                    // columnGap: `${columnGap}rem`,
-                    // border: "1px solid black",
-                    // height: "-webkit-fill-available",
-                    // width: "-webkit-fill-available",
-                    // alignContent: "flex-start",
-                  }
-                : {}
-            }>
+          <tr>
             {workingData.data?.map((timeSpeed) => {
               return (
                 <td
-                  key={timeSpeed.id}
-                  className={timeSpeed.deliveryTime}
-                  style={
-                    screenSize === MEDIUM
-                      ? {
-                          display: "flex",
-                          flexWrap: "wrap",
-                          columnGap: `${columnGap}rem`,
-                          height: "-webkit-fill-available",
-                          width: "-webkit-fill-available",
-                          alignContent: "flex-start",
-                        }
-                      : {}
-                  }>
+                  key={"td" + timeSpeed.id}
+                  className={getClassName(
+                    screenSize === MEDIUM,
+                    "Results-Table_isMedium"
+                  )}>
                   <ColumnOfDeliveryTime
                     timeSpeedData={timeSpeed.timeSpeedData}
                     screenSize={screenSize}
-                    columnGap={columnGap}
                   />
                 </td>
               );
