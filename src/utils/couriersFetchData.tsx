@@ -40,6 +40,8 @@ export interface TimeSpeedData {
 }
 
 export interface DefaultData {
+  rowsData?: any[];
+  titles: any[];
   options: {
     sortedBy: string;
     isAscending: boolean;
@@ -62,7 +64,9 @@ export const defaultData: DefaultData = {
     deliveryTimeBtn: ALL,
   },
   data: [],
+  titles: [],
   mergedAllData: [],
+  rowsData: [],
 };
 interface CouriersNames {
   apiUrl: string;

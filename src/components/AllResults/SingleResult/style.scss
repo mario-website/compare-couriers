@@ -1,0 +1,27 @@
+@import "../../../scss/style.scss";
+
+.SingleColumn {
+  // display: grid;
+  // row-gap: $gridGap;
+  // grid-template-rows: 1fr;
+  // height: min-content;
+  width: 100%;
+
+  tr {
+    // width: 100%;
+    // width: fit-content;
+    // min-width: 100%;
+
+    td {
+      // width: 100%;
+      // min-width: 100%;
+      // display: block;
+    }
+  }
+  &-SingleResult {
+    // max-width: max-content;
+    // min-width: 100%;
+
+    // border: 1px solid black;
+  }
+}

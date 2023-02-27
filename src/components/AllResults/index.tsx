@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useReducer} from "react";
-import ColumnOfDeliveryTime from "./ColumnOfDeliveryTime";
+import Table from "./Table";
 import {VARIABLES} from "../../utils/variables";
 import {dynamicSort, generateUUID} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
@@ -101,7 +101,6 @@ const AllResults = ({
   const getClassName = (isTrue: boolean, className: string) => {
     if (isTrue) return className;
   };
-
   return (
     <section className="Results">
       {(screenSize === SMALL || screenSize === MEDIUM) && (
@@ -128,58 +127,34 @@ const AllResults = ({
           })}
 
           {/* to show how many services */}
-          {workingData.data?.map((timeSpeed) => {
+          {workingData.titles?.map((title, index) => {
             //when screenSize === SMALL, workingData.data have only one object
             const allTimeSpeedArray = workingData.mergedAllData.find(
               (e) => e.deliveryTime === ALL
             );
-            const showingCount = workingData.data[0]?.timeSpeedData.length;
-            const allItemsCount = allTimeSpeedArray.timeSpeedData.length;
+
+            let showingCount = 0;
+
+            workingData.data?.forEach((workingDataEle, i) => {
+              showingCount = showingCount + workingDataEle.timeSpeedData.length;
+              // rows.push(new Array(workingDataEle.timeSpeedData.length));
+            });
+
+            const allItemsCount = allTimeSpeedArray?.timeSpeedData.length;
             const isTrue = showingCount !== allItemsCount;
             if (isTrue) {
               return (
-                <p key={timeSpeed.id}>
+                <p key={index + title}>
                   Showing {showingCount} of {allItemsCount} Services
                 </p>
               );
             } else {
-              return <p key={timeSpeed.id}>Showing {showingCount} Services</p>;
+              return <p key={index + title}>Showing {showingCount} Services</p>;
             }
           })}
         </div>
       )}
-      <table>
-        <thead>
-          <tr>
-            {workingData.data?.map((timeSpeed) => {
-              return (
-                <th key={"th" + timeSpeed.id} className="Results-Table_th">
-                  {delTime(timeSpeed.deliveryTime)}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {workingData.data?.map((timeSpeed) => {
-              return (
-                <td
-                  key={"td" + timeSpeed.id}
-                  className={getClassName(
-                    screenSize === MEDIUM,
-                    "Results-Table_isMedium"
-                  )}>
-                  <ColumnOfDeliveryTime
-                    timeSpeedData={timeSpeed.timeSpeedData}
-                    screenSize={screenSize}
-                  />
-                </td>
-              );
-            })}
-          </tr>
-        </tbody>
-      </table>
+      <Table workingData={workingData} delTime={delTime} />
     </section>
   );
 };
@@ -247,6 +222,7 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
     },
   ];
   const returnGetNewData = {
+    ...defaultValues,
     options: {
       sortedBy: SORTED_BY,
       isAscending: IS_ASCENDING,
@@ -286,6 +262,7 @@ const filterData = (
   mergedAllData.sort(dynamicSort("deliveryTime"));
 
   return {
+    ...{titles: []},
     ...{options: {...options}},
     ...{data: allData.data},
     mergedAllData,
@@ -338,6 +315,43 @@ const sorting = (
     return returnSortedData;
   });
 
+  const mediumSortedData: any = [
+    {
+      id: generateUUID(),
+      deliveryTime: sortedData[0]?.deliveryTime,
+      minPrice: sortedData[0]?.minPrice,
+      maxPrice: sortedData[0]?.maxPrice,
+      timeSpeedData: [],
+    },
+    {
+      id: generateUUID(),
+      deliveryTime: sortedData[0]?.deliveryTime,
+      minPrice: sortedData[0]?.minPrice,
+      maxPrice: sortedData[0]?.maxPrice,
+      timeSpeedData: [],
+    },
+  ];
+
+  if (screenSize === MEDIUM) {
+    sortedData[0]?.timeSpeedData?.forEach((speedData: any, index: number) => {
+      if (index % 2 === 0) {
+        mediumSortedData[0].timeSpeedData.push(speedData);
+      } else {
+        mediumSortedData[1].timeSpeedData.push(speedData);
+      }
+    });
+  }
+
+  const returnData = screenSize === MEDIUM ? mediumSortedData : sortedData;
+  const rowsData: any[] = [];
+  returnData?.forEach((workingDataEle: {timeSpeedData: any[]}, i: number) => {
+    workingDataEle.timeSpeedData?.forEach((TSD, indexData) => {
+      if (i === 0) {
+        rowsData.push([]);
+      }
+      rowsData[indexData].push(TSD);
+    });
+  });
   const returnSorting = {
     ...filteredData,
     ...{
@@ -347,7 +361,9 @@ const sorting = (
         deliveryTimeBtn,
       },
     },
-    ...{data: sortedData},
+    ...{titles: Array.from(new Set(returnData.map((item: any) => item.deliveryTime)))},
+    ...{data: returnData},
+    rowsData,
   };
 
   return returnSorting;

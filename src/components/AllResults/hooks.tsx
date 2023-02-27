@@ -42,11 +42,17 @@ const useWindowSize = () => {
 };
 //3.0
 export const getScreenSize = (width: number) => {
-  let screenSize: string;
-  screenSize = "";
-  if (width < 850) screenSize = SMALL;
-  if (width >= 850 && width < 1050) screenSize = MEDIUM;
-  if (width >= 1050) screenSize = LARGE;
+  //IMPORTANT!!!!!!!
+  //------------------------------------------------------------------------------------------------
+  //when changing MD or LR values you need also update file src/scss/globals/_breakpoints.scss
+  //in values $MD and $LR
+  const MD = 768;
+  const LR = 1024;
+  //------------------------------------------------------------------------------------------------
+  let screenSize: string = "";
+  if (width < MD) screenSize = SMALL;
+  if (width >= MD && width <= LR) screenSize = MEDIUM;
+  if (width > LR) screenSize = LARGE;
   return screenSize;
 };
 

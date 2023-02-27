@@ -1,4 +1,4 @@
-@import "../../scss/globals/variables.scss";
+@import "../../scss/style.scss";
 
 .Results {
   &-FilterButtons {
@@ -7,18 +7,42 @@
     }
   }
 
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+  table {
+    border-collapse: separate;
+    border-spacing: $gridGap;
+    table-layout: fixed;
+  }
   &-Table {
-    &_th {
-      // margin: 0 auto;
-    }
+    width: 100%;
+    &_titles {
+      text-align: center;
 
-    &_isMedium {
-      display: flex;
-      flex-wrap: wrap;
-      column-gap: $gridGap;
-      height: -webkit-fill-available;
-      width: -webkit-fill-available;
-      align-content: flex-start;
+      @include media(">LARGE") {
+        // display: grid;
+        // grid-template-columns: repeat(3, 1fr);
+      }
+      &_title {
+      }
+    }
+    &_allItems {
+      // display: grid;
+      // grid-template-columns: repeat(2, 1fr);
+      // row-gap: $gridGap;
+      @include media(">MEDIUM", "<=LARGE") {
+        // display: grid;
+        // grid-template-columns: repeat(2, 1fr);
+        // column-gap: $gridGap;
+      }
+      @include media(">LARGE") {
+        // display: grid;
+        // grid-template-columns: repeat(3, 1fr);
+        // column-gap: $gridGap;
+      }
     }
   }
 }
