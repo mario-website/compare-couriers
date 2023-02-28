@@ -39,12 +39,13 @@
 //------------------------------------------------------------------------------------------------
 //when changing $MD or $LR values you need also update file src/components/AllResults/hooks.tsx
 //in function getScreenSize
+$SM: 500px;
 $MD: 768px;
 $LR: 1024px;
 //------------------------------------------------------------------------------------------------
 
 $breakpoints: (
-  "phone": 320px,
+  "SMALL": $SM,
   "MEDIUM": $MD,
   "LARGE": $LR,
 ) !default;
@@ -602,17 +603,17 @@ $im-no-media-expressions: ("screen", "portrait", "landscape") !default;
 }
 
 .include-media-test {
-  @include media("<=phone") {
+  @include media("<=SMALL") {
     display: flex;
     flex-direction: column;
     background-color: #def;
 
     // &:before {
-    //   content: "<=phone";
+    //   content: "<=SMALL";
     // }
   }
 
-  @include media(">phone", "<=MEDIUM") {
+  @include media(">SMALL", "<=MEDIUM") {
     display: flex;
     flex-direction: row;
     background-color: rgb(218, 59, 59);
