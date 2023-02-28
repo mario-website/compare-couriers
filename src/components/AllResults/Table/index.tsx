@@ -12,7 +12,10 @@ const Table = ({workingData, delTime}: {workingData: DefaultData; delTime: any})
               <th
                 key={"title" + timeSpeed}
                 className="Results-Table_titles_title"
-                colSpan={workingData.titles.length > 1 ? 1 : 2}>
+                //need to find better way to set colSpan value
+                colSpan={
+                  workingData.titles.length > 1 || workingData.data.length === 1 ? 1 : 2
+                }>
                 {delTime(timeSpeed)}
               </th>
             );
