@@ -1,5 +1,10 @@
 @use "../../scss/globals" as *;
 @use "sass:map";
+@mixin dim {
+  background-color: white;
+  border-style: none;
+  border-radius: $ParcelValuesBorderRadius;
+}
 
 .ParcelValues {
   font-family: $font-Lexend;
@@ -16,15 +21,20 @@
     grid-template-columns: auto min-content;
     gap: $gridGap / 2;
 
-    > &_lessThan1Metre {
-      color: $ParcelValuesColour;
-      font-size: 1rem;
-      background-color: white;
-      border: 0;
-      border-radius: $ParcelValuesBorderRadius;
-      text-align: left;
-      :first-child {
-        font-size: 0.7rem;
+    &_lessThan1Metre {
+      @include dim;
+      padding: 0;
+      //   //   color: $ParcelValuesColour;
+      //   //   font-size: 1rem;
+      //   //   border-radius: $ParcelValuesBorderRadius;
+      //   //   text-align: left;
+      //   //   :first-child {
+      //   //     font-size: 0.7rem;
+      //   //   }
+      // }
+
+      &_weight {
+        @include dim;
       }
     }
   }

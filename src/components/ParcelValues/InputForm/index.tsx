@@ -29,13 +29,19 @@ const InputForm = ({labelName, placeholder, name, useReducerTable}: Props) => {
   return (
     <div className="InputForm">
       <label className="InputForm-Label">
-        <span>{labelName}</span>
-        <input
-          type="text"
-          onChange={(e) => handleChange(e)}
-          placeholder={placeholder}
-          value={useReducerTable.stateCurrentValues[name]}
-        />
+        <p>{labelName}</p>
+        {placeholder === "none" ? (
+          <p>{name}</p>
+        ) : (
+          <p>
+            <input
+              type="text"
+              onChange={(e) => handleChange(e)}
+              placeholder={placeholder}
+              value={useReducerTable.stateCurrentValues[name]}
+            />
+          </p>
+        )}
       </label>
     </div>
   );

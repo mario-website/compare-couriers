@@ -20,8 +20,13 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
       </div>
       <div className="ParcelValues-Dimensions">
         <button className="ParcelValues-Dimensions_lessThan1Metre">
-          <p>Parcel Length</p>
-          <p>Less than 1 Metre</p>
+          <InputForm
+            key={"keylessThan1Metre"}
+            placeholder={"none"}
+            name={"Less than 1 Metre"}
+            labelName={"Parcel Length"}
+            useReducerTable={useReducerTable}
+          />
         </button>
         <div className="ParcelValues-Dimensions_weight">
           <InputForm
