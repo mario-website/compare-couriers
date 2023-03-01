@@ -1,31 +1,27 @@
-@use "../../scss/style.scss";
-$colours: (
-  1: #1391d2,
-  2: #fc9e15,
-  3: #e3403d,
-);
+@use "../../scss/globals" as *;
 
 .Header {
   display: grid;
-
+  padding-bottom: 1rem;
   &-Logo {
     text-align: center;
     font-size: 2.8rem;
     padding: 1rem;
-    @each $number, $color in $colours {
+    @each $number, $color in $LogoColours {
       span:nth-child(#{$number}) {
         font-weight: 800;
-        font-family: style.$font-Lexend;
+        font-family: $font-Lexend;
         color: $color;
       }
     }
 
-    @include style.media(">=LARGE") {
+    @include media(">=MEDIUM") {
       padding-left: 0;
+      font-size: 4rem;
     }
   }
 
-  @include style.media(">=MEDIUM") {
+  @include media(">=MEDIUM") {
     display: grid;
     grid-template-columns: min-content max-content;
     align-items: center;
@@ -33,7 +29,7 @@ $colours: (
 
   &-Slogan {
     font-size: 1.4rem;
-    font-family: style.$font-RobotoSlab;
+    font-family: $font-RobotoSlab;
     text-align: center;
 
     h1 {
@@ -42,11 +38,11 @@ $colours: (
     p {
       font-weight: 200;
     }
-    @include style.media(">SMALL") {
+    @include media(">SMALL") {
       font-size: 1.6rem;
     }
 
-    @include style.media(">=LARGE") {
+    @include media(">=MEDIUM") {
       text-align: left;
       padding-left: 1rem;
     }

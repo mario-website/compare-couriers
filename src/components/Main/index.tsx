@@ -1,10 +1,10 @@
 import React, {useState, useReducer, useLayoutEffect} from "react";
 import {INITIAL_STATE, tableReducer, Initial_State} from "./reducer";
-import AllResults from "../AllResults/index";
+import AllResults from "../AllResults";
+import ParcelValues from "../ParcelValues";
 
 import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
 import {VARIABLES} from "../../utils/variables";
-import ParcelValues from "../SearchForm/index";
 import {useBoolean} from "./hooks";
 import "./style.scss";
 

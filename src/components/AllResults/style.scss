@@ -6,43 +6,4 @@
       background-color: darkgray;
     }
   }
-
-  table,
-  th,
-  td {
-    border: 1px solid black;
-  }
-  table {
-    border-collapse: separate;
-    border-spacing: $gridGap;
-    table-layout: fixed;
-  }
-  &-Table {
-    width: 100%;
-    &_titles {
-      text-align: center;
-
-      @include media(">LARGE") {
-        // display: grid;
-        // grid-template-columns: repeat(3, 1fr);
-      }
-      &_title {
-      }
-    }
-    &_allItems {
-      // display: grid;
-      // grid-template-columns: repeat(2, 1fr);
-      // row-gap: $gridGap;
-      @include media(">MEDIUM", "<=LARGE") {
-        // display: grid;
-        // grid-template-columns: repeat(2, 1fr);
-        // column-gap: $gridGap;
-      }
-      @include media(">LARGE") {
-        // display: grid;
-        // grid-template-columns: repeat(3, 1fr);
-        // column-gap: $gridGap;
-      }
-    }
-  }
 }

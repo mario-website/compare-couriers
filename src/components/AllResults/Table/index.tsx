@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {DefaultData, TimeSpeedData} from "../../../utils/couriersFetchData";
 import SingleResult from "../SingleResult";
+import "./style.scss";
 
 const Table = ({workingData, delTime}: {workingData: DefaultData; delTime: any}) => {
   return (
-    <table className="Results-Table">
+    <table className="Table">
       <thead>
-        <tr className="Results-Table_titles">
+        <tr className="Table-Titles">
           {workingData.titles?.map((timeSpeed) => {
             return (
               <th
                 key={"title" + timeSpeed}
-                className="Results-Table_titles_title"
+                className="Table-Titles_title"
                 //need to find better way to set colSpan value
                 colSpan={
                   workingData.titles.length > 1 || workingData.data.length === 1 ? 1 : 2
@@ -22,7 +23,7 @@ const Table = ({workingData, delTime}: {workingData: DefaultData; delTime: any})
           })}
         </tr>
       </thead>
-      <tbody className="Results-Table_allItems">
+      <tbody className="Table-AllItems">
         {workingData.rowsData?.map((timeSpeedRow, i) => {
           return (
             <SingleResult

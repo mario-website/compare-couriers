@@ -1,0 +1,31 @@
+@use "../../scss/globals" as *;
+@use "sass:map";
+
+.ParcelValues {
+  font-family: $font-Lexend;
+  font-weight: 300;
+  font-size: 1.2rem;
+  letter-spacing: -0.1px;
+  margin: -$bodyPadding 0 -$bodyPadding 0;
+  padding: $bodyPadding;
+  background-color: map.get($LogoColours, 1);
+  color: white;
+
+  &-Dimensions {
+    display: grid;
+    grid-template-columns: auto min-content;
+    gap: $gridGap / 2;
+
+    > &_lessThan1Metre {
+      color: $ParcelValuesColour;
+      font-size: 1rem;
+      background-color: white;
+      border: 0;
+      border-radius: $ParcelValuesBorderRadius;
+      text-align: left;
+      :first-child {
+        font-size: 0.7rem;
+      }
+    }
+  }
+}

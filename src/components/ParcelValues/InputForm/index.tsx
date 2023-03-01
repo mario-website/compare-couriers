@@ -1,4 +1,5 @@
 import React, {useReducer, useEffect} from "react";
+import "./style.scss";
 
 interface Dispatch {
   type: string;
@@ -17,7 +18,7 @@ interface Props {
     stateCurrentValues: {[key: string]: any};
   };
 }
-const InputForm: React.FC<Props> = ({labelName, placeholder, name, useReducerTable}) => {
+const InputForm = ({labelName, placeholder, name, useReducerTable}: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     useReducerTable.dispatch({
       type: "CHANGE_INPUT",
@@ -26,11 +27,9 @@ const InputForm: React.FC<Props> = ({labelName, placeholder, name, useReducerTab
   };
 
   return (
-    <div
-    // className={nameClass}
-    >
-      <label>
-        {labelName}
+    <div className="InputForm">
+      <label className="InputForm-Label">
+        <span>{labelName}</span>
         <input
           type="text"
           onChange={(e) => handleChange(e)}

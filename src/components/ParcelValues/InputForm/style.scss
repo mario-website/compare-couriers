@@ -1,0 +1,17 @@
+@use "../../../scss/globals" as *;
+
+.InputForm {
+  width: 100%;
+  background-color: white;
+  border-radius: $ParcelValuesBorderRadius;
+
+  &-Label {
+    display: grid;
+
+    input {
+      border: 0;
+      border-radius: $ParcelValuesBorderRadius;
+    }
+    // font-size: 3rem;
+  }
+}
