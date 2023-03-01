@@ -46,7 +46,7 @@ export const getScreenSize = (width: number) => {
   //------------------------------------------------------------------------------------------------
   //when changing MD or LR values you need also update file src/scss/globals/_breakpoints.scss
   //in values $MD and $LR
-  const SM = 500;
+  const SM = 530;
   const MD = 768;
   const LR = 1024;
   //------------------------------------------------------------------------------------------------

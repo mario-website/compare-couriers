@@ -1,4 +1,4 @@
-@import "../../scss/style.scss";
+@use "../../scss/globals" as *;
 
 .Results {
   &-FilterButtons {
