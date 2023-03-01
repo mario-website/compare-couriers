@@ -4,9 +4,6 @@
 body {
   font-size: 1.5rem;
   padding: 0 $bodyPadding 0 $bodyPadding;
-}
-
-body {
   @include media(">MEDIUM") {
     padding: 0 ($bodyPadding * 2) 0 ($bodyPadding * 2);
   }
