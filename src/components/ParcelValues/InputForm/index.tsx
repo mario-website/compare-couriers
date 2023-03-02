@@ -17,8 +17,9 @@ interface Props {
     dispatch: ({type, payload}: Dispatch) => void;
     stateCurrentValues: {[key: string]: any};
   };
+  units: string;
 }
-const InputForm = ({labelName, placeholder, name, useReducerTable}: Props) => {
+const InputForm = ({labelName, placeholder, name, useReducerTable, units}: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     useReducerTable.dispatch({
       type: "CHANGE_INPUT",
@@ -40,6 +41,7 @@ const InputForm = ({labelName, placeholder, name, useReducerTable}: Props) => {
               placeholder={placeholder}
               value={useReducerTable.stateCurrentValues[name]}
             />
+            <span>{units}</span>
           </p>
         )}
       </label>

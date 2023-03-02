@@ -20,6 +20,7 @@
     display: grid;
     grid-template-columns: auto min-content;
     gap: $gridGap / 2;
+    align-items: center;
 
     &_lessThan1Metre {
       @include dim;
@@ -35,6 +36,7 @@
 
       &_weight {
         @include dim;
+        // width: 1rem;
       }
     }
   }

@@ -7,11 +7,16 @@ const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
 const ParcelValues = ({useReducerTable, setNewData}) => {
   const dimensions = [
-    {name: LENGTH, labelName: "Length", placeholder: "Length in cm"},
-    {name: WIDTH, labelName: "Width", placeholder: "Width in cm"},
-    {name: HEIGHT, labelName: "Height", placeholder: "Height in cm"},
+    {name: LENGTH, labelName: "Length", placeholder: "Length in cm", units: "cm"},
+    {name: WIDTH, labelName: "Width", placeholder: "Width in cm", units: "cm"},
+    {name: HEIGHT, labelName: "Height", placeholder: "Height in cm", units: "cm"},
   ];
-  const weight = {name: WEIGHT, labelName: "Weight", placeholder: "Weight in kg"};
+  const weight = {
+    name: WEIGHT,
+    labelName: "Weight",
+    placeholder: "Weight in kg",
+    units: "kg",
+  };
 
   return (
     <form className="ParcelValues">
@@ -35,6 +40,7 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
             name={weight.name}
             labelName={weight.labelName}
             useReducerTable={useReducerTable}
+            units={weight.units}
           />
         </div>
       </div>
@@ -47,11 +53,12 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
               name={e.name}
               labelName={e.labelName}
               useReducerTable={useReducerTable}
+              units={e.units}
             />
           );
         })}
-      </div>
-    */}
+      </div> */}
+
       <div>
         <button onClick={setNewData}>Get Quote</button>
       </div>
