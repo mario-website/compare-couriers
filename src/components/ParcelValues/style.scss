@@ -11,15 +11,19 @@
   font-weight: 300;
   font-size: 1.2rem;
   letter-spacing: -0.1px;
-  margin: -$bodyPadding 0 -$bodyPadding 0;
+  margin: (-$bodyPadding) 0 (-$bodyPadding) 0;
   padding: $bodyPadding;
   background-color: map.get($LogoColours, 1);
   color: white;
 
+  &-Title {
+    padding-bottom: $bodyPadding;
+  }
+
   &-Dimensions {
     display: grid;
     grid-template-columns: auto min-content;
-    gap: $gridGap / 2;
+    gap: calc($gridGap / 2);
     align-items: center;
 
     &_lessThan1Metre {
