@@ -1,5 +1,7 @@
 @use "../../scss/globals" as *;
 @use "sass:map";
+$gridGapPV: calc($gridGap / 2);
+
 @mixin dim {
   background-color: white;
   border-style: none;
@@ -15,38 +17,67 @@
   padding: $bodyPadding;
   background-color: map.get($LogoColours, 1);
   color: white;
-  max-width: calc($SM);
+  max-width: max-content;
 
-  @include media(">=SMALL") {
+  @include media(">FORM") {
     margin: 0 auto;
   }
 
   &-Title {
     padding-bottom: $bodyPadding;
+    display: grid;
+    grid-template-columns: auto max-content;
+    align-items: center;
+
+    button {
+      border: 0;
+      border-radius: $ParcelValuesBorderRadius;
+      background-color: #03aa5b;
+      font-size: 1.4rem;
+      font-weight: 500;
+      font-family: $font-Lexend;
+      color: white;
+      padding: 0.6rem;
+      margin-left: 1rem;
+    }
   }
 
   &-Dimensions {
     display: grid;
-    grid-template-columns: auto min-content;
-    gap: calc($gridGap / 2);
-    align-items: center;
+    grid-template-columns: auto max-content;
+    gap: $gridGapPV;
 
     &_lessThan1Metre {
       @include dim;
       padding: 0;
-      //   //   color: $ParcelValuesColour;
-      //   //   font-size: 1rem;
-      //   //   border-radius: $ParcelValuesBorderRadius;
-      //   //   text-align: left;
-      //   //   :first-child {
-      //   //     font-size: 0.7rem;
-      //   //   }
-      // }
+      height: 100%;
+      text-align: left;
+    }
 
-      &_weight {
-        @include dim;
-        // width: 1rem;
-      }
+    &_lengths {
+      display: none;
     }
   }
+}
+
+.displayNone {
+  display: none;
+}
+
+.weightMod {
+  display: grid;
+  grid-template-columns: min-content min-content;
+  gap: $gridGapPV;
+  justify-content: center;
+}
+
+.displayGrid {
+  display: grid;
+  gap: $gridGapPV;
+  justify-content: center;
+  grid-template-columns: repeat(3, min-content);
+}
+
+.removeGap {
+  gap: 0;
 }

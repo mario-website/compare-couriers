@@ -6,6 +6,12 @@ import "./style.scss";
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
 const ParcelValues = ({useReducerTable, setNewData}) => {
+  const [classNames, setClassNames] = useState({
+    weightMod: "",
+    displayNone: "",
+    displayGrid: "",
+    removeGap: "",
+  });
   const dimensions = [
     {name: LENGTH, labelName: "Length", placeholder: "Length in cm", units: "cm"},
     {name: WIDTH, labelName: "Width", placeholder: "Width in cm", units: "cm"},
@@ -18,22 +24,36 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
     units: "kg",
   };
 
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    setClassNames({
+      weightMod: "weightMod",
+      displayNone: "displayNone",
+      displayGrid: "displayGrid",
+      removeGap: "removeGap",
+    });
+  };
+
   return (
-    <form className="ParcelValues">
+    <form className="ParcelValues" id="form1" onSubmit={setNewData}>
       <div className="ParcelValues-Title">
         <p>Send UK to UK</p>
+        <button>Get Quote</button>
       </div>
-      <div className="ParcelValues-Dimensions">
-        <button className="ParcelValues-Dimensions_lessThan1Metre">
+      <div className={`ParcelValues-Dimensions ${classNames.removeGap}`}>
+        <button
+          className={`ParcelValues-Dimensions_lessThan1Metre ${classNames.displayNone}`}
+          onClick={handleClick}>
           <InputForm
             key={"keylessThan1Metre"}
-            placeholder={"none"}
+            placeholder={"without dimensions"}
             name={"Less than 1 Metre"}
-            labelName={"Parcel Length"}
+            labelName={"Parcel Length - click to modify"}
             useReducerTable={useReducerTable}
           />
         </button>
-        <div className="ParcelValues-Dimensions_weight">
+        <div className={`ParcelValues-Dimensions_weight ${classNames.weightMod}`}>
           <InputForm
             key={"key" + weight.name}
             placeholder={weight.placeholder}
@@ -42,25 +62,21 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
             useReducerTable={useReducerTable}
             units={weight.units}
           />
+          <div className={`ParcelValues-Dimensions_lengths ${classNames.displayGrid}`}>
+            {dimensions.map((e, i) => {
+              return (
+                <InputForm
+                  key={i + e.name}
+                  placeholder={e.placeholder}
+                  name={e.name}
+                  labelName={e.labelName}
+                  useReducerTable={useReducerTable}
+                  units={e.units}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
-      {/* <div>
-        {dimensions.map((e, i) => {
-          return (
-            <InputForm
-              key={i + e.name}
-              placeholder={e.placeholder}
-              name={e.name}
-              labelName={e.labelName}
-              useReducerTable={useReducerTable}
-              units={e.units}
-            />
-          );
-        })}
-      </div> */}
-
-      <div>
-        <button onClick={setNewData}>Get Quote</button>
       </div>
     </form>
   );

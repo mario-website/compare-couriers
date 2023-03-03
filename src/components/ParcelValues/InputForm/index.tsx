@@ -26,25 +26,25 @@ const InputForm = ({labelName, placeholder, name, useReducerTable, units}: Props
       payload: {name, value: e.target.value},
     });
   };
-
   return (
     <div className="InputForm">
-      <label className="InputForm-Label">
-        <p>{labelName}</p>
-        {placeholder === "none" ? (
-          <p>{name}</p>
-        ) : (
-          <p>
-            <input
-              type="text"
-              onChange={(e) => handleChange(e)}
-              placeholder={placeholder}
-              value={useReducerTable.stateCurrentValues[name]}
-            />
-            <span>{units}</span>
-          </p>
-        )}
-      </label>
+      <p>{labelName}</p>
+      {placeholder === "without dimensions" ? (
+        <p>{name}</p>
+      ) : (
+        <p>
+          <input
+            type={"number"}
+            step={0.1}
+            min={0}
+            max={500}
+            onChange={(e) => handleChange(e)}
+            placeholder={placeholder}
+            value={useReducerTable.stateCurrentValues[name]}
+          />
+          <label className="InputForm-Label">{units}</label>
+        </p>
+      )}
     </div>
   );
 };

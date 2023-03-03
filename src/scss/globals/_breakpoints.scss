@@ -39,12 +39,14 @@
 //------------------------------------------------------------------------------------------------
 //when changing $MD or $LR values you need also update file src/components/AllResults/hooks.tsx
 //in function getScreenSize
+$FR: 320px;
 $SM: 530px;
 $MD: 768px;
 $LR: 1024px;
 //------------------------------------------------------------------------------------------------
 
 $breakpoints: (
+  "FORM": $FR,
   "SMALL": $SM,
   "MEDIUM": $MD,
   "LARGE": $LR,

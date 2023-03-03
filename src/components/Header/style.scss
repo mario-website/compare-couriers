@@ -38,6 +38,7 @@
     p {
       font-weight: 200;
     }
+
     @include media(">SMALL") {
       font-size: 1.6rem;
     }
