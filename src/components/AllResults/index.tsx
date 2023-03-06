@@ -14,9 +14,11 @@ const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 const AllResults = ({
   allResponses,
   fetchCounter,
+  isSearching,
 }: {
   allResponses: any[];
   fetchCounter: number;
+  isSearching: boolean;
 }) => {
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData} = state;
@@ -108,6 +110,7 @@ const AllResults = ({
   };
   return (
     <section className="Results">
+      {isSearching && fetchCounter === 0 && <p>is searching</p>}
       {fetchCounter > 0 && (
         <>
           <Filter

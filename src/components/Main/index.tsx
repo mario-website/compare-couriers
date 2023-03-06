@@ -14,9 +14,12 @@ const Main = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
   const {couriersData, currentValues, fetchCounter, allRes, error, tempController} =
     state;
+  const [isSearching, setIsSearching] = useState(false);
+
   //2.0
   const setNewData = (e: any) => {
     e.preventDefault();
+    setIsSearching(true);
     //1.0
     handleFetchNewData(tempController, dispatch, couriersData, currentValues);
   };
@@ -34,7 +37,11 @@ const Main = () => {
         useReducerTable={{stateCurrentValues: currentValues, dispatch}}
         setNewData={setNewData}
       />
-      <AllResults allResponses={allRes} fetchCounter={fetchCounter} />
+      <AllResults
+        allResponses={allRes}
+        fetchCounter={fetchCounter}
+        isSearching={isSearching}
+      />
     </main>
   );
 };
