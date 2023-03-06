@@ -16,13 +16,13 @@ const AllResults = ({
   fetchCounter,
   isSearching,
   setIsSearching,
-  newController,
+  controller,
 }: {
   allResponses: any[];
   fetchCounter: number;
   isSearching: boolean;
   setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
-  newController: AbortController;
+  controller: AbortController;
 }) => {
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData} = state;
@@ -45,18 +45,15 @@ const AllResults = ({
       const maxiumuDisplayTime = displaySearchingTime + nothingFoundDisplayTime;
 
       const timer1 = setTimeout(() => {
-        if (allResponses.length === 0) {
-          setIsSearchingTxt("nothing found");
-        }
+        if (allResponses.length === 0) setIsSearchingTxt("nothing found");
       }, maxiumuDisplayTime - nothingFoundDisplayTime);
 
       const timer2 = setTimeout(() => {
         setIsSearching(false);
         setIsOpenModal(false);
         setIsSearchingTxt("is searching");
-
-        //to stop all searchings
-        newController.abort();
+        //to stop all searchings after maxiumuDisplayTime countdown
+        if (allResponses.length === 0) controller.abort();
       }, maxiumuDisplayTime);
 
       return () => {
@@ -64,7 +61,7 @@ const AllResults = ({
         clearTimeout(timer2);
       };
     }
-  }, [isSearching, allResponses.length, setIsSearching, newController]);
+  }, [isSearching, allResponses.length, setIsSearching, controller]);
 
   useEffect(() => {
     setCurrentSortingValues(workingData.options);

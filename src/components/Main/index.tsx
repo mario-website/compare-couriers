@@ -14,7 +14,7 @@ const Main = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
   const {couriersData, currentValues, fetchCounter, allRes, error, tempController} =
     state;
-  const [newController, setNewController] = useState(new AbortController());
+  const [controller, setController] = useState(new AbortController());
   const [isSearching, setIsSearching] = useState(false);
 
   //2.0
@@ -27,7 +27,7 @@ const Main = () => {
       dispatch,
       couriersData,
       currentValues,
-      setNewController
+      setController
     );
   };
 
@@ -49,7 +49,7 @@ const Main = () => {
         fetchCounter={fetchCounter}
         isSearching={isSearching}
         setIsSearching={setIsSearching}
-        newController={newController}
+        controller={controller}
       />
     </main>
   );
@@ -65,11 +65,11 @@ const handleFetchNewData = (
   }>,
   couriersData: (values: any) => any,
   currentValues: any,
-  setNewController: React.Dispatch<React.SetStateAction<AbortController>>
+  setController: React.Dispatch<React.SetStateAction<AbortController>>
 ) => {
   const controller = new AbortController();
   const {signal} = controller;
-  setNewController(controller);
+  setController(controller);
   //for any new fetch I need to cancell all current fetching in asyc functions
   //I checking if there is any of them, I need to cancel that one
   if (tempController) tempController.abort();
