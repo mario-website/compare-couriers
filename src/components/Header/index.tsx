@@ -11,7 +11,7 @@ const Header = () => {
       </p>
       <div className="Header-Slogan">
         <h1>Deals from your favourite courier website</h1>
-        <p>Try searching for beast parcel deal</p>
+        <p>Try searching for best parcel deal</p>
       </div>
     </header>
   );

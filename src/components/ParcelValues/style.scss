@@ -94,7 +94,7 @@ $gridGapPV: calc($gridGap / 2);
   display: grid;
   gap: $gridGapPV;
   justify-content: center;
-  grid-template-columns: repeat(3, min-content);
+  grid-template-columns: repeat(3, auto);
 }
 
 .removeGap {
