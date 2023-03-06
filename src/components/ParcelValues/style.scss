@@ -20,7 +20,6 @@ $gridGapPV: calc($gridGap / 2);
   max-width: max-content;
 
   &-Title {
-    // padding-bottom: $bodyPadding;
     display: grid;
     grid-template-columns: max-content auto max-content;
     align-items: center;

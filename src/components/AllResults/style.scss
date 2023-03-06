@@ -5,18 +5,24 @@
     z-index: 1000;
     top: 0;
     left: -$bodyPadding;
-    display: table-cell;
+    display: block;
     position: absolute;
     width: calc(100% + $bodyPadding);
     height: 100%;
-    background-color: aliceblue;
+    background: radial-gradient(#a35454, transparent 80%, #e4d5d5);
+    background-color: rgb(206, 218, 230);
+    opacity: 0.7;
     text-align: center;
     margin: 0;
 
     span {
+      display: flex;
+      flex-direction: column;
       text-align: center;
-      position: relative;
+      justify-content: center;
       top: 50%;
+      align-items: center;
+      position: relative;
       -ms-transform: translateY(-50%);
       -webkit-transform: translateY(-50%);
       transform: translateY(-50%);

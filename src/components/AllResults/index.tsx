@@ -34,7 +34,7 @@ const AllResults = ({
   const [valClickedSoring, setValClickedSoring] = useState("");
   const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
   const isClickedBtn = useBoolean(false);
-  const [isSearchingTxt, setIsSearchingTxt] = useState("is searching");
+  const [isSearchingTxt, setIsSearchingTxt] = useState("please wait...");
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const AllResults = ({
       const timer2 = setTimeout(() => {
         setIsSearching(false);
         setIsOpenModal(false);
-        setIsSearchingTxt("is searching");
+        setIsSearchingTxt("please wait...");
         //to stop all searchings after maxiumuDisplayTime countdown
         if (allResponses.length === 0) controller.abort();
       }, maxiumuDisplayTime);
@@ -143,8 +143,20 @@ const AllResults = ({
   return (
     <section className="Results">
       {isOpenModal && (
-        <p className="Results-IsSearching">
-          <span>{isSearchingTxt}</span>
+        <p className="Results-IsSearching ">
+          <span>
+            <div className="lds-roller">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <p>{isSearchingTxt}</p>
+          </span>
         </p>
       )}
       {allResponses.length > 0 && (
