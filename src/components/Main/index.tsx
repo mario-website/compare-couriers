@@ -45,7 +45,7 @@ const Main = () => {
         setNewData={setNewData}
       />
       <AllResults
-        allResponses={[]}
+        allResponses={allRes}
         fetchCounter={fetchCounter}
         isSearching={isSearching}
         setIsSearching={setIsSearching}
