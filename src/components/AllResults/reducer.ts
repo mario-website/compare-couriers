@@ -1,12 +1,26 @@
-import {defaultData} from "../../utils/couriersFetchData";
+import {defaultData, DefaultData} from "../../utils/couriersFetchData";
 
-export const INITIAL_STATE = {
+export interface Initial_State {
+  dataAllResponses: DefaultData;
+  filteredData: DefaultData;
+  defaultData: DefaultData;
+}
+
+export const INITIAL_STATE: Initial_State = {
   dataAllResponses: defaultData,
   filteredData: defaultData,
   defaultData,
 };
 
-export const allResReducer = (INITIAL_STATE, action) => {
+export interface AllResReducer {
+  state: Initial_State;
+  action: {type: string; payload?: any};
+}
+
+export const allResReducer = (
+  INITIAL_STATE: Initial_State,
+  action: AllResReducer["action"]
+) => {
   switch (action.type) {
     case ACTION_TYPES.SET_DATA_ALL_RESPONSES:
       return {

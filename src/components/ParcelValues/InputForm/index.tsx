@@ -9,7 +9,13 @@ interface Dispatch {
   };
 }
 
-interface Props {
+const InputForm = ({
+  labelName,
+  placeholder,
+  name,
+  useReducerTable,
+  units,
+}: {
   labelName: string;
   placeholder: string;
   name: string;
@@ -18,14 +24,16 @@ interface Props {
     stateCurrentValues: {[key: string]: any};
   };
   units: string;
-}
-const InputForm = ({labelName, placeholder, name, useReducerTable, units}: Props) => {
+}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     useReducerTable.dispatch({
       type: "CHANGE_INPUT",
       payload: {name, value: e.target.value},
     });
   };
+  const isZeroNumber: boolean =
+    Number(useReducerTable.stateCurrentValues[name]).toString() === "0" ? true : false;
+
   return (
     <div className="InputForm">
       <p>{labelName}</p>
@@ -34,13 +42,12 @@ const InputForm = ({labelName, placeholder, name, useReducerTable, units}: Props
       ) : (
         <p>
           <input
-            type={"number"}
+            type={isZeroNumber ? "text" : "number"}
             step={0.1}
-            min={0}
+            min={1}
             max={500}
             onChange={(e) => handleChange(e)}
-            placeholder={placeholder}
-            value={useReducerTable.stateCurrentValues[name]}
+            value={isZeroNumber ? " " : useReducerTable.stateCurrentValues[name]}
           />
           <label className="InputForm-Label">{units}</label>
         </p>

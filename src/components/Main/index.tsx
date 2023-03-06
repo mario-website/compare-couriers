@@ -10,39 +10,22 @@ import "./style.scss";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
-const Table = () => {
+const Main = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
-  const {
-    couriersData,
-    currentValues,
-    fetchCounter,
-    allRes,
-    error,
-    tempController,
-    defaultData,
-  } = state;
+  const {couriersData, currentValues, fetchCounter, allRes, error, tempController} =
+    state;
   //2.0
-  const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
-  const isClickedBtn = useBoolean(false);
-  const [valClickedSoring, setValClickedSoring] = useState("");
   const setNewData = (e: any) => {
     e.preventDefault();
     //1.0
     handleFetchNewData(tempController, dispatch, couriersData, currentValues);
   };
 
-  const setSorting = (item: string) => {
-    // e.preventDefault();
-    setValClickedSoring(item);
-
-    // dispatch({type: "SET_IS_CLICKED_BTN_TO_TRUE"});
-    isClickedBtn.setTrue();
-    // dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
-  };
-
   return (
-    <main id="main">
-      {/* {error && (
+    <main className="Main">
+      {/* 
+      //need to be done error
+      {error && (
         <p>
           error message{error.message}, error stack{error.stack}
         </p>
@@ -51,25 +34,11 @@ const Table = () => {
         useReducerTable={{stateCurrentValues: currentValues, dispatch}}
         setNewData={setNewData}
       />
-      <div>
-        <button onClick={() => setSorting("price")}>sortByPrice</button>
-        <button onClick={() => setSorting("alphabetical")}>sortByServiceName</button>
-      </div>
-      <div>
-        <span>fetchCounter:{fetchCounter}</span>
-        <div>sortedBy: {currentSortingValues.sortedBy}</div>
-        <div>isAscending: {currentSortingValues.isAscending.toString()}</div>
-      </div>
-      <AllResults
-        allResponses={allRes}
-        isClickedBtn={isClickedBtn}
-        valClickedSoring={valClickedSoring}
-        setCurrentSortingValues={setCurrentSortingValues}
-      />
+      <AllResults allResponses={allRes} fetchCounter={fetchCounter} />
     </main>
   );
 };
-export default Table;
+export default Main;
 
 //1.0
 const handleFetchNewData = (

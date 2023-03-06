@@ -19,17 +19,13 @@ $gridGapPV: calc($gridGap / 2);
   color: white;
   max-width: max-content;
 
-  @include media(">FORM") {
-    margin: 0 auto;
-  }
-
   &-Title {
-    padding-bottom: $bodyPadding;
+    // padding-bottom: $bodyPadding;
     display: grid;
-    grid-template-columns: auto max-content;
+    grid-template-columns: auto auto max-content;
     align-items: center;
 
-    button {
+    > button {
       border: 0;
       border-radius: $ParcelValuesBorderRadius;
       background-color: #03aa5b;
@@ -46,6 +42,9 @@ $gridGapPV: calc($gridGap / 2);
     display: grid;
     grid-template-columns: auto max-content;
     gap: $gridGapPV;
+    grid-row: 2;
+    grid-column: 1 / span 2;
+    padding-top: $gridGap;
 
     &_lessThan1Metre {
       @include dim;
@@ -58,13 +57,33 @@ $gridGapPV: calc($gridGap / 2);
       display: none;
     }
   }
+
+  @include media(">FORM") {
+    margin: 0 auto;
+  }
+
+  @media (min-width: 640px) {
+    &-Title {
+      gap: $gridGap;
+
+      > button {
+        margin-left: 0;
+      }
+    }
+
+    &-Dimensions {
+      grid-row: 1;
+      grid-column: 2;
+      padding-top: 0;
+    }
+  }
 }
 
 .displayNone {
   display: none;
 }
 
-.weightMod {
+.showAllDimensionsAndWeight {
   display: grid;
   grid-template-columns: min-content min-content;
   gap: $gridGapPV;

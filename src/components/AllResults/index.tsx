@@ -1,25 +1,22 @@
 import React, {useState, useEffect, useReducer} from "react";
 import Table from "./Table";
+import Filter from "./Filter";
 import {VARIABLES} from "../../utils/variables";
 import {dynamicSort, generateUUID} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
 import {defaultValues, DefaultData, DefaultValues} from "../../utils/couriersFetchData";
 import {useScreenSize, getScreenSize} from "./hooks";
-import {ReturnUseBoolean} from "../Main/hooks";
+import {ReturnUseBoolean, useBoolean} from "../Main/hooks";
 import "./style.scss";
 
 const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
 
 const AllResults = ({
   allResponses,
-  setCurrentSortingValues,
-  valClickedSoring,
-  isClickedBtn,
+  fetchCounter,
 }: {
   allResponses: any[];
-  setCurrentSortingValues: React.Dispatch<React.SetStateAction<DefaultData["options"]>>;
-  valClickedSoring: string;
-  isClickedBtn: ReturnUseBoolean;
+  fetchCounter: number;
 }) => {
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData} = state;
@@ -28,6 +25,9 @@ const AllResults = ({
   const [screenSize] = useScreenSize();
   const [workingData, setWorkingData] = useState<DefaultData>(defaultData);
   const [currentScreenSize, setCurrentScreenSize] = useState<string>(screenSize);
+  const [valClickedSoring, setValClickedSoring] = useState("");
+  const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
+  const isClickedBtn = useBoolean(false);
 
   useEffect(() => {
     setCurrentSortingValues(workingData.options);
@@ -98,63 +98,30 @@ const AllResults = ({
     setWorkingData(sortedData);
   };
 
-  const getClassName = (isTrue: boolean, className: string) => {
-    if (isTrue) return className;
+  const setSorting = (item: string) => {
+    // e.preventDefault();
+    setValClickedSoring(item);
+
+    // dispatch({type: "SET_IS_CLICKED_BTN_TO_TRUE"});
+    isClickedBtn.setTrue();
+    // dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
   };
   return (
     <section className="Results">
-      {(screenSize === SMALL || screenSize === MEDIUM) && (
-        <div className="Results-FilterButtons">
-          {/* to show buttons deliveryTimeBtn */}
-          {workingData.mergedAllData?.map((timeSpeed) => {
-            const deliveryTimeBtn = timeSpeed.deliveryTime;
-            const currentLength = timeSpeed.timeSpeedData.length;
-            const minPrice = timeSpeed.minPrice.toFixed(2);
-            return (
-              <button
-                key={timeSpeed.id}
-                className={getClassName(
-                  deliveryTimeBtn === workingData.options.deliveryTimeBtn,
-                  "Results-FilterButtons_isSelected"
-                )}
-                onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
-                <p>{delTime(deliveryTimeBtn)}</p>
-                <p>
-                  {currentLength} FROM £{minPrice}
-                </p>
-              </button>
-            );
-          })}
-
-          {/* to show how many services */}
-          {workingData.titles?.map((title, index) => {
-            //when screenSize === SMALL, workingData.data have only one object
-            const allTimeSpeedArray = workingData.mergedAllData.find(
-              (e) => e.deliveryTime === ALL
-            );
-
-            let showingCount = 0;
-
-            workingData.data?.forEach((workingDataEle, i) => {
-              showingCount = showingCount + workingDataEle.timeSpeedData.length;
-              // rows.push(new Array(workingDataEle.timeSpeedData.length));
-            });
-
-            const allItemsCount = allTimeSpeedArray?.timeSpeedData.length;
-            const isTrue = showingCount !== allItemsCount;
-            if (isTrue) {
-              return (
-                <p key={index + title}>
-                  Showing {showingCount} of {allItemsCount} Services
-                </p>
-              );
-            } else {
-              return <p key={index + title}>Showing {showingCount} Services</p>;
-            }
-          })}
-        </div>
+      {fetchCounter > 0 && (
+        <>
+          <Filter
+            setSorting={setSorting}
+            fetchCounter={fetchCounter}
+            currentSortingValues={currentSortingValues}
+            screenSize={screenSize}
+            workingData={workingData}
+            handleDeliveryTime={handleDeliveryTime}
+            delTime={delTime}
+          />
+          <Table workingData={workingData} delTime={delTime} />
+        </>
       )}
-      <Table workingData={workingData} delTime={delTime} />
     </section>
   );
 };

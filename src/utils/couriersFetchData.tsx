@@ -18,10 +18,10 @@ export interface DefaultValues {
 
 export const defaultValues: DefaultValues = {
   VALUE: 0,
-  WEIGHT: 10,
-  LENGTH: 9,
-  WIDTH: 8,
-  HEIGHT: 7,
+  WEIGHT: 1,
+  LENGTH: 10,
+  WIDTH: 10,
+  HEIGHT: 10,
   IS_ASCENDING: true,
   SORTED_BY: "price",
   COUNTRY_FROM: "GB",
