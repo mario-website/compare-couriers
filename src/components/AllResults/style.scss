@@ -1,6 +1,28 @@
 @use "../../scss/globals" as *;
 
 .Results {
+  &-IsSearching {
+    z-index: 1000;
+    top: 0;
+    left: -$bodyPadding;
+    display: table-cell;
+    position: absolute;
+    width: calc(100% + $bodyPadding);
+    height: 100%;
+    background-color: aliceblue;
+    text-align: center;
+    margin: 0;
+
+    span {
+      text-align: center;
+      position: relative;
+      top: 50%;
+      -ms-transform: translateY(-50%);
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+  }
+
   &-FilterButtons {
     &_isSelected {
       background-color: darkgray;

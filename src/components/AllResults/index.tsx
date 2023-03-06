@@ -15,10 +15,14 @@ const AllResults = ({
   allResponses,
   fetchCounter,
   isSearching,
+  setIsSearching,
+  newController,
 }: {
   allResponses: any[];
   fetchCounter: number;
   isSearching: boolean;
+  setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
+  newController: AbortController;
 }) => {
   const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData} = state;
@@ -30,6 +34,37 @@ const AllResults = ({
   const [valClickedSoring, setValClickedSoring] = useState("");
   const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
   const isClickedBtn = useBoolean(false);
+  const [isSearchingTxt, setIsSearchingTxt] = useState("is searching");
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  useEffect(() => {
+    if (isSearching) {
+      setIsOpenModal(true);
+      const displaySearchingTime = 8500;
+      const nothingFoundDisplayTime = 1500;
+      const maxiumuDisplayTime = displaySearchingTime + nothingFoundDisplayTime;
+
+      const timer1 = setTimeout(() => {
+        if (allResponses.length === 0) {
+          setIsSearchingTxt("nothing found");
+        }
+      }, maxiumuDisplayTime - nothingFoundDisplayTime);
+
+      const timer2 = setTimeout(() => {
+        setIsSearching(false);
+        setIsOpenModal(false);
+        setIsSearchingTxt("is searching");
+
+        //to stop all searchings
+        newController.abort();
+      }, maxiumuDisplayTime);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
+    }
+  }, [isSearching, allResponses.length, setIsSearching, newController]);
 
   useEffect(() => {
     setCurrentSortingValues(workingData.options);
@@ -110,8 +145,12 @@ const AllResults = ({
   };
   return (
     <section className="Results">
-      {isSearching && fetchCounter === 0 && <p>is searching</p>}
-      {fetchCounter > 0 && (
+      {isOpenModal && (
+        <p className="Results-IsSearching">
+          <span>{isSearchingTxt}</span>
+        </p>
+      )}
+      {allResponses.length > 0 && (
         <>
           <Filter
             setSorting={setSorting}
