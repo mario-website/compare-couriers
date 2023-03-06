@@ -22,7 +22,7 @@ $gridGapPV: calc($gridGap / 2);
   &-Title {
     // padding-bottom: $bodyPadding;
     display: grid;
-    grid-template-columns: auto auto max-content;
+    grid-template-columns: max-content auto max-content;
     align-items: center;
 
     > button {
@@ -34,7 +34,9 @@ $gridGapPV: calc($gridGap / 2);
       font-family: $font-Lexend;
       color: white;
       padding: 0.6rem;
-      margin-left: 1rem;
+      margin-left: $gridGap;
+      max-width: max-content;
+      justify-self: end;
     }
   }
 
