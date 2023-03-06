@@ -34,24 +34,26 @@ const InputForm = ({
   const isZeroNumber: boolean =
     Number(useReducerTable.stateCurrentValues[name]).toString() === "0" ? true : false;
 
+  const withDimensions = (
+    <p>
+      <input
+        type={isZeroNumber ? "text" : "number"}
+        step={0.1}
+        min={1}
+        max={500}
+        onChange={(e) => handleChange(e)}
+        value={isZeroNumber ? " " : useReducerTable.stateCurrentValues[name]}
+      />
+      <label className="InputForm-Label">{units}</label>
+    </p>
+  );
+
   return (
     <div className="InputForm">
       <p>{labelName}</p>
-      {placeholder === "without dimensions" ? (
-        <p>{name}</p>
-      ) : (
-        <p>
-          <input
-            type={isZeroNumber ? "text" : "number"}
-            step={0.1}
-            min={1}
-            max={500}
-            onChange={(e) => handleChange(e)}
-            value={isZeroNumber ? " " : useReducerTable.stateCurrentValues[name]}
-          />
-          <label className="InputForm-Label">{units}</label>
-        </p>
-      )}
+      {/* "without dimensions" is used to render this component to be used 
+      as button to show all dimensions */}
+      {placeholder === "without dimensions" ? <p>{name}</p> : withDimensions}
     </div>
   );
 };
