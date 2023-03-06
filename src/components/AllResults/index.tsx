@@ -39,7 +39,7 @@ const AllResults = ({
 
   useEffect(() => {
     if (isSearching) {
-      setIsOpenModal(true);
+      setIsOpenModal(allResponses.length === 0);
       const displaySearchingTime = 8500;
       const nothingFoundDisplayTime = 1500;
       const maxiumuDisplayTime = displaySearchingTime + nothingFoundDisplayTime;
