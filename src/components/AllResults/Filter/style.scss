@@ -1,4 +1,63 @@
 @use "../../../scss/globals" as *;
 
+$borderWidth: 2px;
+@mixin button {
+  width: max-content;
+  background-color: white;
+  border: 0;
+  outline: $borderWidth solid #15537d;
+  margin-top: $borderWidth;
+  margin-bottom: $borderWidth;
+}
+
 .Filter {
+  margin-top: $gridGap;
+  margin-bottom: $gridGap;
+  &-Buttons {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-Button {
+    @include button;
+
+    &_sortBy {
+      @include button;
+      width: max-content;
+      margin-left: auto;
+    }
+    &_isSelected {
+      @include button;
+      background-color: #15537d;
+      color: white;
+    }
+  }
+
+  &-DeliveryTime {
+    &_title {
+      text-align: center;
+      padding: $gridGap;
+    }
+    &_allButtons {
+      display: grid;
+      grid-auto-flow: column;
+      justify-content: center;
+      // gap: $gridGap;
+      grid-gap: 1px;
+    }
+  }
+
+  &-Services {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-column-gap: 5px;
+    justify-items: center;
+    align-items: center;
+    margin-top: $gridGap;
+
+    > p {
+      grid-column-start: 2;
+      font-size: 1.3rem;
+    }
+  }
 }

@@ -143,7 +143,7 @@ const AllResults = ({
   return (
     <section className="Results">
       {isOpenModal && (
-        <p className="Results-IsSearching ">
+        <div className="Results-IsSearching ">
           <span>
             <div className="lds-roller">
               <div></div>
@@ -157,7 +157,7 @@ const AllResults = ({
             </div>
             <p>{isSearchingTxt}</p>
           </span>
-        </p>
+        </div>
       )}
       {allResponses.length > 0 && (
         <>
