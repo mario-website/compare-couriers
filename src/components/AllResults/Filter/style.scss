@@ -4,10 +4,8 @@ $borderWidth: 2px;
 @mixin button {
   width: max-content;
   background-color: white;
-  border: 0;
-  outline: $borderWidth solid #15537d;
-  margin-top: $borderWidth;
-  margin-bottom: $borderWidth;
+  border: $borderWidth solid #15537d;
+  margin: -$borderWidth;
 }
 
 .Filter {
@@ -42,7 +40,7 @@ $borderWidth: 2px;
       display: grid;
       grid-auto-flow: column;
       justify-content: center;
-      // gap: $gridGap;
+      padding: $borderWidth 0 $borderWidth 0;
       grid-gap: 1px;
     }
   }
@@ -54,6 +52,7 @@ $borderWidth: 2px;
     justify-items: center;
     align-items: center;
     margin-top: $gridGap;
+    padding: $borderWidth 0 $borderWidth 0;
 
     > p {
       grid-column-start: 2;
