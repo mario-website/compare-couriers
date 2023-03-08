@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {DefaultData, TimeSpeedData} from "../../../utils/couriersFetchData";
-import SingleResult from "../SingleResult";
+import TableRow from "../TableRow";
 import "./style.scss";
 
 const Table = ({workingData, delTime}: {workingData: DefaultData; delTime: any}) => {
   return (
     <table className="Table">
-      <thead>
-        <tr className="Table-Titles">
+      <thead className="Table-Titles">
+        <tr>
           {workingData.titles?.map((timeSpeed) => {
             return (
               <th
@@ -26,7 +26,7 @@ const Table = ({workingData, delTime}: {workingData: DefaultData; delTime: any})
       <tbody className="Table-AllItems">
         {workingData.rowsData?.map((timeSpeedRow, i) => {
           return (
-            <SingleResult
+            <TableRow
               key={"allItems" + timeSpeedRow[0].id}
               timeSpeedData={timeSpeedRow}
             />

@@ -212,6 +212,7 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
       (item) => item.serviceName === serviceName
     );
     const deliveryTime = filteredWithServiceName[0].deliveryTime;
+    const courierName = filteredWithServiceName[0].courierName;
     filteredWithServiceName.sort(dynamicSort(SORTED_BY));
     const min = Math.min(...filteredWithServiceName.map((item) => item.price));
     const max = Math.max(...filteredWithServiceName.map((item) => item.price));
@@ -222,6 +223,7 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
       deliveryTime,
       serviceData: filteredWithServiceName,
       serviceName,
+      courierName,
     };
     return returnTempData;
   });

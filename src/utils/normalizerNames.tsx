@@ -8,9 +8,9 @@ const {SLOW, MEDIUM, FAST} = VARIABLES;
 export const courierNameF = (courierName: string, courier: string) => {
   let output = "";
 
-  if (["MyHermes", "Hermes"].includes(courierName)) {
-    output = "Hermes";
-  }
+  // if (["MyHermes", "Hermes"].includes(courierName)) {
+  //   output = "Evri";
+  // }
   if (
     [
       "Parcelforce 24",
@@ -84,9 +84,9 @@ export const courierNameF = (courierName: string, courier: string) => {
   if (courierName === "FedEx Express") {
     output = "FedEx";
   }
-  // if (courierName === 'InPost Lockers') {
-  //   output = 'InPost'
-  // }
+  if (courierName === "InPost Lockers") {
+    output = "InPost";
+  }
   if (output === "") {
     console.log("new courierName: ", courierName, courier);
   }
@@ -267,28 +267,28 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   if (serviceName === "TNT UK Express Service") {
     output = "TNT UK Express Service";
   }
-  if (
-    serviceName === "Hermes UK Collection" ||
-    serviceName === "ukparcels_hermescollected" ||
-    serviceName === "Hermes UK Collection Small Parcel"
-  ) {
-    output = "Hermes UK Collection";
-  }
-  if (serviceName === "Hermes ParcelShop" || serviceName === "ukparcels_hermesdropoff") {
-    output = "Drop off - Hermes ParcelShop";
-  }
-  if (serviceName === "Hermes UK Collection Medium Parcel") {
-    output = "Hermes UK Collection Medium Parcel";
-  }
-  if (serviceName === "Hermes ParcelShop Small") {
-    output = "Drop off - Hermes ParcelShop Small";
-  }
-  if (serviceName === "Hermes ParcelShop Medium") {
-    output = "Drop off - Hermes ParcelShop Medium";
-  }
-  if (serviceName === "Hermes Light and Large") {
-    output = "Hermes Light and Large";
-  }
+  // if (
+  //   serviceName === "Hermes UK Collection" ||
+  //   serviceName === "ukparcels_hermescollected" ||
+  //   serviceName === "Hermes UK Collection Small Parcel"
+  // ) {
+  //   output = "Hermes UK Collection";
+  // }
+  // if (serviceName === "Hermes ParcelShop" || serviceName === "ukparcels_hermesdropoff") {
+  //   output = "Drop off - Hermes ParcelShop";
+  // }
+  // if (serviceName === "Hermes UK Collection Medium Parcel") {
+  //   output = "Hermes UK Collection Medium Parcel";
+  // }
+  // if (serviceName === "Hermes ParcelShop Small") {
+  //   output = "Drop off - Hermes ParcelShop Small";
+  // }
+  // if (serviceName === "Hermes ParcelShop Medium") {
+  //   output = "Drop off - Hermes ParcelShop Medium";
+  // }
+  // if (serviceName === "Hermes Light and Large") {
+  //   output = "Hermes Light and Large";
+  // }
   if (serviceName === "TNT UK 10:00 Express") {
     output = "TNT UK 10:00 Express";
   }
