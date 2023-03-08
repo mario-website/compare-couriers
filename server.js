@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === "production") {
 }
 const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 
-// app.use(express.static("public"));
+app.use(express.static("src/assets/logo"));
 // app.use(bodyParser.urlencoded({extended: true}));
 // app.set("view engine", "ejs");
 // app.use(bodyParser.json());

@@ -1,6 +1,7 @@
 @use "../../../scss/globals" as *;
 
 $borderWidth: 2px;
+
 @mixin button {
   width: max-content;
   background-color: white;
@@ -36,12 +37,12 @@ $borderWidth: 2px;
       text-align: center;
       padding: $gridGap;
     }
+
     &_allButtons {
       display: grid;
       grid-auto-flow: column;
       justify-content: center;
       padding: $borderWidth 0 $borderWidth 0;
-      grid-gap: 1px;
     }
   }
 

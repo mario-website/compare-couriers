@@ -12,6 +12,7 @@ const SingleResult = ({timeSpeedData}: {timeSpeedData: any}) => {
         return (
           <td key={service.id} className="SingleColumn-SingleResult">
             <div>
+              <img alt="DPD Collection" src="./dpd.svg"></img>
               <span>service:</span>
               <span style={{background: "lightgreen"}}>{service.serviceName}</span>
             </div>
