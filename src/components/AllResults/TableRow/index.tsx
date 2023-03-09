@@ -10,7 +10,9 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
       {timeSpeedData?.map((service: any) => {
         // console.log(`timeSpeedData:`, timeSpeedData);
         // console.log(`service:`, service);
+        // console.log(`service.serviceData[0]:`, service.serviceData[0]);
         const numOfServicesFound = service.serviceData.length;
+        // const price =
         return (
           <td key={service.id} className="TableRow-SingleResult">
             <div className="TableRow-SingleResult_content">
@@ -18,20 +20,27 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
                 <img alt={service.courierName} src={`./${service.courierName}.svg`}></img>
                 <figcaption>{service.serviceName}</figcaption>
               </figure>
-              {/* <p>price: {service.serviceData[0].url}</p> */}
             </div>
             <div className="TableRow-SingleResult_allPrices ">
-              <details>
-                <summary>
-                  <span>
-                    Found {numOfServicesFound} deal{numOfServicesFound > 1 && "s"}, from:
-                    £{service.serviceData[0].price}
-                  </span>
-                </summary>
-                <ul>
-                  <Prices serviceData={service.serviceData} />
-                </ul>
-              </details>
+              <p>
+                <span>
+                  {service.serviceData[0].companyName.toLowerCase()} £
+                  {service.serviceData[0].price}
+                </span>
+                <a href={service.serviceData[0].url} target="_blank" rel="noreferrer">
+                  <button>Get Deal</button>
+                </a>
+              </p>
+              {numOfServicesFound > 1 && (
+                <details>
+                  <summary>
+                    <span>All {numOfServicesFound} deals:</span>
+                  </summary>
+                  <ul className="TableRow-SingleResult_price">
+                    <Prices serviceData={service.serviceData} />
+                  </ul>
+                </details>
+              )}
             </div>
           </td>
         );

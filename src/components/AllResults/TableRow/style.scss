@@ -4,6 +4,7 @@ $chevronSize: 0.5rem;
 .TableRow {
   &-SingleResult {
     padding: 0.4rem;
+    // display: grid;
 
     img {
       width: 100%;
@@ -13,7 +14,7 @@ $chevronSize: 0.5rem;
       figure {
         img {
           float: left;
-          max-width: 5rem;
+          max-width: 4rem;
           margin-right: 0.4rem;
         }
 
@@ -23,11 +24,19 @@ $chevronSize: 0.5rem;
     }
 
     &_allPrices {
-      background-color: rgb(241, 246, 251, 0.6);
+      > p {
+        background-color: rgb(241, 246, 251);
+        display: grid;
+        grid-template-columns: 1fr auto;
+      }
+
+      details summary {
+        cursor: pointer;
+      }
       summary,
       summary:after {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr min-content;
         align-items: center;
       }
 
@@ -63,6 +72,16 @@ $chevronSize: 0.5rem;
       details summary::-webkit-details-marker {
         content: "";
         display: none;
+      }
+    }
+    &_price {
+      li {
+        display: grid;
+        grid-template-columns: max-content 1fr auto;
+
+        span:nth-child(1) {
+          padding-right: 0.3rem;
+        }
       }
     }
   }

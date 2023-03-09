@@ -144,7 +144,7 @@ const AllResults = ({
   return (
     <section className="Results">
       {isOpenModal && (
-        <div className="Results-IsSearching ">
+        <div className="Results-IsSearching">
           <span>
             <div className="lds-roller">
               <div></div>
