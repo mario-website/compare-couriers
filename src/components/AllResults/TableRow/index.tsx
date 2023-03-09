@@ -24,8 +24,8 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
               <details>
                 <summary>
                   <span>
-                    found {numOfServicesFound} service
-                    {numOfServicesFound > 1 && "s"}, from: £{service.serviceData[0].price}
+                    Found {numOfServicesFound} deal{numOfServicesFound > 1 && "s"}, from:
+                    £{service.serviceData[0].price}
                   </span>
                 </summary>
                 <ul>
