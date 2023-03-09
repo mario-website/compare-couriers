@@ -5,14 +5,6 @@ import {TimeSpeedData} from "../../../utils/couriersFetchData";
 import "./style.scss";
 
 const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
-  const [openUl, setOpenUl] = useState("visibilityHidden");
-  const handleClick = () => {
-    console.log("scc");
-    // setOpenUl((prev) => {
-    //   if (prev === "visibilityHidden") return "visibilityVisible";
-    //   else return "visibilityHidden";
-    // });
-  };
   return (
     <tr className="TableRow">
       {timeSpeedData?.map((service: any) => {
@@ -30,13 +22,13 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
             </div>
             <div className="TableRow-SingleResult_allPrices ">
               <details>
-                <summary onClick={handleClick}>
+                <summary>
                   <span>
                     found {numOfServicesFound} service
                     {numOfServicesFound > 1 && "s"}, from: £{service.serviceData[0].price}
                   </span>
                 </summary>
-                <ul className={openUl}>
+                <ul>
                   <Prices serviceData={service.serviceData} />
                 </ul>
               </details>
