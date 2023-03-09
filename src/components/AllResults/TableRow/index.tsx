@@ -18,6 +18,7 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
       {timeSpeedData?.map((service: any) => {
         // console.log(`timeSpeedData:`, timeSpeedData);
         // console.log(`service:`, service);
+        const numOfServicesFound = service.serviceData.length;
         return (
           <td key={service.id} className="TableRow-SingleResult">
             <div className="TableRow-SingleResult_content">
@@ -25,13 +26,15 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
                 <img alt={service.courierName} src={`./${service.courierName}.svg`}></img>
                 <figcaption>{service.serviceName}</figcaption>
               </figure>
-              <span>services found: {service.serviceData.length}</span>
               {/* <p>price: {service.serviceData[0].url}</p> */}
             </div>
-            <div className="TableRow-SingleResult_allPrices">
+            <div className="TableRow-SingleResult_allPrices ">
               <details>
                 <summary onClick={handleClick}>
-                  lowest price: {service.serviceData[0].price}
+                  <span>
+                    found {numOfServicesFound} service
+                    {numOfServicesFound > 1 && "s"}, from: £{service.serviceData[0].price}
+                  </span>
                 </summary>
                 <ul className={openUl}>
                   <Prices serviceData={service.serviceData} />
