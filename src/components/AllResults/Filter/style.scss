@@ -1,12 +1,10 @@
 @use "../../../scss/globals" as *;
 
-$borderWidth: 2px;
-
 @mixin button {
   background-color: white;
-  border: $borderWidth solid #15537d;
+  border: $borderButtonWidth solid #15537d;
   cursor: pointer;
-  margin: (-$borderWidth);
+  margin: (-$borderButtonWidth);
 
   display: grid;
   align-items: center;
@@ -55,6 +53,8 @@ $borderWidth: 2px;
     &_allButtons {
       display: grid;
       justify-content: center;
+      margin-left: $borderButtonWidth;
+      margin-right: $borderButtonWidth;
 
       div {
         display: grid;
@@ -62,7 +62,7 @@ $borderWidth: 2px;
         grid-auto-columns: 1fr;
         justify-content: center;
         width: fit-content;
-        padding: $borderWidth 0 $borderWidth 0;
+        padding: $borderButtonWidth 0 $borderButtonWidth 0;
       }
     }
   }
@@ -74,7 +74,7 @@ $borderWidth: 2px;
     justify-items: center;
     align-items: center;
     margin-top: $gridGap;
-    padding: $borderWidth 0 $borderWidth 0;
+    padding: $borderButtonWidth 0 $borderButtonWidth 0;
 
     > p {
       grid-column-start: 2;

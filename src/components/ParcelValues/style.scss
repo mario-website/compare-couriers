@@ -1,11 +1,10 @@
 @use "../../scss/globals" as *;
 @use "sass:map";
-$gridGapPV: calc($gridGap / 2);
 
 @mixin dim {
   background-color: white;
   border-style: none;
-  border-radius: $ParcelValuesBorderRadius;
+  border-radius: $borderRadiusParcelValues;
 }
 
 .ParcelValues {
@@ -13,9 +12,10 @@ $gridGapPV: calc($gridGap / 2);
   font-weight: 300;
   font-size: 1.2rem;
   letter-spacing: -0.1px;
-  margin: -$bodyPadding 0 -$bodyPadding 0;
+  margin-top: -$bodyPadding;
+  margin-bottom: -$bodyPadding;
   padding: $bodyPadding;
-  background-color: map.get($LogoColours, 1);
+  background-color: map.get($coloursLogo, 1);
   color: white;
   max-width: max-content;
 
@@ -27,7 +27,7 @@ $gridGapPV: calc($gridGap / 2);
     > button {
       cursor: pointer;
       border: 0;
-      border-radius: $ParcelValuesBorderRadius;
+      border-radius: $borderRadiusParcelValues;
       background-color: #03aa5b;
       font-size: 1.4rem;
       font-weight: 500;

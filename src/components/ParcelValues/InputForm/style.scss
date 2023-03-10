@@ -3,14 +3,14 @@
 @mixin dim {
   background-color: white;
   border-style: none;
-  border-radius: $ParcelValuesBorderRadius;
+  border-radius: $borderRadiusParcelValues;
 }
 $gridGapPV: calc($gridGap / 2);
 $paddingUpDown: 3px;
 
 .InputForm {
   background-color: white;
-  border-radius: $ParcelValuesBorderRadius;
+  border-radius: $borderRadiusParcelValues;
   font-family: $font-Lexend;
   width: max-content;
   height: max-content;
@@ -29,7 +29,7 @@ $paddingUpDown: 3px;
   input,
   p {
     @include dim;
-    color: $ParcelValuesColour;
+    color: $colourParcelValues;
     font-size: 1.2rem;
     font-weight: 300;
   }
