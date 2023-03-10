@@ -5,8 +5,10 @@
   border-collapse: separate;
   border-spacing: $gridGap;
   table-layout: fixed;
-  width: 100%;
-  // font-size: 1.3rem;
+  width: calc(100% + calc($gridGap * 2));
+  font-size: 1.4rem;
+  margin: 0 (-$gridGap) 0 (-$gridGap);
+  padding: 0;
 
   th,
   td {

@@ -181,10 +181,10 @@ const AllResults = ({
 export default AllResults;
 
 const delTime = (time: string) => {
-  if (time === FAST) return "Next Day";
-  if (time === MEDIUM) return "2 Days";
-  if (time === SLOW) return "3 + Days";
-  if (time === ALL) return "All";
+  if (time === FAST) return "Next Day Delivery";
+  if (time === MEDIUM) return "2 Days Delivery";
+  if (time === SLOW) return "3 + Days Delivery";
+  if (time === ALL) return "All Services";
 };
 
 const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {

@@ -3,10 +3,19 @@
 $borderWidth: 2px;
 
 @mixin button {
-  width: max-content;
   background-color: white;
   border: $borderWidth solid #15537d;
-  margin: -$borderWidth;
+  cursor: pointer;
+  margin: (-$borderWidth);
+
+  display: grid;
+  align-items: center;
+  gap: calc($gridGap/2);
+  grid-template-rows: 1fr auto auto;
+
+  p:nth-child(3) {
+    font-size: 1.5rem;
+  }
 }
 
 .Filter {
@@ -19,16 +28,20 @@ $borderWidth: 2px;
 
   &-Button {
     @include button;
+    width: auto;
 
     &_sortBy {
       @include button;
       width: max-content;
+      margin: 0;
       margin-left: auto;
+      grid-template-rows: repeat(2, 1fr);
     }
     &_isSelected {
       @include button;
       background-color: #15537d;
       color: white;
+      width: auto;
     }
   }
 
@@ -36,6 +49,7 @@ $borderWidth: 2px;
     &_title {
       text-align: center;
       padding: $gridGap;
+      font-size: 1.4rem;
     }
 
     &_allButtons {

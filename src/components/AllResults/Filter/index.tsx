@@ -56,7 +56,7 @@ const Filter = ({
                       }`}
                       onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
                       <p>{delTime(deliveryTimeBtn)}</p>
-                      <p>{currentLength} FROM</p>
+                      <p>{currentLength} from</p>
                       <p>£{minPrice}</p>
                     </button>
                   );
@@ -103,6 +103,16 @@ const Filter = ({
         )}
       </div>
       {/* to show how many services */}
+      {/* <div className="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div> */}
     </div>
   );
 };

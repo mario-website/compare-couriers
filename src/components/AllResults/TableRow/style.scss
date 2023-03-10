@@ -1,10 +1,57 @@
 @use "../../../scss/globals" as *;
 
 $chevronSize: 0.5rem;
+
+@mixin gridView {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  > span figure {
+    display: grid;
+    align-items: center;
+    grid-template-columns: min-content 120px;
+    gap: $gridGap;
+  }
+
+  a {
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: $ParcelValuesBorderRadius;
+      background-color: #03aa5b;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: $font-Lexend;
+      color: white;
+      padding: 0.4rem;
+      margin-left: $gridGap;
+      max-width: max-content;
+      justify-self: end;
+    }
+  }
+}
+
+@mixin gridSeparateViewDealBtn {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+@mixin summaryAfter {
+  content: "";
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  width: $chevronSize;
+  height: $chevronSize;
+  border-right: 0.2rem solid black;
+  border-top: 0.2rem solid black;
+  margin-right: $chevronSize;
+}
+
 .TableRow {
   &-SingleResult {
-    padding: 0.4rem;
-    // display: grid;
+    padding: calc($gridGap / 2);
 
     img {
       width: 100%;
@@ -15,52 +62,15 @@ $chevronSize: 0.5rem;
         img {
           float: left;
           max-width: 4rem;
-          margin-right: 0.4rem;
-        }
-
-        figcaption {
+          margin-right: calc($gridGap / 2);
         }
       }
     }
 
     &_allPrices {
       > p {
+        @include gridView;
         background-color: rgb(241, 248, 234);
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
-
-        > span figure {
-          display: grid;
-          align-items: center;
-          grid-template-columns: min-content 120px;
-          gap: $gridGap;
-        }
-
-        figcaption {
-          font-size: 1.45rem;
-        }
-
-        a {
-          display: grid;
-          align-items: center;
-          text-decoration: none;
-
-          button {
-            cursor: pointer;
-            border: 0;
-            border-radius: $ParcelValuesBorderRadius;
-            background-color: #03aa5b;
-            font-size: 0.8rem;
-            font-weight: 500;
-            font-family: $font-Lexend;
-            color: white;
-            padding: 0.4rem;
-            margin-left: $gridGap;
-            max-width: max-content;
-            justify-self: end;
-          }
-        }
       }
 
       details summary {
@@ -74,30 +84,14 @@ $chevronSize: 0.5rem;
       }
 
       summary:after {
-        display: grid;
-        justify-content: center;
-        align-items: center;
-        content: "";
-        width: $chevronSize;
-        height: $chevronSize;
-        border-right: 0.2rem solid black;
-        border-top: 0.2rem solid black;
+        @include summaryAfter;
         transform: rotate(135deg);
-        margin-right: $chevronSize;
         margin-top: -$chevronSize;
       }
 
       details[open] summary::after {
-        content: "";
-        display: grid;
-        justify-content: center;
-        align-items: center;
-        width: $chevronSize;
-        height: $chevronSize;
-        border-right: 0.2rem solid black;
-        border-top: 0.2rem solid black;
+        @include summaryAfter;
         transform: rotate(-45deg);
-        margin-right: $chevronSize;
         margin-top: $chevronSize;
       }
 
@@ -113,37 +107,7 @@ $chevronSize: 0.5rem;
       }
 
       li {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: center;
-
-        // gap: $gridGap;
-
-        > span figure {
-          display: grid;
-          align-items: center;
-          grid-template-columns: min-content 120px;
-          gap: $gridGap;
-
-          figcaption {
-            font-size: 1.45rem;
-          }
-        }
-
-        a button {
-          cursor: pointer;
-          border: 0;
-          border-radius: $ParcelValuesBorderRadius;
-          background-color: #03aa5b;
-          font-size: 0.8rem;
-          font-weight: 500;
-          font-family: $font-Lexend;
-          color: white;
-          padding: 0.4rem;
-          margin-left: $gridGap;
-          max-width: max-content;
-          justify-self: end;
-        }
+        @include gridView;
       }
     }
   }
