@@ -32,7 +32,7 @@ const InputForm = ({
     });
   };
   const isZeroNumber: boolean =
-    Number(useReducerTable.stateCurrentValues[name]).toString() === "0" ? true : false;
+    useReducerTable.stateCurrentValues[name] === "0" ? true : false;
 
   const withDimensions = (
     <p>
@@ -40,7 +40,7 @@ const InputForm = ({
         type={isZeroNumber ? "text" : "number"}
         step={0.1}
         min={1}
-        max={500}
+        max={1000}
         onChange={(e) => handleChange(e)}
         value={isZeroNumber ? " " : useReducerTable.stateCurrentValues[name]}
       />

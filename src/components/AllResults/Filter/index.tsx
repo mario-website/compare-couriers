@@ -42,25 +42,28 @@ const Filter = ({
               <p className={"Filter-DeliveryTime_title"}>View Results By Delivery Day</p>
               {/* to show buttons deliveryTimeBtn */}
               <div className={"Filter-DeliveryTime_allButtons"}>
-                {workingData.mergedAllData?.map((timeSpeed) => {
-                  const deliveryTimeBtn = timeSpeed.deliveryTime;
-                  const currentLength = timeSpeed.timeSpeedData.length;
-                  const minPrice = timeSpeed.minPrice.toFixed(2);
-                  return (
-                    <button
-                      key={timeSpeed.id}
-                      className={`Filter-Button${
-                        deliveryTimeBtn === workingData.options.deliveryTimeBtn
-                          ? "_isSelected"
-                          : ""
-                      }`}
-                      onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
-                      <p>{delTime(deliveryTimeBtn)}</p>
-                      <p>{currentLength} from</p>
-                      <p>£{minPrice}</p>
-                    </button>
-                  );
-                })}
+                {/* {adding extra div helps center and all buttons have the same width} */}
+                <div>
+                  {workingData.mergedAllData?.map((timeSpeed) => {
+                    const deliveryTimeBtn = timeSpeed.deliveryTime;
+                    const currentLength = timeSpeed.timeSpeedData.length;
+                    const minPrice = timeSpeed.minPrice.toFixed(2);
+                    return (
+                      <button
+                        key={timeSpeed.id}
+                        className={`Filter-Button${
+                          deliveryTimeBtn === workingData.options.deliveryTimeBtn
+                            ? "_isSelected"
+                            : ""
+                        }`}
+                        onClick={(e) => handleDeliveryTime(e, deliveryTimeBtn)}>
+                        <p>{delTime(deliveryTimeBtn)}</p>
+                        <p>{currentLength} from</p>
+                        <p>£{minPrice}</p>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
             <div className={"Filter-Services"}>
