@@ -25,9 +25,21 @@ $chevronSize: 0.5rem;
 
     &_allPrices {
       > p {
-        background-color: rgb(241, 246, 251);
+        // background-color: rgb(241, 248, 234);
         display: grid;
         grid-template-columns: 1fr auto;
+
+        > span figure {
+          display: grid;
+          grid-template-columns: 100px 1fr;
+          align-items: center;
+          gap: $gridGap;
+          // max-width: 100px;
+
+          > img {
+            // float: left;
+          }
+        }
       }
 
       details summary {
@@ -85,4 +97,8 @@ $chevronSize: 0.5rem;
       }
     }
   }
+}
+
+.parcelMonkeyBC {
+  background-color: $parcelMonkeyBC;
 }

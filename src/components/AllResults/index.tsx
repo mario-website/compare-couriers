@@ -65,7 +65,7 @@ const AllResults = ({
 
   useEffect(() => {
     setCurrentSortingValues(workingData.options);
-    console.log(`workingData:`, workingData);
+    // console.log(`workingData:`, workingData);
   }, [setCurrentSortingValues, workingData.options]);
 
   //this useEffect is working when new data is received from another courier

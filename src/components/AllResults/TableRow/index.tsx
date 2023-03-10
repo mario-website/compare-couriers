@@ -4,6 +4,8 @@ import {VARIABLES} from "../../../utils/variables";
 import {TimeSpeedData} from "../../../utils/couriersFetchData";
 import "./style.scss";
 
+const {PARCEL_MONKEY} = VARIABLES;
+
 const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
   return (
     <tr className="TableRow">
@@ -12,7 +14,10 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
         // console.log(`service:`, service);
         // console.log(`service.serviceData[0]:`, service.serviceData[0]);
         const numOfServicesFound = service.serviceData.length;
+        const logoSrc = service.serviceData[0].logoSrc;
         // const price =
+        const getParcelMonkeyClassName =
+          service.serviceData[0].companyName === PARCEL_MONKEY ? "parcelMonkeyBC" : "";
         return (
           <td key={service.id} className="TableRow-SingleResult">
             <div className="TableRow-SingleResult_content">
@@ -24,11 +29,17 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
             <div className="TableRow-SingleResult_allPrices ">
               <p>
                 <span>
-                  {service.serviceData[0].companyName.toLowerCase()} £
-                  {service.serviceData[0].price}
+                  <figure>
+                    <img
+                      className={getParcelMonkeyClassName}
+                      alt={logoSrc}
+                      src={`./${logoSrc}`}></img>
+                    <figcaption>£{service.serviceData[0].price}</figcaption>
+                  </figure>
+                  {/* {service.serviceData[0].companyName} £{service.serviceData[0].price} */}
                 </span>
                 <a href={service.serviceData[0].url} target="_blank" rel="noreferrer">
-                  <button>Get Deal</button>
+                  <button>View Deal</button>
                 </a>
               </p>
               {numOfServicesFound > 1 && (

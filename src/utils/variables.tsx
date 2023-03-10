@@ -1,6 +1,8 @@
 interface Variables {
   PARCEL2GO: string;
+  PARCEL2GO_LOGO_SRC: string;
   PARCEL_MONKEY: string;
+  PARCEL_MONKEY_LOGO_SRC: string;
   SLOW: string;
   MEDIUM: string;
   FAST: string;
@@ -15,8 +17,10 @@ interface Variables {
 }
 
 export const VARIABLES: Variables = {
-  PARCEL2GO: "PARCEL2GO",
+  PARCEL2GO: "PARCEL 2GO",
+  PARCEL2GO_LOGO_SRC: "p2g-logo.svg",
   PARCEL_MONKEY: "PARCEL_MONKEY",
+  PARCEL_MONKEY_LOGO_SRC: "parcelMonkey-logo.png",
   SLOW: "SLOW",
   MEDIUM: "MEDIUM",
   FAST: "FAST",

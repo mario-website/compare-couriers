@@ -8,7 +8,7 @@ import {VARIABLES} from "../../utils/variables";
 import {useBoolean} from "./hooks";
 import "./style.scss";
 
-const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
+const {PARCEL2GO_LOGO_SRC, PARCEL_MONKEY_LOGO_SRC, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
 const Main = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
@@ -178,6 +178,7 @@ interface SingleFormatedItem {
   price: any;
   deliveryTime: string;
   url: string;
+  logoSrc: string;
 }
 
 const isUniqueObjectFromArray = (
@@ -209,6 +210,7 @@ const formattingData = (
         const serviceName = serviceNameF(item.Service.Name, companyName);
         const deliveryTime = deliveryTimeF(item.Service.Classification, companyName);
         const price = item.TotalPrice.toFixed(2);
+        const logoSrc = PARCEL2GO_LOGO_SRC;
         const url = `https://www.parcel2go.com/quotes?col=219&dest=219&mdd=0&mode=Default&p=1~${WEIGHT}|${LENGTH}|${WIDTH}|${HEIGHT}&quoteType=Default`;
         const objectToCheck: SingleFormatedItem = {
           companyName,
@@ -217,6 +219,7 @@ const formattingData = (
           price,
           deliveryTime,
           url,
+          logoSrc,
         };
 
         if (isUniqueObjectFromArray(objectToCheck, formatedData))
@@ -232,6 +235,7 @@ const formattingData = (
         const serviceName = serviceNameF(item.service, companyName);
         const deliveryTime = deliveryTimeF(item.service_name, companyName);
         const price = item.total_price_gross;
+        const logoSrc = PARCEL_MONKEY_LOGO_SRC;
         const url = "https://www.parcelmonkey.co.uk/";
         const objectToCheck: SingleFormatedItem = {
           companyName,
@@ -240,6 +244,7 @@ const formattingData = (
           price,
           deliveryTime,
           url,
+          logoSrc,
         };
 
         if (isUniqueObjectFromArray(objectToCheck, formatedData))
