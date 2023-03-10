@@ -36,6 +36,11 @@ $chevronSize: 0.5rem;
           grid-template-columns: min-content 120px;
           gap: $gridGap;
         }
+
+        figcaption {
+          font-size: 1.45rem;
+        }
+
         a {
           display: grid;
           align-items: center;
@@ -119,6 +124,10 @@ $chevronSize: 0.5rem;
           align-items: center;
           grid-template-columns: min-content 120px;
           gap: $gridGap;
+
+          figcaption {
+            font-size: 1.45rem;
+          }
         }
 
         a button {
