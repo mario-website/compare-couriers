@@ -30,11 +30,11 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
               <p>
                 <span>
                   <figure>
+                    <figcaption>£{service.serviceData[0].price}</figcaption>
                     <img
                       className={getParcelMonkeyClassName}
                       alt={logoSrc}
                       src={`./${logoSrc}`}></img>
-                    <figcaption>£{service.serviceData[0].price}</figcaption>
                   </figure>
                   {/* {service.serviceData[0].companyName} £{service.serviceData[0].price} */}
                 </span>

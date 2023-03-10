@@ -25,19 +25,24 @@ $chevronSize: 0.5rem;
 
     &_allPrices {
       > p {
-        // background-color: rgb(241, 248, 234);
+        background-color: rgb(241, 248, 234);
         display: grid;
         grid-template-columns: 1fr auto;
+        align-items: center;
 
         > span figure {
           display: grid;
-          grid-template-columns: 100px 1fr;
           align-items: center;
+          grid-template-columns: min-content 100px;
           gap: $gridGap;
-          // max-width: 100px;
+        }
+        a {
+          display: grid;
+          align-items: center;
+          text-decoration: none;
 
-          > img {
-            // float: left;
+          button {
+            cursor: pointer;
           }
         }
       }
@@ -89,10 +94,19 @@ $chevronSize: 0.5rem;
     &_price {
       li {
         display: grid;
-        grid-template-columns: max-content 1fr auto;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        // gap: $gridGap;
 
-        span:nth-child(1) {
-          padding-right: 0.3rem;
+        > span figure {
+          display: grid;
+          align-items: center;
+          grid-template-columns: min-content 100px;
+          gap: $gridGap;
+        }
+
+        a button {
+          cursor: pointer;
         }
       }
     }

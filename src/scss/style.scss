@@ -2,7 +2,7 @@
 @forward "globals";
 
 body {
-  font-size: 1.5rem;
+  font-size: 20px;
   padding: 0 $bodyPadding 0 $bodyPadding;
   @include media(">MEDIUM") {
     // padding: 0 ($bodyPadding * 2) 0 ($bodyPadding * 2);
