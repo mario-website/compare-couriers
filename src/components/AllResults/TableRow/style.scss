@@ -33,7 +33,7 @@ $chevronSize: 0.5rem;
         > span figure {
           display: grid;
           align-items: center;
-          grid-template-columns: min-content 100px;
+          grid-template-columns: min-content 120px;
           gap: $gridGap;
         }
         a {
@@ -43,6 +43,17 @@ $chevronSize: 0.5rem;
 
           button {
             cursor: pointer;
+            border: 0;
+            border-radius: $ParcelValuesBorderRadius;
+            background-color: #03aa5b;
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: $font-Lexend;
+            color: white;
+            padding: 0.4rem;
+            margin-left: $gridGap;
+            max-width: max-content;
+            justify-self: end;
           }
         }
       }
@@ -92,21 +103,37 @@ $chevronSize: 0.5rem;
       }
     }
     &_price {
+      li:not(:last-child) {
+        padding-bottom: calc($gridGap / 2);
+      }
+
       li {
         display: grid;
         grid-template-columns: 1fr auto;
         align-items: center;
+
         // gap: $gridGap;
 
         > span figure {
           display: grid;
           align-items: center;
-          grid-template-columns: min-content 100px;
+          grid-template-columns: min-content 120px;
           gap: $gridGap;
         }
 
         a button {
           cursor: pointer;
+          border: 0;
+          border-radius: $ParcelValuesBorderRadius;
+          background-color: #03aa5b;
+          font-size: 0.8rem;
+          font-weight: 500;
+          font-family: $font-Lexend;
+          color: white;
+          padding: 0.4rem;
+          margin-left: $gridGap;
+          max-width: max-content;
+          justify-self: end;
         }
       }
     }

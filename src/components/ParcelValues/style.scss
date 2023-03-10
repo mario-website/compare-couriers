@@ -25,6 +25,7 @@ $gridGapPV: calc($gridGap / 2);
     align-items: center;
 
     > button {
+      cursor: pointer;
       border: 0;
       border-radius: $ParcelValuesBorderRadius;
       background-color: #03aa5b;
@@ -49,6 +50,7 @@ $gridGapPV: calc($gridGap / 2);
 
     &_lessThan1Metre {
       @include dim;
+      cursor: pointer;
       padding: 0;
       height: 100%;
       text-align: left;
