@@ -1,31 +1,20 @@
-// const couriersNamesArr = require("../src/store/couriers");
-
 const express = require("express");
-// const path = require("path");
-// const bodyParser = require("body-parser");
 const app = express();
 app.use(express.json());
+const fetch = (...args) =>
+  import("node-fetch").then(({default: fetch}) => fetch(...args));
+require("dotenv").config();
+app.use(express.static("src/assets/logo"));
+
+const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
 const couriersNamesArr = [
   {apiUrl: "/api/parcelmonkey/", companyName: "PARCEL_MONKEY", method: app.post},
   {apiUrl: "/api/p2g/", companyName: "PARCEL2GO", method: app.post},
 ];
-// const cheerio = require("cheerio");
-// const superagent = require("superagent");
-const fetch = (...args) =>
-  import("node-fetch").then(({default: fetch}) => fetch(...args));
-require("dotenv").config();
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
-const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
-
-app.use(express.static("src/assets/logo"));
-// app.use(bodyParser.urlencoded({extended: true}));
-// app.set("view engine", "ejs");
-// app.use(bodyParser.json());
-
-// app.use(bodyParser.urlencoded({extended: true}));
 
 couriersNamesArr.forEach((courier) => {
   app.post(courier.apiUrl, async (req, res) => {
@@ -37,23 +26,9 @@ couriersNamesArr.forEach((courier) => {
   });
 });
 
-// app.post("/api/parcelmonkey/", async (req, res) => {
-//   const fetchRes = await fetch(req.body.url, req.body)
-//     .then((res) => res.json())
-//     .then((body) => body)
-//     .catch((error) => error);
-//   res.json(fetchRes);
-// });
-
-// app.post("/api/p2g/", async (req, res) => {
-//   const fetchRes = await fetch(req.body.url, req.body)
-//     .then((res) => res.json())
-//     .then((body) => body)
-//     .catch((error) => error);
-//   res.json(fetchRes);
-// });
-
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+//below comments will use in the future to scrapp from other couriers websites
 
 // app.get("/", (req, res) => {
 //   res.render("index");

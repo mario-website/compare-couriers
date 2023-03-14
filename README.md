@@ -17,7 +17,7 @@ FRONTEND:
 - HTML5 - BEM class names
 - CSS3 (SCSS) - Responsive Web Design (with mobile first approach)
 - JavaScript ES6/7
-- React 18+ (typescript, hooks (included custom created), use reducer is some components) - ***no external libraries used - all elements has ben created by myself***
+- React 18+ (TypeScript, hooks - included custom created, use reducer is some components) - ***no external libraries used - all elements has ben created by myself***
 
 BACKEND:
 - Node
