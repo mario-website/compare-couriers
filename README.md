@@ -13,8 +13,8 @@ At the moment, the database is parcel2go.com and parcelmonkey.co.uk.
 ## What technologies it uses?
 
 FRONTEND:
-- HTML5 - BEM class names
-- CSS3 (SCSS) - Responsive Web Design (with mobile first approach)
+- HTML5 
+- CSS3 (SCSS) - BEM class names. Responsive Web Design (with mobile first approach)
 - JavaScript ES6/7
 - React 18+ (TypeScript, hooks - included custom created, use reducer is some components) - ***no external libraries used - all elements has ben created by myself***
 
