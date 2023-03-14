@@ -12,6 +12,12 @@ html {
   }
 }
 
+#root {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+}
+
 body {
   padding: 0 $bodyPadding 0 $bodyPadding;
 }

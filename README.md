@@ -3,12 +3,11 @@ Live preview: https://parcel.herokuapp.com/
 
 ## What the project does?
 
-Finding deals from courier website.
+Finding deals from courier websites.
 
-Courier websites like https://parcel2go.com or https://parcelmonkey.co.uk/ have their own deals with couriers (ie. DHL, DPD, UPS...) - this website display parcel prices from those courier websites, and in case the same service is already found (ie. UPS Access Point or DHL Parcel UK Next Day...)  also compare services from courier websites.
-You can specify weight and dimensions to get an accurate parcel price. 
+Courier websites like https://parcel2go.com or https://parcelmonkey.co.uk/ have their own deals with couriers (ie. DHL, DPD, UPS...) - this website display parcel prices from those courier websites, and in case the same service is already found (ie. UPS Access Point or DHL Parcel UK Next Day...) also compare services from courier websites. You can specify weight and dimensions to get an accurate parcel price.
 
-At the moment, in the database is parcel2go.com and parcelmonkey.co.uk. 
+At the moment, the database is parcel2go.com and parcelmonkey.co.uk.
 
 
 ## What technologies it uses?
