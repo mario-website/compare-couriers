@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {DefaultData, TimeSpeedData} from "../../../utils/couriersFetchData";
+import React from "react";
+import {DefaultData} from "../../../utils/couriersFetchData";
 import TableRow from "../TableRow";
 import "./style.scss";
 

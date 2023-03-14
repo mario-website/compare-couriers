@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useReducer} from "react";
+import React, {useState} from "react";
 import InputForm from "./InputForm";
 import {VARIABLES} from "../../utils/variables";
 import "./style.scss";
@@ -42,7 +42,8 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
         <div className={`ParcelValues-Dimensions ${classNames.removeGap}`}>
           <button
             className={`ParcelValues-Dimensions_lessThan1Metre ${classNames.displayNone}`}
-            onClick={handleClick}>
+            onClick={handleClick}
+            type="submit">
             <InputForm
               key={"keylessThan1Metre"}
               placeholder={"without dimensions"}

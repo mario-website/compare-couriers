@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useReducer} from "react";
+import React from "react";
 
 import {VARIABLES} from "../../../utils/variables";
-import {TimeSpeedData, DefaultData} from "../../../utils/couriersFetchData";
+import {DefaultData} from "../../../utils/couriersFetchData";
 import "./style.scss";
 
-const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
+const {MEDIUM, SMALL, ALL} = VARIABLES;
 
 const Filter = ({
   setSorting,
@@ -30,11 +30,6 @@ const Filter = ({
 
   return (
     <div className="Filter">
-      {/* <div>
-        <span>fetchCounter:{fetchCounter}</span>
-        <div>sortedBy: {currentSortingValues.sortedBy}</div>
-        <div>isAscending: {currentSortingValues.isAscending.toString()}</div>
-      </div> */}
       <div className="Filter-Buttons">
         {screenSize === SMALL || screenSize === MEDIUM ? (
           <>
@@ -66,14 +61,13 @@ const Filter = ({
                 </div>
               </div>
             </div>
+
             <div className={"Filter-Services"}>
               {workingData.titles?.map((title, index) => {
                 const allTimeSpeedArray = workingData.mergedAllData.find(
                   (e) => e.deliveryTime === ALL
                 );
-
                 let showingCount = 0;
-
                 workingData.data?.forEach((workingDataEle, i) => {
                   showingCount = showingCount + workingDataEle.timeSpeedData.length;
                 });
@@ -105,17 +99,6 @@ const Filter = ({
           </button>
         )}
       </div>
-      {/* to show how many services */}
-      {/* <div className="lds-roller">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div> */}
     </div>
   );
 };

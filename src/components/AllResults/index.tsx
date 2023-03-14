@@ -6,10 +6,10 @@ import {dynamicSort, generateUUID} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
 import {defaultValues, DefaultData, DefaultValues} from "../../utils/couriersFetchData";
 import {useScreenSize, getScreenSize} from "./hooks";
-import {ReturnUseBoolean, useBoolean} from "../Main/hooks";
+import {useBoolean} from "../Main/hooks";
 import "./style.scss";
 
-const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
+const {FAST, MEDIUM, SLOW, LARGE, ALL} = VARIABLES;
 
 const AllResults = ({
   allResponses,
@@ -24,7 +24,7 @@ const AllResults = ({
   setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
   controller: AbortController;
 }) => {
-  const [state, dispatch] = useReducer(allResReducer, INITIAL_STATE);
+  const [state] = useReducer(allResReducer, INITIAL_STATE);
   const {defaultData} = state;
   const defaultOptions = defaultData.options;
   const defValIsAscending = defaultOptions.isAscending;

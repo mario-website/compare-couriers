@@ -1,19 +1,17 @@
-import React, {useState, useReducer, useLayoutEffect} from "react";
-import {INITIAL_STATE, tableReducer, Initial_State} from "./reducer";
+import React, {useState, useReducer} from "react";
+import {INITIAL_STATE, tableReducer} from "./reducer";
 import AllResults from "../AllResults";
 import ParcelValues from "../ParcelValues";
 
 import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
 import {VARIABLES} from "../../utils/variables";
-import {useBoolean} from "./hooks";
 import "./style.scss";
 
 const {PARCEL2GO_LOGO_SRC, PARCEL_MONKEY_LOGO_SRC, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
 const Main = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
-  const {couriersData, currentValues, fetchCounter, allRes, error, tempController} =
-    state;
+  const {couriersData, currentValues, fetchCounter, allRes, tempController} = state;
   const [controller, setController] = useState(new AbortController());
   const [isSearching, setIsSearching] = useState(false);
 
@@ -70,10 +68,12 @@ const handleFetchNewData = (
   const controller = new AbortController();
   const {signal} = controller;
   setController(controller);
+
   //for any new fetch I need to cancell all current fetching in asyc functions
   //I checking if there is any of them, I need to cancel that one
   if (tempController) tempController.abort();
   dispatch({type: "SET_TEMP_CONTROLLER", payload: controller});
+
   //1.1
   fetchDataFromAllCouriers(signal, dispatch, couriersData, currentValues);
   return () => {
@@ -161,7 +161,6 @@ const fetching = async (url: RequestInfo | URL, options: RequestInit | undefined
   const fetchRes = await fetch(url, options)
     .then((res) => res.json())
     .then((body) => {
-      // console.log(`body:`, body);
       return body;
     })
     .catch((error) => {
@@ -228,9 +227,7 @@ const formattingData = (
       break;
 
     case PARCEL_MONKEY:
-      // console.log(`data:`, data);
       data.forEach((item) => {
-        // console.log(`item:`, item);
         const courierName = courierNameF(item.carrier, companyName);
         const serviceName = serviceNameF(item.service, companyName);
         const deliveryTime = deliveryTimeF(item.service_name, companyName);
