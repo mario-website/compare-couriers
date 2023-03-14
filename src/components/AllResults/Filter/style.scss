@@ -63,6 +63,10 @@
         justify-content: center;
         width: fit-content;
         padding: $borderButtonWidth 0 $borderButtonWidth 0;
+
+        button {
+          font-size: 1rem;
+        }
       }
     }
   }
