@@ -8,11 +8,8 @@ const {SLOW, MEDIUM, FAST} = VARIABLES;
 export const courierNameF = (courierName: string, courier: string) => {
   let output = "";
 
-  // if (["MyHermes", "Hermes"].includes(courierName)) {
-  //   output = "Evri";
-  // }
-  if (
-    [
+  switch (true) {
+    case [
       "Parcelforce 24",
       "Parcelforce by 9am",
       "Parcelforce by 10am",
@@ -23,72 +20,79 @@ export const courierNameF = (courierName: string, courier: string) => {
       "Saturday Delivery",
       "Parcelforce by 12pm",
       "Parcelforce",
-    ].includes(courierName)
-  ) {
-    output = "Parcelforce";
-  }
-  if (courierName === "Yodel" || courierName === "Yodel Direct") {
-    output = "Yodel";
-  }
-  if (
-    [
+    ].includes(courierName):
+      output = "Parcelforce";
+      break;
+
+    case ["Yodel", "Yodel Direct"].includes(courierName):
+      output = "Yodel";
+      break;
+
+    case [
       "UPS",
       "UPS Access Point",
       "Express Sameday Collect",
       "UPS Express",
       "UPS carrier",
-    ].includes(courierName)
-  ) {
-    output = "UPS";
-  }
-  if (courierName === "TNT") {
-    output = "TNT";
-  }
-  if (courierName === "Collect+") {
-    output = "Collect+";
-  }
-  if (courierName === "InPost") {
-    output = "InPost";
-  }
-  if (courierName === "DX" || courierName === "DX Freight") {
-    output = "DX";
-  }
-  if (courierName === "DPD" || courierName === "DPD Collection") {
-    output = "DPD";
-  }
-  if (courierName === "PalletForce") {
-    output = "PalletForce";
-  }
-  if (
-    [
+    ].includes(courierName):
+      output = "UPS";
+      break;
+
+    case ["TNT"].includes(courierName):
+      output = "TNT";
+      break;
+
+    case ["Collect+"].includes(courierName):
+      output = "Collect+";
+      break;
+
+    case ["InPost"].includes(courierName):
+      output = "InPost";
+      break;
+
+    case ["DX", "DX Freight"].includes(courierName):
+      output = "DX";
+      break;
+
+    case ["DPD", "DPD Collection"].includes(courierName):
+      output = "DPD";
+      break;
+
+    case ["PalletForce"].includes(courierName):
+      output = "PalletForce";
+      break;
+
+    case [
       "DHL Express",
       "DHL Express PRE NOON",
       "DHL Express PRE 9AM",
       "DHL",
       "DHL Parcel UK",
       "DHL Parcel",
-    ].includes(courierName)
-    // ||
-    // courierName === "DHL UK - Drop Off"
-  ) {
-    output = "DHL";
-  }
-  if (
-    ["Evri Collection", "Evri Drop-off", "Evri ParcelShop Next Day"].includes(courierName)
-  ) {
-    output = "Evri";
-  }
-  if (courierName === "Tuffnells") {
-    output = "Tuffnells";
-  }
-  if (courierName === "FedEx Express") {
-    output = "FedEx";
-  }
-  if (courierName === "InPost Lockers") {
-    output = "InPost";
-  }
-  if (output === "") {
-    console.log("new courierName: ", courierName, courier);
+    ].includes(courierName):
+      output = "DHL";
+      break;
+
+    case ["Evri Collection", "Evri Drop-off", "Evri ParcelShop Next Day"].includes(
+      courierName
+    ):
+      output = "Evri";
+      break;
+
+    case ["Tuffnells"].includes(courierName):
+      output = "Tuffnells";
+      break;
+
+    case ["FedEx Express", "FedEx"].includes(courierName):
+      output = "FedEx";
+      break;
+
+    case ["InPost Lockers"].includes(courierName):
+      output = "InPost";
+      break;
+
+    default:
+      console.log("new courierName: ", courierName, courier);
   }
 
   return output;
@@ -125,6 +129,7 @@ export const deliveryTimeF = (deliveryTime: string, courier: string) => {
       "Express 9 (by 9)",
       "Express 10 (by 10)",
       "Express AM (by 12)",
+      "FedEx Next Day™",
     ].includes(deliveryTime)
   ) {
     output = FAST;
@@ -145,7 +150,7 @@ export const deliveryTimeF = (deliveryTime: string, courier: string) => {
   ) {
     output = MEDIUM;
   }
-  if (["Slow", "Drop Off", "Collected"].includes(deliveryTime)) {
+  if (["Slow", "Drop Off", "Collected", "Economy Drop-off"].includes(deliveryTime)) {
     output = SLOW;
   }
   if (output === "") {
@@ -393,6 +398,12 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   if (serviceName === "Yodel Direct") {
     output = "Yodel Direct";
   }
+  if (serviceName === "ukparcels_yodel_72_dropoff") {
+    output = "Yodel Economy Drop-off - Print Label In Store";
+  }
+  if (serviceName === "ukparcels_yodel_72_dropoff_label") {
+    output = "Yodel Economy Drop-off - Print Label at Home";
+  }
   if (serviceName === "Evri Light and Large") {
     output = "Evri Light and Large";
   }
@@ -414,8 +425,14 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   if (serviceName === "Tuffnells Economy") {
     output = "Tuffnells Economy";
   }
-  if (serviceName === "FedEx Next Day Drop Off") {
-    output = "FedEx Next Day Drop Off";
+  if (
+    serviceName === "FedEx Next Day Drop Off" ||
+    serviceName === "ukparcels_fedex_nextday"
+  ) {
+    output = "FedEx Next Day Drop Off - Print Label at Home ";
+  }
+  if (serviceName === "ukparcels_fedex_nextday_label") {
+    output = "FedEx Next Day Drop Off - Print Label at Store ";
   }
   if (serviceName === "FedEx UK Drop Off") {
     output = "FedEx UK Drop Off";

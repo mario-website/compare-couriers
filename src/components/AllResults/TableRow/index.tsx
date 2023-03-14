@@ -26,8 +26,8 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
                 <figcaption>{service.serviceName}</figcaption>
               </figure>
             </div>
-            <div className="TableRow-SingleResult_allPrices ">
-              <p>
+            <div className="TableRow-SingleResult_allPrices">
+              <div className="TableRow-SingleResult_allPrices_title">
                 <span>
                   <figure>
                     <figcaption>£{service.serviceData[0].price}</figcaption>
@@ -41,7 +41,7 @@ const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
                 <a href={service.serviceData[0].url} target="_blank" rel="noreferrer">
                   <button>View Deal</button>
                 </a>
-              </p>
+              </div>
               {numOfServicesFound > 1 && (
                 <details>
                   <summary>

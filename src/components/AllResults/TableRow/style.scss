@@ -68,7 +68,7 @@ $chevronSize: 0.5rem;
     }
 
     &_allPrices {
-      > p {
+      &_title {
         @include gridView;
         background-color: rgb(241, 248, 234);
       }
