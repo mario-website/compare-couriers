@@ -19,8 +19,8 @@ FRONTEND:
 - React 18+ (TypeScript, hooks - included custom created, use reducer is some components) - ***no external libraries used - all elements has ben created by myself***
 
 BACKEND:
-- Node
-- Express
+- Node.js
+- Express.js
 
 ## Technical notes
 
