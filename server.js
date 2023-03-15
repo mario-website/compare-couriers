@@ -18,11 +18,13 @@ if (process.env.NODE_ENV === "production") {
 
 couriersNamesArr.forEach((courier) => {
   app.post(courier.apiUrl, async (req, res) => {
-    const fetchRes = await fetch(req.body.url, req.body)
-      .then((res) => res.json())
-      .then((body) => body)
-      .catch((error) => error);
-    res.json(fetchRes);
+    try {
+      const response = await fetch(req.body.url, req.body);
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      console.error(error);
+    }
   });
 });
 
