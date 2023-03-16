@@ -1,11 +1,11 @@
 import {useEffect, useState, useLayoutEffect, useRef} from "react";
 import {VARIABLES} from "../../utils/variables";
-const {FAST, MEDIUM, SLOW, SMALL, LARGE, ALL} = VARIABLES;
+const {MEDIUM, SMALL, LARGE} = VARIABLES;
 
 export const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState<string>("");
   const [prevScreenSize, setPrevScreenSize] = useState<string>(screenSize);
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
 
   useEffect(() => {
     //3.0
@@ -46,8 +46,8 @@ export const getScreenSize = (width: number) => {
   //------------------------------------------------------------------------------------------------
   //when changing MD or LR values you need also update file src/scss/globals/_breakpoints.scss
   //in values $MD and $LR
-  const $FR = 320;
-  const SM = 530;
+  // const $FR = 320;
+  // const SM = 530;
   const MD = 768;
   const LR = 1024;
   //------------------------------------------------------------------------------------------------
