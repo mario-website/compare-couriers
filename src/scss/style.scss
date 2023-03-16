@@ -1,14 +1,6 @@
 @use "globals" as *;
 
 html {
-  font-size: 10px;
-
-  @include media(">FORM") {
-    font-size: 13px;
-  }
-  @include media(">SMALL") {
-    font-size: 16px;
-  }
   body {
     padding: 0 $bodyPadding 0 $bodyPadding;
   }
