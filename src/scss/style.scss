@@ -1,5 +1,4 @@
 @use "globals" as *;
-@forward "globals";
 
 html {
   font-size: 10px;
@@ -10,6 +9,9 @@ html {
   @include media(">SMALL") {
     font-size: 16px;
   }
+  body {
+    padding: 0 $bodyPadding 0 $bodyPadding;
+  }
 }
 
 #root {
@@ -17,8 +19,4 @@ html {
   flex-flow: column nowrap;
   min-height: 100vh;
   min-height: 100dvh;
-}
-
-body {
-  padding: 0 $bodyPadding 0 $bodyPadding;
 }
