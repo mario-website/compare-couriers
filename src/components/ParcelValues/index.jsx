@@ -42,8 +42,8 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
         <div className={`ParcelValues-Dimensions ${classNames.removeGap}`}>
           <button
             className={`ParcelValues-Dimensions_lessThan1Metre ${classNames.displayNone}`}
-            onClick={handleClick}
-            type="submit">
+            type="button"
+            onClick={handleClick}>
             <InputForm
               key={"keylessThan1Metre"}
               placeholder={"without dimensions"}
@@ -78,7 +78,7 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
             </div>
           </div>
         </div>
-        <button>Get Quote</button>
+        <button type="submit">Get Quote</button>
       </div>
     </form>
   );

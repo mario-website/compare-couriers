@@ -99,13 +99,11 @@ const fetchDataFromAllCouriers = async (
   dispatch({type: "SET_TO_DEFAULT_FETCH_COUNTER"});
   dispatch({type: "SET_TO_DEFAULT_ALL_RES"});
 
-  // const {couriersData, currentValues} = state;
   //I might use Promise.all() but I want to do display new results after each response
   couriersData(currentValues).forEach(async (courierData: CourierData) => {
     //1.2
     const data = await getData(courierData, signal);
     //todo: Change to try/catch and then prompt error if occured
-    // const {companyName} = courierData.names;
     //1.3
     const formatedData = formattingData(
       courierData.names.companyName,
