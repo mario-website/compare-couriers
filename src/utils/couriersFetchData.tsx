@@ -80,10 +80,10 @@ export const couriersNamesArr: CouriersNames[] = [
 ];
 
 export const getObjName = (companyName: string) =>
-  couriersNamesArr.find((name) => name.companyName === companyName);
+  couriersNamesArr.find((name) => name.companyName === companyName) as CouriersNames;
 
-interface CourierData {
-  names: CouriersNames | undefined;
+export interface CourierData {
+  names: CouriersNames;
   getToken?: {
     url: string;
     options: {
@@ -121,7 +121,7 @@ export const couriersData = (values: DefaultValues) => {
     POSTCODE_TO,
   } = values;
 
-  const returnCouriersData: CourierData[] = [
+  return [
     {
       names: getObjName(PARCEL2GO),
       getToken: {
@@ -213,6 +213,5 @@ export const couriersData = (values: DefaultValues) => {
         },
       },
     },
-  ];
-  return returnCouriersData;
+  ] as ReturnCouriersData;
 };

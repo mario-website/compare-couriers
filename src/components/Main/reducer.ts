@@ -17,7 +17,7 @@ export interface Initial_State {
   allRes: any[];
   valueClickedBtn: string;
   isClickedBtn: Boolean;
-  tempController: null;
+  tempController: {abort: () => void};
   defaultData: DefaultData;
   error: {message: string; stack: string};
 }
@@ -30,7 +30,9 @@ export const INITIAL_STATE: Initial_State = {
   allRes: [],
   valueClickedBtn: "",
   isClickedBtn: false,
-  tempController: null,
+  tempController: {
+    abort: () => null,
+  },
   defaultData,
   error: {message: "", stack: ""},
 };
@@ -40,7 +42,10 @@ export interface TableReducer {
   action: {type: string; payload?: any};
 }
 
-export const tableReducer = (state = INITIAL_STATE, action: TableReducer["action"]) => {
+export const tableReducer = (
+  state = INITIAL_STATE,
+  action: TableReducer["action"]
+): Initial_State => {
   switch (action.type) {
     case ACTION_TYPES.SET_TO_DEFAULT_FETCH_COUNTER:
       return {
@@ -95,6 +100,7 @@ export const tableReducer = (state = INITIAL_STATE, action: TableReducer["action
         ...state,
         tempController: action.payload,
       };
+
     default:
       return state;
   }

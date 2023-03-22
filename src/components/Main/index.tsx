@@ -5,18 +5,23 @@ import ParcelValues from "../ParcelValues";
 
 import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
 import {VARIABLES} from "../../utils/variables";
+import {
+  CourierData,
+  DefaultValues,
+  ReturnCouriersData,
+} from "../../utils/couriersFetchData";
 import "./style.scss";
 
 const {PARCEL2GO_LOGO_SRC, PARCEL_MONKEY_LOGO_SRC, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
 
 const Main = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
+  const [controller, setController] = useState<AbortController>(new AbortController());
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const {couriersData, currentValues, fetchCounter, allRes, tempController} = state;
-  const [controller, setController] = useState(new AbortController());
-  const [isSearching, setIsSearching] = useState(false);
 
   //2.0
-  const setNewData = (e: any) => {
+  const setNewData = (e: {preventDefault: () => void}) => {
     e.preventDefault();
     setIsSearching(true);
     //1.0
@@ -32,7 +37,7 @@ const Main = () => {
   return (
     <main className="Main">
       {/* 
-      //need to be done error
+      //to do error
       {error && (
         <p>
           error message{error.message}, error stack{error.stack}
@@ -56,13 +61,13 @@ export default Main;
 
 //1.0
 const handleFetchNewData = (
-  tempController: any,
+  tempController: {abort: () => void},
   dispatch: React.Dispatch<{
     type: string;
     payload?: any;
   }>,
-  couriersData: (values: any) => any,
-  currentValues: any,
+  couriersData: (values: DefaultValues) => ReturnCouriersData,
+  currentValues: DefaultValues,
   setController: React.Dispatch<React.SetStateAction<AbortController>>
 ) => {
   const controller = new AbortController();
@@ -87,8 +92,8 @@ const fetchDataFromAllCouriers = async (
     type: string;
     payload?: any;
   }>,
-  couriersData: {(values: any): any; (arg0: any): any[]},
-  currentValues: any
+  couriersData: (values: DefaultValues) => ReturnCouriersData,
+  currentValues: DefaultValues
 ) => {
   //every time when starting fetching new data, reset to default values
   dispatch({type: "SET_TO_DEFAULT_FETCH_COUNTER"});
@@ -96,25 +101,24 @@ const fetchDataFromAllCouriers = async (
 
   // const {couriersData, currentValues} = state;
   //I might use Promise.all() but I want to do display new results after each response
-  couriersData(currentValues).forEach(
-    async (courierData: {names: {companyName: string}}) => {
-      //1.2
-      const data = await getData(courierData, signal);
-      //todo: Change to try/catch and then prompt error if occured
-      const {companyName} = courierData.names;
-      //1.3
-      const formatedData = formattingData(companyName, data, currentValues);
+  couriersData(currentValues).forEach(async (courierData: CourierData) => {
+    //1.2
+    const data = await getData(courierData, signal);
+    //todo: Change to try/catch and then prompt error if occured
+    // const {companyName} = courierData.names;
+    //1.3
+    const formatedData = formattingData(
+      courierData.names.companyName,
+      data,
+      currentValues
+    );
 
-      dispatch({type: "SET_ALL_RESPONSES", payload: formatedData});
-      dispatch({type: "INCREASE_FETCH_COUNTER_BY_1"});
-    }
-  );
+    dispatch({type: "SET_ALL_RESPONSES", payload: formatedData});
+    dispatch({type: "INCREASE_FETCH_COUNTER_BY_1"});
+  });
 };
 //1.2
-const getData = async (
-  courierData: {names: any; getToken?: any; getData?: any},
-  signal: AbortSignal
-) => {
+const getData = async (courierData: CourierData, signal: AbortSignal) => {
   let optionsData = {};
   if (courierData.getToken) {
     const optionsToken = {
@@ -145,8 +149,9 @@ const getData = async (
     ...{url: courierData.getData.url},
     ...optionsData,
   };
+
   //1.2.1
-  const data = await fetching(courierData.names.apiUrl, {
+  return await fetching(courierData.names.apiUrl, {
     method: "POST",
     body: JSON.stringify(optionsData),
     headers: {
@@ -154,64 +159,73 @@ const getData = async (
     },
     signal,
   });
-  return data;
 };
+
 //1.2.1
-const fetching = async (url: RequestInfo | URL, options: RequestInit | undefined) => {
-  const fetchRes = await fetch(url, options)
+const fetching = async (
+  url: string,
+  options: {
+    method: string;
+    body: string;
+    headers: {"Content-Type": string};
+    signal: AbortSignal;
+  }
+) => {
+  return await fetch(url, options)
     .then((res) => res.json())
-    .then((body) => {
-      return body;
-    })
+    .then((body) => body)
     .catch((error) => {
       // console.log("Server failed to return data: " + error);
       return error;
     });
-  return fetchRes;
 };
 
 interface SingleFormatedItem {
   companyName: string;
   courierName: string;
   serviceName: string;
-  price: any;
+  price: string;
   deliveryTime: string;
   url: string;
   logoSrc: string;
 }
 
-const isUniqueObjectFromArray = (
-  objectToCheck: SingleFormatedItem,
-  arrayData: SingleFormatedItem[]
-) => {
-  const foundInArray = arrayData.find(
-    (ele) =>
-      ele.companyName === objectToCheck.companyName &&
-      ele.courierName === objectToCheck.courierName &&
-      ele.serviceName === objectToCheck.serviceName &&
-      ele.price === objectToCheck.price &&
-      ele.deliveryTime === objectToCheck.deliveryTime
-  );
-  return foundInArray ? false : true;
-};
+// const isUniqueObjectFromArray = (
+//   objectToCheck: SingleFormatedItem,
+//   arrayData: SingleFormatedItem[]
+// ) =>
+//   !arrayData.some(
+//     (ele) =>
+//       ele.companyName === objectToCheck.companyName &&
+//       ele.courierName === objectToCheck.courierName &&
+//       ele.serviceName === objectToCheck.serviceName &&
+//       ele.price === objectToCheck.price &&
+//       ele.deliveryTime === objectToCheck.deliveryTime
+//   );
+
 //1.3
 const formattingData = (
   companyName: string,
-  data: {Quotes: any[]; forEach: (arg0: (item: any) => void) => void},
-  dimension: {WEIGHT: any; LENGTH: any; WIDTH: any; HEIGHT: any}
-) => {
+  //data is any due to unkonow respond from server
+  data: any,
+  dimension: DefaultValues
+): SingleFormatedItem[] => {
   const {WEIGHT, LENGTH, WIDTH, HEIGHT} = dimension;
-  const formatedData: SingleFormatedItem[] = [];
   switch (companyName) {
     case PARCEL2GO:
-      data.Quotes.forEach((item) => {
+      interface PARCEL2GO_Item {
+        Service: {CourierName: string; Name: string; Classification: string};
+        TotalPrice: number;
+      }
+
+      return data.Quotes.map((item: PARCEL2GO_Item) => {
         const courierName = courierNameF(item.Service.CourierName, companyName);
         const serviceName = serviceNameF(item.Service.Name, companyName);
         const deliveryTime = deliveryTimeF(item.Service.Classification, companyName);
         const price = item.TotalPrice.toFixed(2);
         const logoSrc = PARCEL2GO_LOGO_SRC;
         const url = `https://www.parcel2go.com/quotes?col=219&dest=219&mdd=0&mode=Default&p=1~${WEIGHT}|${LENGTH}|${WIDTH}|${HEIGHT}&quoteType=Default`;
-        const objectToCheck: SingleFormatedItem = {
+        return {
           companyName,
           courierName,
           serviceName,
@@ -220,21 +234,24 @@ const formattingData = (
           url,
           logoSrc,
         };
-
-        if (isUniqueObjectFromArray(objectToCheck, formatedData))
-          formatedData.push(objectToCheck);
       });
-      break;
 
     case PARCEL_MONKEY:
-      data.forEach((item) => {
+      interface PARCEL_MONKEY_Item {
+        carrier: string;
+        service: string;
+        service_name: string;
+        total_price_gross: string;
+      }
+
+      return data.map((item: PARCEL_MONKEY_Item) => {
         const courierName = courierNameF(item.carrier, companyName);
         const serviceName = serviceNameF(item.service, companyName);
         const deliveryTime = deliveryTimeF(item.service_name, companyName);
         const price = item.total_price_gross;
         const logoSrc = PARCEL_MONKEY_LOGO_SRC;
         const url = "https://www.parcelmonkey.co.uk/";
-        const objectToCheck: SingleFormatedItem = {
+        return {
           companyName,
           courierName,
           serviceName,
@@ -243,14 +260,9 @@ const formattingData = (
           url,
           logoSrc,
         };
-
-        if (isUniqueObjectFromArray(objectToCheck, formatedData))
-          formatedData.push(objectToCheck);
       });
-      break;
 
     default:
-      break;
+      return [];
   }
-  return formatedData;
 };
