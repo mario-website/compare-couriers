@@ -31,8 +31,7 @@ const InputForm = ({
       payload: {name, value: e.target.value},
     });
   };
-  const isZeroNumber: boolean =
-    useReducerTable.stateCurrentValues[name] === "0" ? true : false;
+  const isZeroNumber: boolean = useReducerTable.stateCurrentValues[name] === 0;
 
   const withDimensions = (
     <p>
@@ -42,7 +41,7 @@ const InputForm = ({
         min={1}
         max={1000}
         onChange={(e) => handleChange(e)}
-        value={isZeroNumber ? " " : useReducerTable.stateCurrentValues[name]}
+        value={isZeroNumber ? "" : useReducerTable.stateCurrentValues[name]}
       />
       <label className="InputForm-Label">{units}</label>
     </p>
