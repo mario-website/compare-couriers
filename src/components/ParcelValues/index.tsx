@@ -5,26 +5,57 @@ import "./style.scss";
 
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
-const ParcelValues = ({useReducerTable, setNewData}) => {
-  const [classNames, setClassNames] = useState({
+interface Dispatch {
+  type: string;
+  payload: {
+    name: string;
+    value: string | number;
+  };
+}
+
+const ParcelValues = ({
+  useReducerTable,
+  setNewData,
+}: {
+  useReducerTable: {
+    dispatch: ({type, payload}: Dispatch) => void;
+    stateCurrentValues: {
+      [key: string]: any;
+    };
+  };
+  setNewData: (e: {preventDefault: () => void}) => void;
+}) => {
+  const [classNames, setClassNames] = useState<{
+    showAllDimensionsAndWeight: string;
+    displayNone: string;
+    displayGrid: string;
+    removeGap: string;
+  }>({
     showAllDimensionsAndWeight: "",
     displayNone: "",
     displayGrid: "",
     removeGap: "",
   });
-  const dimensions = [
+
+  interface Dimensions {
+    name: string;
+    labelName: string;
+    placeholder: string;
+    units: string;
+  }
+  const dimensions: Dimensions[] = [
     {name: LENGTH, labelName: "Length", placeholder: "Length in cm", units: "cm"},
     {name: WIDTH, labelName: "Width", placeholder: "Width in cm", units: "cm"},
     {name: HEIGHT, labelName: "Height", placeholder: "Height in cm", units: "cm"},
   ];
-  const weight = {
+  const weight: Dimensions = {
     name: WEIGHT,
     labelName: "Weight",
     placeholder: "Weight in kg",
     units: "kg",
   };
 
-  const handleClick = (e) => {
+  const handleClick = (e: {preventDefault: () => void}) => {
     e.preventDefault();
 
     setClassNames({
@@ -50,6 +81,7 @@ const ParcelValues = ({useReducerTable, setNewData}) => {
               name={"Less than 1 Metre"}
               labelName={"Parcel Length - click to modify"}
               useReducerTable={useReducerTable}
+              units={""}
             />
           </button>
           <div

@@ -21,7 +21,7 @@ const Main = () => {
   const {couriersData, currentValues, fetchCounter, allRes, tempController} = state;
 
   //2.0
-  const setNewData = (e: {preventDefault: () => void}) => {
+  const setNewData = (e: {preventDefault: () => void}): void => {
     e.preventDefault();
     setIsSearching(true);
     //1.0
