@@ -186,6 +186,23 @@ const delTime = (time: string) => {
   if (time === SLOW) return "3 + Days Delivery";
   if (time === ALL) return "All Services";
 };
+interface TempData {
+  id: string;
+  min: number;
+  max: number;
+  deliveryTime: any;
+  serviceData: any[];
+  serviceName: string;
+  courierName: any;
+}
+
+interface ReturnNewData {
+  id: string;
+  deliveryTime: string;
+  minPrice: number;
+  maxPrice: number;
+  timeSpeedData: TempData[];
+}
 
 const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
   const {IS_ASCENDING, SORTED_BY} = defaultValues;
@@ -193,20 +210,17 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
   const withIdTempAllRes = allResponses.map((item) => {
     return {...item, id: generateUUID()};
   });
-  const allServicesNames: any[] = [];
-
-  withIdTempAllRes.forEach((singleData) => {
-    if (
-      //filtering if in allServicesNames array exist singleData.serviceName
-      //AND is not an empty string. If yes, do not do anything
-      !allServicesNames.includes(singleData.serviceName) &&
-      singleData.serviceName !== ""
-    )
-      allServicesNames.push(singleData.serviceName);
-  });
+  //filtering if in acc array not exist item.serviceName
+  //AND is not an empty string.
+  const allServicesNames: string[] = withIdTempAllRes.reduce((acc, item) => {
+    if (item.serviceName !== "" && !acc.includes(item.serviceName)) {
+      acc.push(item.serviceName);
+    }
+    return acc;
+  }, []);
 
   //after having all uniques serviceName, I can start to create tempData
-  const tempData = allServicesNames.map((serviceName) => {
+  const tempData = allServicesNames.map((serviceName): TempData => {
     //looking for all objects who is the same as serviceName
     const filteredWithServiceName = withIdTempAllRes.filter(
       (item) => item.serviceName === serviceName
@@ -233,7 +247,7 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
 
   tempData.sort(dynamicSort("min"));
 
-  const returnNewData = [
+  const returnNewData: ReturnNewData[] = [
     {
       id: generateUUID(),
       deliveryTime: ALL,
@@ -254,12 +268,17 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
 };
 
 const filterData = (
-  allData: {options?: {sortedBy: string; isAscending: boolean}; data: any},
+  allData: {
+    options?: {sortedBy: string; isAscending: boolean};
+    data: ReturnNewData[];
+  },
   options: DefaultData["options"]
 ) => {
-  const TSD = allData.data[0].timeSpeedData;
+  const TSD: TempData[] = allData.data[0].timeSpeedData;
   const unique = Array.from(
-    new Set(TSD.map((item: {deliveryTime: any}) => item.deliveryTime))
+    new Set(
+      TSD.map((item: {deliveryTime: ReturnNewData["deliveryTime"]}) => item.deliveryTime)
+    )
   );
 
   const newData = unique.map((ele: any, index) => {
