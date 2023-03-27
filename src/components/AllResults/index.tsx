@@ -18,7 +18,7 @@ const AllResults = ({
   setIsSearching,
   controller,
 }: {
-  allResponses: any[];
+  allResponses: SingleFormatedItem[];
   fetchCounter: number;
   isSearching: boolean;
   setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,11 +31,13 @@ const AllResults = ({
   const [screenSize] = useScreenSize();
   const [workingData, setWorkingData] = useState<DefaultData>(defaultData);
   const [currentScreenSize, setCurrentScreenSize] = useState<string>(screenSize);
-  const [valClickedSoring, setValClickedSoring] = useState("");
-  const [currentSortingValues, setCurrentSortingValues] = useState(defaultData.options);
+  const [valClickedSoring, setValClickedSoring] = useState<string>("");
+  const [currentSortingValues, setCurrentSortingValues] = useState<
+    DefaultData["options"]
+  >(defaultData.options);
   const isClickedBtn = useBoolean(false);
-  const [isSearchingTxt, setIsSearchingTxt] = useState("please wait...");
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isSearchingTxt, setIsSearchingTxt] = useState<string>("please wait...");
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (isSearching) {
@@ -190,10 +192,10 @@ interface TempData {
   id: string;
   min: number;
   max: number;
-  deliveryTime: any;
+  deliveryTime: string;
   serviceData: any[];
   serviceName: string;
-  courierName: any;
+  courierName: string;
 }
 
 interface ReturnNewData {
@@ -204,7 +206,21 @@ interface ReturnNewData {
   timeSpeedData: TempData[];
 }
 
-const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
+interface SingleFormatedItem {
+  companyName: string;
+  courierName: string;
+  deliveryTime: string;
+  logoSrc: string;
+  price: string;
+  serviceName: string;
+  url: string;
+}
+
+const createNewData = (
+  allResponses: SingleFormatedItem[],
+  defaultValues: DefaultValues
+) => {
+  console.log(`allResponses:`, allResponses);
   const {IS_ASCENDING, SORTED_BY} = defaultValues;
   //added unique ID for each entry
   const withIdTempAllRes = allResponses.map((item) => {
@@ -213,8 +229,8 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
   //filtering if in acc array not exist item.serviceName
   //AND is not an empty string.
   const allServicesNames: string[] = withIdTempAllRes.reduce((acc, item) => {
-    if (item.serviceName !== "" && !acc.includes(item.serviceName)) {
-      acc.push(item.serviceName);
+    if (item.serviceName !== "" && !acc.includes(item.serviceName as never)) {
+      acc.push(item.serviceName as never);
     }
     return acc;
   }, []);
@@ -228,8 +244,8 @@ const createNewData = (allResponses: any[], defaultValues: DefaultValues) => {
     const deliveryTime = filteredWithServiceName[0].deliveryTime;
     const courierName = filteredWithServiceName[0].courierName;
     filteredWithServiceName.sort(dynamicSort(SORTED_BY));
-    const min = Math.min(...filteredWithServiceName.map((item) => item.price));
-    const max = Math.max(...filteredWithServiceName.map((item) => item.price));
+    const min = Math.min(...filteredWithServiceName.map((item) => Number(item.price)));
+    const max = Math.max(...filteredWithServiceName.map((item) => Number(item.price)));
     const returnTempData = {
       id: generateUUID(),
       min,
@@ -281,12 +297,17 @@ const filterData = (
     )
   );
 
-  const newData = unique.map((ele: any, index) => {
+  const newData = unique.map((ele: string) => {
     const filteredWithDelTime = TSD.filter(
-      (singleData: {deliveryTime: unknown}) => singleData.deliveryTime === ele
+      (singleData: {deliveryTime: ReturnNewData["deliveryTime"]}) =>
+        singleData.deliveryTime === ele
     );
-    const minPrice = Math.min(...filteredWithDelTime.map((item: {min: any}) => item.min));
-    const maxPrice = Math.max(...filteredWithDelTime.map((item: {max: any}) => item.max));
+    const minPrice = Math.min(
+      ...filteredWithDelTime.map((item: {min: number}) => item.min)
+    );
+    const maxPrice = Math.max(
+      ...filteredWithDelTime.map((item: {max: number}) => item.max)
+    );
     return {
       id: generateUUID(),
       deliveryTime: ele,
@@ -297,13 +318,11 @@ const filterData = (
   });
   newData.sort(dynamicSort("deliveryTime"));
 
-  const mergedAllData = [...newData];
-  mergedAllData.push(allData.data[0]);
-  mergedAllData.sort(dynamicSort("deliveryTime"));
+  const mergedAllData = [...newData, allData.data[0]].sort(dynamicSort("deliveryTime"));
 
   return {
     ...{titles: []},
-    ...{options: {...options}},
+    ...{options},
     ...{data: allData.data},
     mergedAllData,
   };
@@ -321,10 +340,9 @@ const sorting = (
   //1.0.2 if not defalut sorting is doing
   //1.1 if case when not sortBy is passed, then just sort via filteredData.options
   //2. return in object returnSorting.filteredData.options current sorting
-  const data =
-    screenSize === LARGE
-      ? filteredData.mergedAllData.filter((e) => e.deliveryTime !== "ALL")
-      : filteredData.mergedAllData.filter((e) => e.deliveryTime === deliveryTimeBtn);
+  const data = filteredData.mergedAllData.filter((e) =>
+    screenSize === LARGE ? e.deliveryTime !== "ALL" : e.deliveryTime === deliveryTimeBtn
+  );
 
   const {options} = filteredData;
   const {isAscending, sortedBy} = options;
@@ -336,7 +354,7 @@ const sorting = (
   );
 
   const sortedData = data.map((timeSpeedObj) => {
-    const timeSpeedData = [...timeSpeedObj.timeSpeedData];
+    const timeSpeedData: TempData[] = [...timeSpeedObj.timeSpeedData];
     const TSDSortBy = setSortingBy(isAsc, options, sortBy);
     timeSpeedData.sort(dynamicSort(TSDSortBy));
 
@@ -355,7 +373,7 @@ const sorting = (
     return returnSortedData;
   });
 
-  const mediumSortedData: any = [
+  const mediumSortedData: ReturnNewData[] = [
     {
       id: generateUUID(),
       deliveryTime: sortedData[0]?.deliveryTime,
@@ -374,24 +392,42 @@ const sorting = (
 
   if (screenSize === MEDIUM) {
     sortedData[0]?.timeSpeedData?.forEach((speedData: any, index: number) => {
-      if (index % 2 === 0) {
-        mediumSortedData[0].timeSpeedData.push(speedData);
-      } else {
-        mediumSortedData[1].timeSpeedData.push(speedData);
-      }
+      const indexNum = index % 2 === 0 ? 0 : 1;
+      mediumSortedData[indexNum].timeSpeedData.push(speedData);
     });
   }
 
   const returnData = screenSize === MEDIUM ? mediumSortedData : sortedData;
-  const rowsData: any[] = [];
-  returnData?.forEach((workingDataEle: {timeSpeedData: any[]}, i: number) => {
-    workingDataEle.timeSpeedData?.forEach((TSD, indexData) => {
+
+  // const allServicesNames: any[] = [];
+
+  // withIdTempAllRes.forEach((singleData) => {
+  //   if (
+  //     //filtering if in allServicesNames array exist singleData.serviceName
+  //     //AND is not an empty string. If yes, do not do anything
+  //     !allServicesNames.includes(singleData.serviceName) &&
+  //     singleData.serviceName !== ""
+  //   )
+  //     allServicesNames.push(singleData.serviceName);
+  // });
+
+  // const allServicesNames: string[] = withIdTempAllRes.reduce((acc, item) => {
+  //   if (item.serviceName !== "" && !acc.includes(item.serviceName as never)) {
+  //     acc.push(item.serviceName as never);
+  //   }
+  //   return acc;
+  // }, []);
+
+  const rowsData: TempData[] = returnData?.reduce((acc, item, i) => {
+    item.timeSpeedData?.forEach((TSD: TempData, indexData: number) => {
       if (i === 0) {
-        rowsData.push([]);
+        acc.push([]);
       }
-      rowsData[indexData].push(TSD);
+      acc[indexData].push(TSD);
     });
-  });
+    return acc;
+  }, []);
+
   const returnSorting = {
     ...filteredData,
     ...{
@@ -401,7 +437,9 @@ const sorting = (
         deliveryTimeBtn,
       },
     },
-    ...{titles: Array.from(new Set(returnData.map((item: any) => item.deliveryTime)))},
+    ...{
+      titles: Array.from(new Set(returnData.map((item: TempData) => item.deliveryTime))),
+    },
     ...{data: returnData},
     rowsData,
   };
@@ -413,7 +451,7 @@ const isSortedByAscending = (
   isAscending: boolean,
   defaultValueIsAscending: boolean,
   sortedBy: string,
-  sortBy: string | undefined
+  sortBy?: string
 ) => {
   if (sortBy) {
     //when clicking button sorting, I check if fired button is the same as current sorting

@@ -4,7 +4,7 @@ import {VARIABLES} from "../../../../utils/variables";
 const {PARCEL_MONKEY} = VARIABLES;
 
 const Prices = ({serviceData}: {serviceData: []}) => {
-  interface items {
+  interface Items {
     companyName: string;
     courierName: string;
     price: string | number;
@@ -14,7 +14,7 @@ const Prices = ({serviceData}: {serviceData: []}) => {
   }
   return (
     <>
-      {serviceData.map((company: items) => {
+      {serviceData.map((company: Items) => {
         const getParcelMonkeyClassName =
           company.companyName === PARCEL_MONKEY ? "parcelMonkeyBC" : "";
         return (
