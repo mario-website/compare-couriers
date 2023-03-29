@@ -30,7 +30,6 @@ export const courierNameF = (courierName: string, courier: string) => {
 
     case [
       "UPS",
-      "ups",
       "UPS Access Point",
       "Express Sameday Collect",
       "UPS Express",
@@ -55,7 +54,7 @@ export const courierNameF = (courierName: string, courier: string) => {
       output = "DX";
       break;
 
-    case ["DPD", "dpd", "DPD Collection"].includes(courierName):
+    case ["DPD", "DPD Collection"].includes(courierName):
       output = "DPD";
       break;
 
@@ -90,10 +89,6 @@ export const courierNameF = (courierName: string, courier: string) => {
 
     case ["InPost Lockers"].includes(courierName):
       output = "InPost";
-      break;
-
-    case ["p4d"].includes(courierName):
-      output = "P4D";
       break;
 
     default:
@@ -135,7 +130,6 @@ export const deliveryTimeF = (deliveryTime: string, courier: string) => {
       "Express 10 (by 10)",
       "Express AM (by 12)",
       "FedEx Next Day™",
-      "1 day",
     ].includes(deliveryTime)
   ) {
     output = FAST;
@@ -318,15 +312,11 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   if (serviceName === "UPS Express" || serviceName === "Next Day") {
     output = "UPS Express";
   }
-  if (serviceName === "UPS Standard®" || serviceName === "StandardUPS") {
+  if (serviceName === "UPS Standard®") {
     output = "UPS Standard";
-  }
-  if (serviceName === "ExpressP4D") {
-    output = "P4D Express";
   }
   if (
     serviceName === "Express Sameday Collect" ||
-    serviceName === "Express SaverUPS" ||
     serviceName === "ukparcels_upsstandard_collected"
   ) {
     output = "UPS Express Sameday Collect";
@@ -337,7 +327,7 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   ) {
     output = "Drop off - UPS Access Point™";
   }
-  if (serviceName === "UPS Express® by 10.30am" || serviceName === "Express 10:30UPS") {
+  if (serviceName === "UPS Express® by 10.30am") {
     output = "UPS Express® by 10.30am";
   }
   if (serviceName === "UPS Express Saver® by 12pm") {
@@ -362,10 +352,7 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   if (serviceName === "InPost 24") {
     output = "Drop off - InPost 24";
   }
-  if (
-    serviceName === "DPD Drop Off" ||
-    serviceName === "Next Day Delivery Drop to ShopDPD"
-  ) {
+  if (serviceName === "DPD Drop Off") {
     output = "Drop off - DPD";
   }
   if (serviceName === "Collect+") {

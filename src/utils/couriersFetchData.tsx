@@ -1,7 +1,7 @@
 import {VARIABLES} from "./variables";
 import {convertIso2ToIso3} from "./utils";
 
-const {PARCEL2GO, PARCEL_MONKEY, ALL, P4D} = VARIABLES;
+const {PARCEL2GO, PARCEL_MONKEY, ALL} = VARIABLES;
 export interface DefaultValues {
   VALUE: number;
   WEIGHT: number;
@@ -77,7 +77,6 @@ export interface CouriersNamesArr extends Array<CouriersNames> {}
 export const couriersNamesArr: CouriersNames[] = [
   {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
   {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
-  {apiUrl: "/api/p4d/", companyName: P4D},
 ];
 
 export const getObjName = (companyName: string) =>
@@ -102,7 +101,7 @@ export interface CourierData {
     options: {
       method: string;
       headers: {};
-      body?: string;
+      body: string;
     };
   };
 }
@@ -211,16 +210,6 @@ export const couriersData = (values: DefaultValues) => {
               postcode: POSTCODE_TO,
             },
           }),
-        },
-      },
-    },
-    {
-      names: getObjName(P4D),
-      getData: {
-        url: `https://app.p4d.co.uk/quotes/GB:RM191ZY/GB:RM191ZY/${WEIGHT},${LENGTH},${WIDTH},${HEIGHT}?type=Domestic&rank=four`,
-        options: {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
         },
       },
     },
