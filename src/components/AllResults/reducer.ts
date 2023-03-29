@@ -1,5 +1,5 @@
-import {defaultData} from "utils";
-import {Initial_State, AllResReducer} from "types";
+import {defaultData} from "../../utils";
+import {Initial_State, AllResReducer} from "../../types";
 
 export const INITIAL_STATE: Initial_State = {
   dataAllResponses: defaultData,

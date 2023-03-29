@@ -1,4 +1,4 @@
-import {defaultData, DefaultData} from "utils";
+import {defaultData, DefaultData} from "../../utils";
 
 export interface Initial_State {
   dataAllResponses: DefaultData;

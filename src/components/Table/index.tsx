@@ -1,5 +1,5 @@
 import React from "react";
-import {DefaultData} from "utils";
+import {DefaultData} from "../../utils";
 import TableRow from "../TableRow";
 import "./style.scss";
 

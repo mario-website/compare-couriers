@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import InputForm from "../InputForm";
 import "./style.scss";
-import {DispatchParcelValues, ClassNames, Dimensions} from "types";
-import {VARIABLES} from "utils";
+import {DispatchParcelValues, ClassNames, Dimensions} from "../../types";
+import {VARIABLES} from "../../utils";
 
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 

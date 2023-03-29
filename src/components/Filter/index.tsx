@@ -1,6 +1,6 @@
 import React from "react";
 
-import {VARIABLES, DefaultData} from "utils";
+import {VARIABLES, DefaultData} from "../../utils";
 import "./style.scss";
 
 const {MEDIUM, SMALL, ALL} = VARIABLES;

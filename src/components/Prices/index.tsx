@@ -1,5 +1,5 @@
 import React from "react";
-import {VARIABLES} from "utils";
+import {VARIABLES} from "../../utils";
 
 const {PARCEL_MONKEY} = VARIABLES;
 

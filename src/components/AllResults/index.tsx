@@ -8,7 +8,7 @@ import {
   defaultValues,
   DefaultData,
   DefaultValues,
-} from "utils";
+} from "../../utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
 import {useScreenSize, getScreenSize} from "./hooks";
 import {useBoolean} from "../Main/hooks";

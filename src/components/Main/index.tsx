@@ -10,7 +10,7 @@ import {
   CourierData,
   DefaultValues,
   ReturnCouriersData,
-} from "utils";
+} from "../../utils";
 
 import "./style.scss";
 

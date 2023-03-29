@@ -6,12 +6,6 @@
       "dom.iterable",
       "esnext"
     ],
-    "baseUrl": "./src",
-    "paths": {
-      "@types/*": ["types/*"],
-      "@utils/*": ["utils/*"],
-      "@scss/*": ["scss/*"],
-    },
     "importHelpers": true,
     "allowJs": true,
     "skipLibCheck": true,

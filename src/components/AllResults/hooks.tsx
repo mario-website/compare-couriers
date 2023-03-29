@@ -1,5 +1,5 @@
 import {useEffect, useState, useLayoutEffect, useRef} from "react";
-import {VARIABLES} from "utils";
+import {VARIABLES} from "../../utils";
 const {MEDIUM, SMALL, LARGE} = VARIABLES;
 
 export const useScreenSize = () => {
