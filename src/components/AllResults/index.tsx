@@ -220,7 +220,6 @@ const createNewData = (
   allResponses: SingleFormatedItem[],
   defaultValues: DefaultValues
 ) => {
-  console.log(`allResponses:`, allResponses);
   const {IS_ASCENDING, SORTED_BY} = defaultValues;
   //added unique ID for each entry
   const withIdTempAllRes = allResponses.map((item) => {
