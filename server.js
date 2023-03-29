@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 const puppeteer = require("puppeteer");
+const {chromium} = require("playwright");
 const fetch = (...args) =>
   import("node-fetch").then(({default: fetch}) => fetch(...args));
 require("dotenv").config();
@@ -31,8 +32,9 @@ couriersNamesArr.forEach((courier) => {
 });
 
 app.post("/api/p4d/", async (req, res) => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+  const browser = await chromium.launch();
+  const context = await browser.newContext();
+  const page = await context.newPage();
   await page.goto(req.body.url);
   await page.waitForSelector(".sc-fzoCCn");
 
