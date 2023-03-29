@@ -1,21 +1,11 @@
-import {defaultData, DefaultData} from "../../utils/couriersFetchData";
-
-export interface Initial_State {
-  dataAllResponses: DefaultData;
-  filteredData: DefaultData;
-  defaultData: DefaultData;
-}
+import {defaultData} from "utils";
+import {Initial_State, AllResReducer} from "types";
 
 export const INITIAL_STATE: Initial_State = {
   dataAllResponses: defaultData,
   filteredData: defaultData,
   defaultData,
 };
-
-export interface AllResReducer {
-  state: Initial_State;
-  action: {type: string; payload?: any};
-}
 
 export const allResReducer = (
   INITIAL_STATE: Initial_State,

@@ -1,7 +1,6 @@
 import React from "react";
 
-import {VARIABLES} from "../../../utils/variables";
-import {DefaultData} from "../../../utils/couriersFetchData";
+import {VARIABLES, DefaultData} from "utils";
 import "./style.scss";
 
 const {MEDIUM, SMALL, ALL} = VARIABLES;

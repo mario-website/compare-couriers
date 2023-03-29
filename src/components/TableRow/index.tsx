@@ -1,6 +1,6 @@
 import React from "react";
-import Prices from "./Prices";
-import {VARIABLES} from "../../../utils/variables";
+import Prices from "../Prices";
+import {VARIABLES} from "utils";
 import "./style.scss";
 
 const {PARCEL_MONKEY} = VARIABLES;

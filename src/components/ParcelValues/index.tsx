@@ -1,48 +1,30 @@
 import React, {useState} from "react";
-import InputForm from "./InputForm";
-import {VARIABLES} from "../../utils/variables";
+import InputForm from "../InputForm";
 import "./style.scss";
+import {DispatchParcelValues, ClassNames, Dimensions} from "types";
+import {VARIABLES} from "utils";
 
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
-
-interface Dispatch {
-  type: string;
-  payload: {
-    name: string;
-    value: string | number;
-  };
-}
 
 const ParcelValues = ({
   useReducerTable,
   setNewData,
 }: {
   useReducerTable: {
-    dispatch: ({type, payload}: Dispatch) => void;
+    dispatch: ({type, payload}: DispatchParcelValues) => void;
     stateCurrentValues: {
       [key: string]: any;
     };
   };
   setNewData: (e: {preventDefault: () => void}) => void;
 }) => {
-  const [classNames, setClassNames] = useState<{
-    showAllDimensionsAndWeight: string;
-    displayNone: string;
-    displayGrid: string;
-    removeGap: string;
-  }>({
+  const [classNames, setClassNames] = useState<ClassNames>({
     showAllDimensionsAndWeight: "",
     displayNone: "",
     displayGrid: "",
     removeGap: "",
   });
 
-  interface Dimensions {
-    name: string;
-    labelName: string;
-    placeholder: string;
-    units: string;
-  }
   const dimensions: Dimensions[] = [
     {name: LENGTH, labelName: "Length", placeholder: "Length in cm", units: "cm"},
     {name: WIDTH, labelName: "Width", placeholder: "Width in cm", units: "cm"},

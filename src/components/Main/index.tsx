@@ -2,14 +2,16 @@ import React, {useState, useReducer} from "react";
 import {INITIAL_STATE, tableReducer} from "./reducer";
 import AllResults from "../AllResults";
 import ParcelValues from "../ParcelValues";
-
-import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
-import {VARIABLES} from "../../utils/variables";
 import {
+  VARIABLES,
+  courierNameF,
+  deliveryTimeF,
+  serviceNameF,
   CourierData,
   DefaultValues,
   ReturnCouriersData,
-} from "../../utils/couriersFetchData";
+} from "utils";
+
 import "./style.scss";
 
 const {

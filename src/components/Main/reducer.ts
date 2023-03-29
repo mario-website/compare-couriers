@@ -7,7 +7,7 @@ import {
   ReturnCouriersData,
   CouriersNamesArr,
   DefaultData,
-} from "../../utils/couriersFetchData";
+} from "utils";
 
 export interface Initial_State {
   couriersData: (values: DefaultValues) => ReturnCouriersData;
