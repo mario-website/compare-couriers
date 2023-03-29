@@ -9,7 +9,7 @@ $chevronSize: 0.5rem;
   > span figure {
     display: grid;
     align-items: center;
-    grid-template-columns: min-content 7rem;
+    grid-template-columns: min-content 6.7rem;
     gap: $gridGap;
   }
 
@@ -54,14 +54,16 @@ $chevronSize: 0.5rem;
     padding: calc($gridGap / 2);
 
     img {
-      width: 100%;
+      max-width: 100%;
+      max-height: 1.2rem;
     }
 
     &_content {
       figure {
         img {
           float: left;
-          max-width: 4rem;
+          max-width: 3.5rem;
+          margin-top: 0.22rem;
           margin-right: calc($gridGap / 2);
         }
       }

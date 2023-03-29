@@ -2,19 +2,24 @@ import React, {useState, useReducer} from "react";
 import {INITIAL_STATE, tableReducer} from "./reducer";
 import AllResults from "../AllResults";
 import ParcelValues from "../ParcelValues";
+
+import {courierNameF, deliveryTimeF, serviceNameF} from "../../utils/normalizerNames";
+import {VARIABLES} from "../../utils/variables";
 import {
-  VARIABLES,
-  courierNameF,
-  deliveryTimeF,
-  serviceNameF,
   CourierData,
   DefaultValues,
   ReturnCouriersData,
-} from "../../utils";
-
+} from "../../utils/couriersFetchData";
 import "./style.scss";
 
-const {PARCEL2GO_LOGO_SRC, PARCEL_MONKEY_LOGO_SRC, PARCEL_MONKEY, PARCEL2GO} = VARIABLES;
+const {
+  PARCEL2GO_LOGO_SRC,
+  PARCEL_MONKEY_LOGO_SRC,
+  PARCEL_MONKEY,
+  PARCEL2GO,
+  P4D,
+  P4D_LOGO_SRC,
+} = VARIABLES;
 
 const Main = () => {
   const [state, dispatch] = useReducer(tableReducer, INITIAL_STATE);
@@ -259,6 +264,48 @@ const formattingData = (
           deliveryTime,
           url,
           logoSrc,
+        };
+      });
+
+    case P4D:
+      interface P4D_Item {
+        courierName: string;
+        serviceName: string;
+        deliveryTime: string;
+        price: string;
+      }
+      const extractCourierNameFromImgSrc = (str: string) => {
+        if (str?.length) {
+          const lastSlashIndex = str.lastIndexOf("/");
+          const dotIndex = str.lastIndexOf(".");
+          return str.substring(lastSlashIndex + 1, dotIndex);
+        } else return str;
+      };
+
+      const getPrice = (str: string) => {
+        const poundIndex = str.indexOf("£");
+        if (str.indexOf("£") !== -1) return str.substring(poundIndex + 1);
+      };
+
+      return data.map((item: P4D_Item) => {
+        const courierName = courierNameF(
+          extractCourierNameFromImgSrc(item.courierName),
+          companyName
+        );
+        const serviceName = serviceNameF(item.serviceName + courierName, companyName);
+        const deliveryTime = deliveryTimeF(item.deliveryTime, companyName);
+        const price = getPrice(item.price);
+        const logoSrc = P4D_LOGO_SRC;
+        const url = `https://app.p4d.co.uk/quotes/GB:RM191ZY/GB:RM191ZY/${WEIGHT},${LENGTH},${WIDTH},${HEIGHT}?type=Domestic&rank=four`;
+
+        return {
+          companyName,
+          courierName,
+          serviceName,
+          price,
+          deliveryTime,
+          logoSrc,
+          url,
         };
       });
 

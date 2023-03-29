@@ -1,5 +1,4 @@
 import React from "react";
-
 import {VARIABLES, DefaultData} from "../../utils";
 import "./style.scss";
 

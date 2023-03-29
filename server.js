@@ -1,12 +1,14 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
+const puppeteer = require("puppeteer");
 const fetch = (...args) =>
   import("node-fetch").then(({default: fetch}) => fetch(...args));
 require("dotenv").config();
 app.use(express.static("src/assets/logo"));
-
 const port = process.env.PORT || process.env.REACT_APP_LOCAL_SERVER_PORT;
+app.listen(port, () => console.log(`Listening on port ${port}`));
+
 const couriersNamesArr = [
   {apiUrl: "/api/parcelmonkey/", companyName: "PARCEL_MONKEY", method: app.post},
   {apiUrl: "/api/p2g/", companyName: "PARCEL2GO", method: app.post},
@@ -28,70 +30,49 @@ couriersNamesArr.forEach((courier) => {
   });
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.post("/api/p4d/", async (req, res) => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto(req.body.url);
+  await page.waitForSelector(".sc-fzoCCn");
 
-//below comments will use in the future to scrapp from other couriers websites
+  try {
+    const allResults = await page.$$eval(".sc-AxiKw", (elements) => {
+      return elements.map((element) => {
+        const courierName = element.querySelector("img")?.getAttribute("src");
+        const serviceName = element.querySelector(".sc-fzoLsD")?.textContent;
+        const deliveryTime = element.querySelector(".sc-fzonjX")?.textContent;
+        const price = element.querySelector(".sc-fzoPby")?.textContent;
+        return {
+          courierName,
+          serviceName,
+          deliveryTime,
+          price,
+        };
+      });
+    });
+    res.json(allResults);
+  } catch (error) {
+    console.error(error);
+  }
 
-// app.get("/", (req, res) => {
-//   res.render("index");
-// });
-// app.get("/api/p4d/", (req, res) => {
-// superagent
-//   .get("https://app.p4d.co.uk/quotes/GB:RM191ZY/PL:51-315/7,12,34,56")
-//   .query()
-//   .end(function (err, response) {
-//     if (err) {
-//       res.json({
-//         confirmation: "fail",
-//         message: err,
-//       });
-//       return;
-//     }
-//     let aa;
-//     aa = cheerio.load(response.text);
-//     // console.log(`aa:`, aa);
-//     let a = [];
-//     aa("div").each(function (i, el) {
-//       // console.log(`i:`, el.text());
-//       // a.push(el.text());
-//       // const service_nameP4D = $(this).text();
-//     });
-//     //.split("\n") = I split to array where each value are splited by enter key
-//     const service_nameArray = service_nameP4D.split("\n");
-//     service_nameArray.forEach((name, i) => {
-//       //.trim() remove white spaces
-//       service_nameArray[i] = name.trim();
-//     });
-//     const service_nameP4DArray = service_nameArray[1];
-//     const priceP4D = service_nameArray[3];
-//     //remove from string priceP4D all characters but not numbers
-//     const price = priceP4D.replace(/[^\d.-]/g, "");
-//     const courier_name = normalizerNames.courierNameP4D(
-//       service_nameP4DArray
-//     );
-//     const service_name = normalizerNames.serviceName(
-//       service_nameP4DArray,
-//       "p4d.co.uk"
-//     );
-//     outputArray[i] = Object.assign({}, outputArray[i], {
-//       company_name: "p4d.co.uk",
-//       price: price,
-//       service_name: service_name,
-//       courier_name: courier_name
-//     });
-//   });
-//   $(
-//     "#newquote-list li form  .newquote-topbox .newquote-delivery-time b"
-//   ).each(function(i, el) {
-//     const deliveryTimeP4D = $(this).text();
-//     const deliveryTime = normalizerNames.deliveryTime(
-//       deliveryTimeP4D,
-//       "p4d.co.uk"
-//     );
-//     outputArray[i] = Object.assign({}, outputArray[i], {
-//       deliveryTime
-//     });
-//   });
-// res.json(a);
-// });
-// });
+  //BELOW IS ANOTHER WORKING SOLUTION TO SCRAP
+  //----------------------
+  // const html = await page.content();
+  // const $ = cheerio.load(html);
+
+  // const allResults = $(".sc-AxiKw")
+  //   .map((i, el) => {
+  //     const courierName = $(el).find("img").attr("src").reverse();
+  //     const serviceName = $(el).find(".sc-fzoLsD").text();
+  //     const deliveryTime = $(el).find(".sc-fzonjX").text();
+  //     const price = $(el).find(".sc-fzoPby").text();
+  //     return {courierName, serviceName, price, deliveryTime};
+  //   })
+  //   .get();
+
+  // res.json(allResults);
+  //----------------------
+
+  await browser.close();
+});

@@ -1,15 +1,10 @@
 import React, {useState, useEffect, useReducer} from "react";
 import Table from "../Table";
 import Filter from "../Filter";
-import {
-  VARIABLES,
-  dynamicSort,
-  generateUUID,
-  defaultValues,
-  DefaultData,
-  DefaultValues,
-} from "../../utils";
+import {VARIABLES} from "../../utils/variables";
+import {dynamicSort, generateUUID} from "../../utils/utils";
 import {INITIAL_STATE, allResReducer} from "./reducer";
+import {defaultValues, DefaultData, DefaultValues} from "../../utils/couriersFetchData";
 import {useScreenSize, getScreenSize} from "./hooks";
 import {useBoolean} from "../Main/hooks";
 import "./style.scss";
@@ -225,7 +220,6 @@ const createNewData = (
   allResponses: SingleFormatedItem[],
   defaultValues: DefaultValues
 ) => {
-  console.log(`allResponses:`, allResponses);
   const {IS_ASCENDING, SORTED_BY} = defaultValues;
   //added unique ID for each entry
   const withIdTempAllRes = allResponses.map((item) => {
