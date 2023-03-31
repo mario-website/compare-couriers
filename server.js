@@ -32,31 +32,33 @@ couriersNamesArr.forEach((courier) => {
 });
 
 app.post("/api/p4d/", async (req, res) => {
-  const browser = await chromium.launch({args: ["--no-sandbox"]});
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  await page.goto(req.body.url);
-  await page.waitForSelector(".sc-fzoCCn");
+  res.json([]);
+  // const browser = await chromium.launch({args: ["--no-sandbox"]});
+  // const context = await browser.newContext();
+  // const page = await context.newPage();
+  // await page.goto(req.body.url);
+  // await page.waitForSelector(".sc-fzoCCn");
 
-  try {
-    const allResults = await page.$$eval(".sc-AxiKw", (elements) => {
-      return elements.map((element) => {
-        const courierName = element.querySelector("img")?.getAttribute("src");
-        const serviceName = element.querySelector(".sc-fzoLsD")?.textContent;
-        const deliveryTime = element.querySelector(".sc-fzonjX")?.textContent;
-        const price = element.querySelector(".sc-fzoPby")?.textContent;
-        return {
-          courierName,
-          serviceName,
-          deliveryTime,
-          price,
-        };
-      });
-    });
-    res.json(allResults);
-  } catch (error) {
-    console.error(error);
-  }
+  // try {
+  //   const allResults = await page.$$eval(".sc-AxiKw", (elements) => {
+  //     return elements.map((element) => {
+  //       const courierName = element.querySelector("img")?.getAttribute("src");
+  //       const serviceName = element.querySelector(".sc-fzoLsD")?.textContent;
+  //       const deliveryTime = element.querySelector(".sc-fzonjX")?.textContent;
+  //       const price = element.querySelector(".sc-fzoPby")?.textContent;
+  //       return {
+  //         courierName,
+  //         serviceName,
+  //         deliveryTime,
+  //         price,
+  //       };
+  //     });
+  //   });
+  //   res.json(allResults);
+  // } catch (error) {
+  //   console.error(error);
+  // }
+  // await browser.close();
 
   //BELOW IS ANOTHER WORKING SOLUTION TO SCRAP
   //----------------------
@@ -74,7 +76,6 @@ app.post("/api/p4d/", async (req, res) => {
   //   .get();
 
   // res.json(allResults);
+  // await browser.close();
   //----------------------
-
-  await browser.close();
 });
