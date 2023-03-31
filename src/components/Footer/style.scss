@@ -4,4 +4,88 @@
   display: flex;
   flex-grow: 1;
   align-items: flex-end;
+  color: $color-dark;
+  font-size: 0.6rem;
+  padding-top: 4rem;
+  font-weight: 200;
+  margin: 0 (-$bodyPadding) 0 (-$bodyPadding);
+
+  &-Wrapper {
+    width: 100%;
+    padding: $bodyPadding;
+    background-color: $color-light;
+  }
+
+  &-Content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: $gridGap * 2;
+    font-family: $font-RobotoSlab;
+    text-align: center;
+
+    &_column {
+      p {
+        margin-bottom: 0.5rem;
+        text-align: justify;
+      }
+
+      p:first-child {
+        font-weight: 500;
+      }
+
+      a {
+        color: $color-dark;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &-Description {
+    text-indent: 1rem;
+  }
+
+  &-About {
+    display: flex;
+    align-items: center;
+    gap: $gridGap;
+    margin-bottom: 0.5rem;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  &-Logo {
+    display: flex;
+    align-items: center;
+
+    @each $number, $color in $coloursLogo {
+      span:nth-child(#{$number}) {
+        font-weight: 800;
+        font-family: $font-Lexend;
+        color: $color;
+      }
+    }
+  }
+
+  &-Copyright {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.6rem;
+
+    @include media(">=MEDIUM") {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @include media(">FORM") {
+    font-size: 0.7rem;
+  }
+
+  @include media(">=SMALL") {
+    font-size: 0.8rem;
+  }
 }
