@@ -1,5 +1,5 @@
-# Parcel
-Live preview: https://parcel.herokuapp.com/ 
+# ShipItNow
+Live preview: https://shipitnow.herokuapp.com/ 
 
 ## What the project does?
 
