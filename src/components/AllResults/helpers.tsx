@@ -146,8 +146,6 @@ export const sorting = (
     screenSize === LARGE ? e.deliveryTime !== "ALL" : e.deliveryTime === deliveryTimeBtn
   );
 
-  console.log(`filteredData:`, filteredData);
-
   const {options} = filteredData;
   const {isAscending, sortedBy} = options;
   const isAsc = isSortedByAscending(
