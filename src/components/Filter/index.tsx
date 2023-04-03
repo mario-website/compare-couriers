@@ -1,6 +1,8 @@
 import React from "react";
-import {VARIABLES, DefaultData} from "../../utils";
 import "./style.scss";
+
+import {FilterProps} from "./types";
+import {VARIABLES} from "../../utils";
 
 const {MEDIUM, SMALL, ALL} = VARIABLES;
 
@@ -12,18 +14,7 @@ const Filter = ({
   workingData,
   handleDeliveryTime,
   delTime,
-}: {
-  setSorting: (item: string) => void;
-  fetchCounter: number;
-  currentSortingValues: {sortedBy: string; isAscending: boolean; deliveryTimeBtn: string};
-  screenSize: string;
-  workingData: DefaultData;
-  handleDeliveryTime: (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    deliveryTimeBtn: string
-  ) => void;
-  delTime: (time: string) => string | undefined;
-}) => {
+}: FilterProps) => {
   const sortByPriceTxt = currentSortingValues.isAscending ? "Low-High" : "High-Low";
 
   return (

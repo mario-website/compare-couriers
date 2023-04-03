@@ -1,20 +1,14 @@
-import {VARIABLES} from "./variables";
+import {VARIABLES} from "./common";
 import {convertIso2ToIso3} from "./utils";
+import {CourierData, CouriersNames, DefaultData, DefaultValues} from "../types";
 
 const {PARCEL2GO, PARCEL_MONKEY, ALL, P4D} = VARIABLES;
-export interface DefaultValues {
-  VALUE: number;
-  WEIGHT: number;
-  LENGTH: number;
-  WIDTH: number;
-  HEIGHT: number;
-  IS_ASCENDING: boolean;
-  SORTED_BY: string;
-  COUNTRY_FROM: string;
-  COUNTRY_TO: string;
-  POSTCODE_FROM: string;
-  POSTCODE_TO: string;
-}
+
+export const couriersNamesArr: CouriersNames[] = [
+  {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
+  {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
+  {apiUrl: "/api/p4d/", companyName: P4D},
+];
 
 export const defaultValues: DefaultValues = {
   VALUE: 0,
@@ -30,33 +24,6 @@ export const defaultValues: DefaultValues = {
   POSTCODE_TO: "BL00AA",
 };
 
-export interface TimeSpeedData {
-  id: string;
-  min: number | string;
-  max: number | string;
-  deliveryTime: any;
-  serviceData: any;
-  serviceName: any;
-}
-
-export interface DefaultData {
-  rowsData?: any[];
-  titles: any[];
-  options: {
-    sortedBy: string;
-    isAscending: boolean;
-    deliveryTimeBtn: string;
-  };
-  data: {
-    id: string;
-    deliveryTime: string;
-    minPrice: number;
-    maxPrice: number;
-    timeSpeedData: TimeSpeedData[];
-  }[];
-  mergedAllData: any[];
-}
-
 export const defaultData: DefaultData = {
   options: {
     sortedBy: defaultValues.SORTED_BY,
@@ -68,46 +35,9 @@ export const defaultData: DefaultData = {
   mergedAllData: [],
   rowsData: [],
 };
-interface CouriersNames {
-  apiUrl: string;
-  companyName: string;
-}
-export interface CouriersNamesArr extends Array<CouriersNames> {}
-
-export const couriersNamesArr: CouriersNames[] = [
-  {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
-  {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
-  {apiUrl: "/api/p4d/", companyName: P4D},
-];
 
 export const getObjName = (companyName: string) =>
   couriersNamesArr.find((name) => name.companyName === companyName) as CouriersNames;
-
-export interface CourierData {
-  names: CouriersNames;
-  getToken?: {
-    url: string;
-    options: {
-      method: string;
-      headers: {
-        Accept: string;
-        "User-Agent": string;
-        "Content-Type": string;
-      };
-      body: string;
-    };
-  };
-  getData: {
-    url: string;
-    options: {
-      method: string;
-      headers: {};
-      body?: string;
-    };
-  };
-}
-
-export interface ReturnCouriersData extends Array<CourierData> {}
 
 export const couriersData = (values: DefaultValues) => {
   const {
@@ -224,5 +154,5 @@ export const couriersData = (values: DefaultValues) => {
         },
       },
     },
-  ] as ReturnCouriersData;
+  ] as CourierData[];
 };

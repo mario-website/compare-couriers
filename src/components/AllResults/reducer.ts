@@ -1,14 +1,14 @@
 import {defaultData} from "../../utils";
-import {Initial_State, AllResReducer} from "../../types";
+import {AllResReducer, Filter_Reducer_Initial_State} from "../Filter/reducer";
 
-export const INITIAL_STATE: Initial_State = {
+export const INITIAL_STATE: Filter_Reducer_Initial_State = {
   dataAllResponses: defaultData,
   filteredData: defaultData,
   defaultData,
 };
 
 export const allResReducer = (
-  INITIAL_STATE: Initial_State,
+  INITIAL_STATE: Filter_Reducer_Initial_State,
   action: AllResReducer["action"]
 ) => {
   switch (action.type) {

@@ -1,24 +1,25 @@
-import {defaultData, DefaultData} from "../../utils";
+import {DefaultData} from "../../types";
+import {defaultData} from "../../utils";
 
-export interface Initial_State {
+export interface Filter_Reducer_Initial_State {
   dataAllResponses: DefaultData;
   filteredData: DefaultData;
   defaultData: DefaultData;
 }
 
-export const INITIAL_STATE: Initial_State = {
+export const INITIAL_STATE: Filter_Reducer_Initial_State = {
   dataAllResponses: defaultData,
   filteredData: defaultData,
   defaultData,
 };
 
 export interface AllResReducer {
-  state: Initial_State;
+  state: Filter_Reducer_Initial_State;
   action: {type: string; payload?: any};
 }
 
 export const allResReducer = (
-  INITIAL_STATE: Initial_State,
+  INITIAL_STATE: Filter_Reducer_Initial_State,
   action: AllResReducer["action"]
 ) => {
   switch (action.type) {

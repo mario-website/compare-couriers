@@ -1,9 +1,10 @@
 import React from "react";
-import {DefaultData} from "../../utils";
 import TableRow from "../TableRow";
 import "./style.scss";
 
-const Table = ({workingData, delTime}: {workingData: DefaultData; delTime: any}) => {
+import {TableProps} from "./types";
+
+const Table = ({workingData, delTime}: TableProps) => {
   return (
     <table className="Table">
       <thead className="Table-Titles">
@@ -24,7 +25,7 @@ const Table = ({workingData, delTime}: {workingData: DefaultData; delTime: any})
         </tr>
       </thead>
       <tbody className="Table-AllItems">
-        {workingData.rowsData?.map((timeSpeedRow, i) => {
+        {workingData.rowsData?.map((timeSpeedRow) => {
           return (
             <TableRow
               key={"allItems" + timeSpeedRow[0].id}

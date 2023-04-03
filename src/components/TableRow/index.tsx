@@ -1,14 +1,16 @@
 import React from "react";
 import Prices from "../Prices";
-import {VARIABLES} from "../../utils";
 import "./style.scss";
+
+import {TableRowProps} from "./types";
+import {VARIABLES} from "../../utils";
 
 const {PARCEL_MONKEY} = VARIABLES;
 
-const TableRow = ({timeSpeedData}: {timeSpeedData: any}) => {
+const TableRow = ({timeSpeedData}: TableRowProps) => {
   return (
     <tr className="TableRow">
-      {timeSpeedData?.map((service: any) => {
+      {timeSpeedData?.map((service) => {
         const numOfServicesFound = service.serviceData.length;
         const logoSrc = service.serviceData[0].logoSrc;
         const getParcelMonkeyClassName =

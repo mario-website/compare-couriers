@@ -1,6 +1,25 @@
-import {useEffect, useState, useLayoutEffect, useRef} from "react";
-import {VARIABLES} from "../../utils";
-const {MEDIUM, SMALL, LARGE} = VARIABLES;
+import {useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {getScreenSize} from "./common";
+
+export interface ReturnUseBoolean {
+  value: boolean;
+  setValue: React.Dispatch<React.SetStateAction<boolean>>;
+  toggle: () => void;
+  setTrue: () => void;
+  setFalse: () => void;
+}
+
+export const useBoolean = (initial: boolean) => {
+  const [value, setValue] = useState<boolean>(initial);
+  const returnUseBoolean: ReturnUseBoolean = {
+    value,
+    setValue,
+    toggle: useCallback(() => setValue((v) => !v), []),
+    setTrue: useCallback(() => setValue(true), []),
+    setFalse: useCallback(() => setValue(false), []),
+  };
+  return returnUseBoolean;
+};
 
 export const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState<string>("");
@@ -41,22 +60,6 @@ const useWindowSize = () => {
   return size;
 };
 //3.0
-export const getScreenSize = (width: number) => {
-  //IMPORTANT!!!!!!!
-  //------------------------------------------------------------------------------------------------
-  //when changing MD or LR values you need also update file src/scss/globals/_breakpoints.scss
-  //in values $MD and $LR
-  // const $FR = 320;
-  // const SM = 530;
-  const MD = 768;
-  const LR = 1024;
-  //------------------------------------------------------------------------------------------------
-  let screenSize: string = "";
-  if (width < MD) screenSize = SMALL;
-  if (width >= MD && width <= LR) screenSize = MEDIUM;
-  if (width > LR) screenSize = LARGE;
-  return screenSize;
-};
 
 export const usePrevious = (value: any) => {
   const ref = useRef<React.MutableRefObject<undefined>>();

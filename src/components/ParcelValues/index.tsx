@@ -1,23 +1,13 @@
 import React, {useState} from "react";
 import InputForm from "../InputForm";
 import "./style.scss";
-import {DispatchParcelValues, ClassNames, Dimensions} from "../../types";
+
+import {ClassNames, Dimensions, ParcelValuesProps} from "./types";
 import {VARIABLES} from "../../utils";
 
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
-const ParcelValues = ({
-  useReducerTable,
-  setNewData,
-}: {
-  useReducerTable: {
-    dispatch: ({type, payload}: DispatchParcelValues) => void;
-    stateCurrentValues: {
-      [key: string]: any;
-    };
-  };
-  setNewData: (e: {preventDefault: () => void}) => void;
-}) => {
+const ParcelValues = ({useReducerTable, setNewData}: ParcelValuesProps) => {
   const [classNames, setClassNames] = useState<ClassNames>({
     showAllDimensionsAndWeight: "",
     displayNone: "",
@@ -30,6 +20,7 @@ const ParcelValues = ({
     {name: WIDTH, labelName: "Width", placeholder: "Width in cm", units: "cm"},
     {name: HEIGHT, labelName: "Height", placeholder: "Height in cm", units: "cm"},
   ];
+
   const weight: Dimensions = {
     name: WEIGHT,
     labelName: "Weight",

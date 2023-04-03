@@ -1,13 +1,7 @@
 import React from "react";
 import "./style.scss";
 
-interface Dispatch {
-  type: string;
-  payload: {
-    name: string;
-    value: string | number;
-  };
-}
+import {DefaultValues, InputFormProps} from "./types";
 
 const InputForm = ({
   labelName,
@@ -15,23 +9,16 @@ const InputForm = ({
   name,
   useReducerTable,
   units,
-}: {
-  labelName: string;
-  placeholder: string;
-  name: string;
-  useReducerTable: {
-    dispatch: ({type, payload}: Dispatch) => void;
-    stateCurrentValues: {[key: string]: any};
-  };
-  units: string;
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    useReducerTable.dispatch({
+}: InputFormProps) => {
+  const handleChange = (e: any) => {
+    useReducerTable.dispatchUseReducer({
       type: "CHANGE_INPUT",
       payload: {name, value: e.target.value},
     });
   };
-  const isZeroNumber: boolean = useReducerTable.stateCurrentValues[name] === 0;
+
+  const currentValue = useReducerTable.stateCurrentValues[name as keyof DefaultValues];
+  const isZeroNumber: boolean = currentValue === 0;
 
   const withDimensions = (
     <p>
@@ -41,7 +28,7 @@ const InputForm = ({
         min={1}
         max={1000}
         onChange={(e) => handleChange(e)}
-        value={isZeroNumber ? "" : useReducerTable.stateCurrentValues[name]}
+        value={isZeroNumber ? "" : Number(currentValue)}
       />
       <label className="InputForm-Label">{units}</label>
     </p>
