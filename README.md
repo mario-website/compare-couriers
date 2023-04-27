@@ -1,39 +1,98 @@
 # ShipItNow
-Live preview: https://shipitnow.herokuapp.com/ 
 
-## What the project does?
+Live preview: https://my-app-s25goz53sa-ew.a.run.app 
 
-Finding deals from courier websites.
+A web application that compares parcel delivery prices and services from multiple courier websites, making it easy for users to find the best deals for their shipping needs.
 
-Courier websites like https://parcel2go.com or https://parcelmonkey.co.uk/ have their own deals with couriers (ie. DHL, DPD, UPS...) - this website display parcel prices from those courier websites, and in case the same service is already found (ie. UPS Access Point or DHL Parcel UK Next Day...) also compare services from courier websites. You can specify weight and dimensions to get an accurate parcel price.
+## Table of Contents
 
-At the moment, the database is from parcel2go.com and parcelmonkey.co.uk.
+1. [Features](#features)
+2. [Data Sources](#data-sources)
+3. [Technologies Used](#technologies-used)
+4. [Getting Started](#getting-started)
+5. [Project Structure](#project-structure)
 
+## Features
 
-## What technologies it uses?
+- Display and compare parcel prices from various courier websites
+- Ability to specify weight and dimensions for accurate pricing
+- Responsive Web Design with a mobile-first approach
+- Custom React components built without external libraries
 
-FRONTEND:
-- HTML5 
-- CSS3 (SCSS) - BEM class names. Responsive Web Design (with mobile first approach)
+## Data Sources
+
+The current data sources for parcel prices and services include:
+
+- [Parcel2Go](https://parcel2go.com)
+- [ParcelMonkey](https://parcelmonkey.co.uk)
+- [P4D](https://p4d.co.uk) (data obtained through scraping with Playwright)
+
+## Technologies Used
+
+### Frontend
+
+- HTML5
+- CSS3 (SCSS) - BEM class names
 - JavaScript ES6+
-- React 18+ (TypeScript, hooks - included custom created, use reducer is some components) - ***no external libraries used - all elements has ben created by myself***
+- React 18+ (TypeScript, hooks, including custom hooks and useReducer)
 
-BACKEND:
+### Backend
+
 - Node.js
 - Express.js
 
-## Technical notes
+## Getting Started
 
+### Prerequisites
 
-- Run `npm install` after cloning to download all dependencies
-- Use `npm start` to build application and run server
-- create in main folder file .env. In that file set:
-    - LOCAL_SERVER_PORT=3001
-    - DB_NAME=p2g
-    - DB_USERNAME=yourusername
-    - DB_PASSWORD=yourpassowrd
-    - DB_HOST=localhost
-    - PARCELMONKEY_APIVERSION=3.3
-    - free registration on parcelmonkey.co.uk to get userId and token 
-    - PARCELMONKEY_USERID=userid_form_website_parcelmonkey
-    - PARCELMONKEY_TOKEN=token_form_website_parcelmonkey
+- Node.js
+- npm
+
+### Installation
+
+1. Create a `.env` file in the main folder and add the following variables:
+
+```bash
+LOCAL_SERVER_PORT=3001
+DB_NAME=p2g
+DB_USERNAME=yourusername
+DB_PASSWORD=yourpassword
+DB_HOST=localhost
+PARCELMONKEY_APIVERSION=3.3
+PARCELMONKEY_USERID=userid_from_website_parcelmonkey
+PARCELMONKEY_TOKEN=token_from_website_parcelmonkey
+```
+
+2. Clone the repository, navigate to the project directory, install the dependencies and run the application in development mode:
+
+```bash
+git clone https://github.com/mario-website/compare-couriers.git
+cd compare-couriers
+npm install
+npm start
+```
+
+The application should automatically open your browser and navigate to 
+http://localhost:3001
+
+## Project Structure
+```bash
+src
+├── assets
+│   └── ...
+├── components
+│   ├── CompareCouriers
+│   ├── CourierList
+│   ├── ParcelForm
+│   ├── ResultList
+│   └── ...
+├── scss
+│   └── ...
+├── types
+│   └── ...
+├── utils
+│   └── utils.ts
+│   └── ...
+└── index.tsx
+└── server.js
+```

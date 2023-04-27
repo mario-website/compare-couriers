@@ -1,0 +1,12 @@
+# Ignore node_modules folder
+node_modules
+
+# Ignore development files
+*.log
+*.json
+*.lock
+*.config.js
+*.config.json
+
+# Ignore local .git folder
+.git

@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 const puppeteer = require("puppeteer");
-const {chromium} = require("playwright-chromium");
+const playwright = require("playwright");
 const fetch = (...args) =>
   import("node-fetch").then(({default: fetch}) => fetch(...args));
 require("dotenv").config();
@@ -32,13 +32,32 @@ couriersNamesArr.forEach((courier) => {
 });
 
 app.post("/api/p4d/", async (req, res) => {
-  res.json([]);
-  // const browser = await chromium.launch({args: ["--no-sandbox"]});
-  // const context = await browser.newContext();
-  // const page = await context.newPage();
-  // await page.goto(req.body.url);
-  // await page.waitForSelector(".sc-fzoCCn");
+  const browser = await playwright.chromium.launch();
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(req.body.url);
+  await page.waitForSelector(".sc-fzoCCn");
 
+  try {
+    const allResults = await page.$$eval(".sc-AxiKw", (elements) => {
+      return elements.map((element) => {
+        const courierName = element.querySelector("img")?.getAttribute("src");
+        const serviceName = element.querySelector(".sc-fzoLsD")?.textContent;
+        const deliveryTime = element.querySelector(".sc-fzonjX")?.textContent;
+        const price = element.querySelector(".sc-fzoPby")?.textContent;
+        return {
+          courierName,
+          serviceName,
+          deliveryTime,
+          price,
+        };
+      });
+    });
+    res.json(allResults);
+  } catch (error) {
+    console.error(error);
+  }
+  await browser.close();
   // try {
   //   const allResults = await page.$$eval(".sc-AxiKw", (elements) => {
   //     return elements.map((element) => {

@@ -1,0 +1,44 @@
+runtime: nodejs16
+
+instance_class: F1
+automatic_scaling:
+  max_instances: 1
+
+handlers:
+  - url: /static
+    static_dir: build/static
+
+  - url: /favicon.ico
+    static_files: build/favicon.ico
+    upload: build/favicon.ico
+
+  - url: /manifest.json
+    static_files: build/manifest.json
+    upload: build/manifest.json
+
+  - url: /logo192.png
+    static_files: build/logo192.png
+    upload: build/logo192.png
+
+  - url: /logo512.png
+    static_files: build/logo512.png
+    upload: build/logo512.png
+
+  - url: /asset-manifest.json
+    static_files: build/asset-manifest.json
+    upload: build/asset-manifest.json
+
+  - url: /(.+\.js)
+    static_files: build/\1
+    upload: build/(.+\.js)
+
+  - url: /(.+\.css)
+    static_files: build/\1
+    upload: build/(.+\.css)
+
+  - url: /api/.*
+    script: auto
+
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
