@@ -33,7 +33,7 @@ The current data sources for parcel prices and services include:
 
 - HTML5
 - CSS3 (SCSS) - BEM class names
-- JavaScript ES6+ using TypeScript
+- JavaScript ES6+ with TypeScript
 - React 18+ (hooks, including custom hooks and useReducer)
 
 ### Backend
