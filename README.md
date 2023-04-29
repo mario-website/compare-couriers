@@ -1,7 +1,6 @@
 # ShipItNow
 
 Live preview (hosted on Google Cloud using Docker):
-
 https://my-app-s25goz53sa-ew.a.run.app 
 
 A web application that compares parcel delivery prices and services from multiple courier websites, making it easy for users to find the best deals for their shipping needs.
