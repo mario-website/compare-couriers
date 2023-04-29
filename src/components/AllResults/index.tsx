@@ -1,7 +1,9 @@
-import React, {useState, useEffect, useReducer} from "react";
+import React, {useState, useEffect, useReducer, useContext} from "react";
 import Table from "../Table";
 import Filter from "../Filter";
 import Modal from "../Modal";
+import CourierContext from "../../contexts/CourierContext";
+
 import "./style.scss";
 
 import {INITIAL_STATE, allResReducer} from "./reducer";
@@ -28,7 +30,8 @@ const AllResults = ({
     DefaultData["options"]
   >(defaultData.options);
   const isClickedBtn = useBoolean(false);
-  const [isSearchingTxt, setIsSearchingTxt] = useState<string>("please wait...");
+  const {isSearchingTxt, setIsSearchingTxt} = useContext(CourierContext);
+  // const [isSearchingTxt, setIsSearchingTxt] = useState<string>("please wait...");
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   useEffect(() => {
@@ -55,7 +58,7 @@ const AllResults = ({
         clearTimeout(timer2);
       };
     }
-  }, [isSearching, allResponses.length, setIsSearching, controller]);
+  }, [isSearching, allResponses.length, setIsSearching, controller, setIsSearchingTxt]);
 
   useEffect(() => {
     setCurrentSortingValues(workingData.options);

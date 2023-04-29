@@ -3,11 +3,14 @@ import ReactDOM from "react-dom/client";
 import "./scss/style.scss";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals.js";
+import CourierProvider from "./contexts/CourierProvider";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <CourierProvider>
+      <App />
+    </CourierProvider>
   </React.StrictMode>
 );
 
