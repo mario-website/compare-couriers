@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useReducer} from "react";
 import Table from "../Table";
 import Filter from "../Filter";
+import Modal from "../Modal";
 import "./style.scss";
 
 import {INITIAL_STATE, allResReducer} from "./reducer";
@@ -133,25 +134,10 @@ const AllResults = ({
     isClickedBtn.setTrue();
     // dispatch({type: "SET_VALUE_CLICKED_BTN", payload: item});
   };
+
   return (
     <section className="Results">
-      {isOpenModal && (
-        <div className="Results-IsSearching">
-          <span>
-            <div className="lds-roller">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <p>{isSearchingTxt}</p>
-          </span>
-        </div>
-      )}
+      {isOpenModal && <Modal isSearchingTxt={isSearchingTxt} />}
       {allResponses.length > 0 && (
         <>
           <Filter
