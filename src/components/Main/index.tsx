@@ -8,9 +8,16 @@ import {INITIAL_STATE, tableReducer} from "./reducer";
 
 const Main = () => {
   const [state, dispatchUseReducer] = useReducer(tableReducer, INITIAL_STATE);
-  const [controller, setController] = useState<AbortController>(new AbortController());
-  const [isSearching, setIsSearching] = useState<boolean>(false);
-  const {couriersData, currentValues, fetchCounter, allRes, tempController} = state;
+  const [controller, setController] = useState(new AbortController());
+  const [isSearching, setIsSearching] = useState(false);
+  const {
+    couriersData,
+    currentValues,
+    fetchCounter,
+    allRes,
+    tempController,
+    couriersNamesArr,
+  } = state;
 
   //2.0
   const setNewData = (e: {preventDefault: () => void}): void => {
@@ -38,6 +45,8 @@ const Main = () => {
       <ParcelValues
         useReducerTable={{stateCurrentValues: currentValues, dispatchUseReducer}}
         setNewData={setNewData}
+        fetchCounter={fetchCounter}
+        couriersNamesArr={couriersNamesArr}
       />
       <AllResults
         allResponses={allRes}

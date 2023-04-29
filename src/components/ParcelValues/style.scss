@@ -39,6 +39,15 @@
       max-width: max-content;
       justify-self: end;
     }
+
+    .button-disabled {
+      opacity: 0.5;
+      background-color: #ccc;
+      color: #999;
+      border: 1px solid #999;
+      pointer-events: none;
+      user-select: none;
+    }
   }
 
   &-Dimensions {
@@ -104,3 +113,7 @@
 .removeGap {
   gap: 0;
 }
+
+// .button-disabled:hover {
+//   cursor: progress;
+// }

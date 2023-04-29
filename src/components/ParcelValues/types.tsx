@@ -1,4 +1,4 @@
-import {DefaultValues, Dimensions} from "../../types";
+import {CouriersNames, DefaultValues, Dimensions} from "../../types";
 export type {Dimensions};
 
 export interface DispatchParcelValues {
@@ -25,4 +25,6 @@ export interface ParcelValuesProps {
     }>;
   };
   setNewData: (e: {preventDefault: () => void}) => void;
+  fetchCounter: number;
+  couriersNamesArr: CouriersNames[];
 }

@@ -7,13 +7,24 @@ import {VARIABLES} from "../../utils";
 
 const {WEIGHT, LENGTH, WIDTH, HEIGHT} = VARIABLES;
 
-const ParcelValues = ({useReducerTable, setNewData}: ParcelValuesProps) => {
+const ParcelValues = ({
+  useReducerTable,
+  setNewData,
+  fetchCounter,
+  couriersNamesArr,
+}: ParcelValuesProps) => {
   const [classNames, setClassNames] = useState<ClassNames>({
     showAllDimensionsAndWeight: "",
     displayNone: "",
     displayGrid: "",
     removeGap: "",
   });
+
+  const totalNumbersCouriersToBeSearched = couriersNamesArr.length;
+  const totalNumbersCouriersFound = fetchCounter;
+  const isDisabledSearched =
+    totalNumbersCouriersFound !== 0 &&
+    totalNumbersCouriersFound < totalNumbersCouriersToBeSearched;
 
   const dimensions: Dimensions[] = [
     {name: LENGTH, labelName: "Length", placeholder: "Length in cm", units: "cm"},
@@ -83,7 +94,12 @@ const ParcelValues = ({useReducerTable, setNewData}: ParcelValuesProps) => {
             </div>
           </div>
         </div>
-        <button type="submit">Get Quote</button>
+        <button
+          disabled={isDisabledSearched}
+          type="submit"
+          className={isDisabledSearched ? "button-disabled" : ""}>
+          Get Quote
+        </button>
       </div>
     </form>
   );

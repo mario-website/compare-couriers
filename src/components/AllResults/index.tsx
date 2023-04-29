@@ -34,13 +34,13 @@ const AllResults = ({
   useEffect(() => {
     if (isSearching) {
       setIsOpenModal(allResponses.length === 0);
-      const displaySearchingTime = 8500;
-      const nothingFoundDisplayTime = 1500;
+      const displaySearchingTime = 20000; //20 sec
+      const nothingFoundDisplayTime = 2500; //2.5 sc
       const maxiumuDisplayTime = displaySearchingTime + nothingFoundDisplayTime;
 
       const timer1 = setTimeout(() => {
         if (allResponses.length === 0) setIsSearchingTxt("nothing found");
-      }, maxiumuDisplayTime - nothingFoundDisplayTime);
+      }, displaySearchingTime);
 
       const timer2 = setTimeout(() => {
         setIsSearching(false);
