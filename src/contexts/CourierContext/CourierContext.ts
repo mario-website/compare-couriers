@@ -1,17 +1,16 @@
+// src/contexts/CourierContext/CourierContext.tsx
 import {createContext} from "react";
 
-interface ICourierContext {
+export interface ICourierContext {
   couriers: any[];
   setCouriers: (couriers: any[]) => void;
   isSearchingTxt: string;
   setIsSearchingTxt: (isSearchingTxt: string) => void;
 }
 
-const CourierContext = createContext<ICourierContext>({
+export const CourierContext = createContext<ICourierContext>({
   couriers: [],
   setCouriers: () => {},
   isSearchingTxt: "please wait...",
   setIsSearchingTxt: () => {},
 });
-
-export default CourierContext;

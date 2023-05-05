@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useContext} from "react";
+import {InputFormContext} from "../../contexts/InputFormContext";
 import "./style.scss";
 
 import {DefaultValues, InputFormProps} from "./types";
@@ -10,14 +11,16 @@ const InputForm = ({
   useReducerTable,
   units,
 }: InputFormProps) => {
-  const handleChange = (e: any) => {
-    useReducerTable.dispatchUseReducer({
+  const {inputFormDispatch, inputFormState} = useContext(InputFormContext);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    inputFormDispatch({
       type: "CHANGE_INPUT",
       payload: {name, value: e.target.value},
     });
   };
 
-  const currentValue = useReducerTable.stateCurrentValues[name as keyof DefaultValues];
+  const currentValue = inputFormState[name as keyof DefaultValues];
   const isZeroNumber: boolean = currentValue === 0;
 
   const withDimensions = (

@@ -1,5 +1,6 @@
+// src/contexts/CourierContext/CourierProvider.tsx
 import React, {useState, ReactNode} from "react";
-import CourierContext from "./CourierContext";
+import {CourierContext} from "./CourierContext";
 
 interface ICourierProviderProps {
   children: ReactNode;

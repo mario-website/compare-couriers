@@ -3,14 +3,14 @@ import ReactDOM from "react-dom/client";
 import "./scss/style.scss";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals.js";
-import CourierProvider from "./contexts/CourierProvider";
+import CombinedProviders from "./contexts/CombinedProviders";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
-    <CourierProvider>
+    <CombinedProviders>
       <App />
-    </CourierProvider>
+    </CombinedProviders>
   </React.StrictMode>
 );
 

@@ -2,7 +2,7 @@ import React, {useState, useEffect, useReducer, useContext} from "react";
 import Table from "../Table";
 import Filter from "../Filter";
 import Modal from "../Modal";
-import CourierContext from "../../contexts/CourierContext";
+import {CourierContext} from "../../contexts/CourierContext";
 
 import "./style.scss";
 
@@ -31,6 +31,7 @@ const AllResults = ({
   >(defaultData.options);
   const isClickedBtn = useBoolean(false);
   const {isSearchingTxt, setIsSearchingTxt} = useContext(CourierContext);
+
   // const [isSearchingTxt, setIsSearchingTxt] = useState<string>("please wait...");
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 

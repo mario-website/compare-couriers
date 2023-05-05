@@ -24,9 +24,9 @@ A web application that compares parcel delivery prices and services from multipl
 
 The current data sources for parcel prices and services include:
 
-- [Parcel2Go](https://parcel2go.com)
-- [ParcelMonkey](https://parcelmonkey.co.uk)
-- [P4D](https://p4d.co.uk) (data obtained through scraping using Playwright)
+- [Parcel2Go](https://parcel2go.com) - data obtained through API
+- [ParcelMonkey](https://parcelmonkey.co.uk) - data obtained through API
+- [P4D](https://p4d.co.uk) - data obtained through scraping using Playwright
 
 ## Technologies Used
 
@@ -35,7 +35,7 @@ The current data sources for parcel prices and services include:
 - HTML5
 - CSS3 (SCSS) - BEM class names
 - JavaScript ES6+ with TypeScript
-- React 18+ (hooks, including custom hooks and useReducer)
+- React 18+ (hooks, including custom hooks)
 
 ### Backend
 
