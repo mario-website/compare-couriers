@@ -27,6 +27,7 @@ The current data sources for parcel prices and services include:
 - [Parcel2Go](https://parcel2go.com)
 - [ParcelMonkey](https://parcelmonkey.co.uk)
 - [P4D](https://p4d.co.uk) (data obtained through scraping using Playwright)
+- [ParcelBroker](https://parcelbroker.co.uk/) (data obtained through scraping using Playwright)
 
 ## Technologies Used
 

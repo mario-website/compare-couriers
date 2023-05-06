@@ -2,12 +2,13 @@ import {VARIABLES} from "./common";
 import {convertIso2ToIso3} from "./utils";
 import {CourierData, CouriersNames, DefaultData, DefaultValues} from "../types";
 
-const {PARCEL2GO, PARCEL_MONKEY, ALL, P4D} = VARIABLES;
+const {PARCEL2GO, PARCEL_MONKEY, ALL, P4D, PARCELBROKER} = VARIABLES;
 
 export const couriersNamesArr: CouriersNames[] = [
   {apiUrl: "/api/parcelmonkey/", companyName: PARCEL_MONKEY},
   {apiUrl: "/api/p2g/", companyName: PARCEL2GO},
   {apiUrl: "/api/p4d/", companyName: P4D},
+  {apiUrl: "/api/parcelbroker/", companyName: PARCELBROKER},
 ];
 
 export const defaultValues: DefaultValues = {
@@ -151,6 +152,18 @@ export const couriersData = (values: DefaultValues) => {
         options: {
           method: "POST",
           headers: {"Content-Type": "application/json"},
+        },
+      },
+    },
+    {
+      names: getObjName(PARCELBROKER),
+      getData: {
+        url: `https://parcelbroker.co.uk/`,
+
+        options: {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({WEIGHT, LENGTH, WIDTH, HEIGHT}),
         },
       },
     },

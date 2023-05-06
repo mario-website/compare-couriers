@@ -70,6 +70,7 @@ export const courierNameF = (courierName: string, courier: string) => {
       "DHL",
       "DHL Parcel UK",
       "DHL Parcel",
+      "DHL UK",
     ].includes(courierName):
       output = "DHL";
       break;
@@ -109,6 +110,10 @@ export const deliveryTimeF = (deliveryTime: string, courier: string) => {
   if (
     [
       "Fast",
+      "1 business day by 12PM",
+      "1 business day by 10:30AM",
+      "Delivered on Saturday",
+      "Delivered on Saturday",
       "Saturday Delivery",
       "Sunday Delivery",
       "DHL Parcel UK",
@@ -136,6 +141,10 @@ export const deliveryTimeF = (deliveryTime: string, courier: string) => {
       "Express AM (by 12)",
       "FedEx Next Day™",
       "1 day",
+      "1 business day",
+      "1 business day By 12PM",
+      "1 business day By 10AM",
+      "1 business day By 9AM",
     ].includes(deliveryTime)
   ) {
     output = FAST;
@@ -152,6 +161,7 @@ export const deliveryTimeF = (deliveryTime: string, courier: string) => {
       "UPS Access Point™",
       "DPD Drop Off",
       "UPS Collected",
+      "2 business days",
     ].includes(deliveryTime)
   ) {
     output = MEDIUM;
@@ -184,48 +194,62 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   }
   if (
     serviceName === "Parcelforce Worldwide Express 24 Drop Off" ||
+    serviceName === "Parcelforce: Standard 24 Drop Off" ||
     serviceName === "ukparcels_podopf24"
   ) {
     output = "Drop off at post office - Parcelforce Worldwide Express 24";
   }
-  if (serviceName === "ukparcels_pfdropoff24") {
-    output = "Drop off at depot - Parcelforce Worldwide Express 24";
-  }
   if (
     serviceName === "Parcelforce Worldwide Express 48 Drop Off" ||
+    serviceName === "Parcelforce: Standard 48 Drop Off" ||
     serviceName === "ukparcels_podopf48"
   ) {
     output = "Drop off at post office - Parcelforce Worldwide Express 48";
+  }
+  if (serviceName === "ukparcels_pfdropoff24") {
+    output = "Drop off at depot - Parcelforce Worldwide Express 24";
   }
   if (serviceName === "ukparcels_pfdropoff48") {
     output = "Drop off at depot - Parcelforce Worldwide Express 48";
   }
   if (
     serviceName === "Parcelforce Worldwide by 9am" ||
+    serviceName === "Parcelforce: Express by 09:00 am (where available)" ||
     serviceName === "ukparcels_pf24before0900"
   ) {
     output = "Parcelforce Worldwide by 9am";
   }
-  if (serviceName === "ukparcels_podopfby09") {
+  if (
+    serviceName === "ukparcels_podopfby09" ||
+    serviceName === "Parcelforce: Express by 09:00 am Drop Off (where available)"
+  ) {
     output = "Drop off at post office - Parcelforce Worldwide by 9am";
   }
   if (
     serviceName === "Parcelforce Worldwide by 10am" ||
+    serviceName === "Parcelforce: Express by 10:00 am" ||
     serviceName === "ukparcels_pf24before1000"
   ) {
     output = "Parcelforce Worldwide by 10am";
   }
-  if (serviceName === "ukparcels_podopfby10") {
+  if (
+    serviceName === "ukparcels_podopfby10" ||
+    serviceName === "Parcelforce: Express by 10:00 am Drop Off"
+  ) {
     output = "Drop off at post office - Parcelforce Worldwide by 10am";
   }
   if (
     serviceName === "Parcelforce Worldwide Express AM" ||
+    serviceName === "Parcelforce: Express by 12:00 pm" ||
     serviceName === "ukparcels_pf24before1200" ||
     serviceName === "Parcelforce AM"
   ) {
-    output = "Parcelforce Worldwide Express AM";
+    output = "Parcelforce Worldwide Express by 12pm";
   }
-  if (serviceName === "ukparcels_podopfby12") {
+  if (
+    serviceName === "ukparcels_podopfby12" ||
+    serviceName === "Parcelforce: Express by 12:00 pm Drop Off"
+  ) {
     output = "Drop off at post office - Parcelforce Worldwide by 12am";
   }
   if (serviceName === "Parcelforce Worldwide Multi 12 Noon") {
@@ -242,6 +266,7 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   }
   if (
     serviceName === "Parcelforce Worldwide Express 24" ||
+    serviceName === "Parcelforce: Standard 24" ||
     serviceName === "ukparcels_pf24" ||
     serviceName === "Parcelforce 24"
   ) {
@@ -249,6 +274,7 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   }
   if (
     serviceName === "Parcelforce Worldwide Express 48" ||
+    serviceName === "Parcelforce: Standard 48" ||
     serviceName === "ukparcels_pf48" ||
     serviceName === "Parcelforce 48"
   ) {
@@ -263,8 +289,15 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   ) {
     output = "Palletforce Delivery - 48 Hours";
   }
-  if (serviceName === "ukparcels_pfsaturday" || serviceName === "Saturday Delivery") {
+  if (
+    serviceName === "ukparcels_pfsaturday" ||
+    serviceName === "Parcelforce: Express Saturday Delivery" ||
+    serviceName === "Saturday Delivery"
+  ) {
     output = "Parcelforce Saturday delivery";
+  }
+  if (serviceName === "Parcelforce: Express Saturday Delivery Drop Off") {
+    output = "Drop off Parcelforce Saturday delivery";
   }
   if (serviceName === "ukparcels_pfsunday" || serviceName === "Sunday Delivery") {
     output = "Parcelforce Sunday delivery";
@@ -333,6 +366,7 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   }
   if (
     serviceName === "UPS Access Point™" ||
+    serviceName === "UPS: Standard" ||
     serviceName === "ukparcels_upsstandard_dropoff"
   ) {
     output = "Drop off - UPS Access Point™";
@@ -342,6 +376,15 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   }
   if (serviceName === "UPS Express Saver® by 12pm") {
     output = "UPS Express Saver® by 12pm";
+  }
+  if (serviceName === "UPS: Express Saver") {
+    output = "Drop off - UPS Express Saver by 12pm";
+  }
+  if (serviceName === "UPS: Express") {
+    output = "Drop off - UPS Express Saver by 10:30pm";
+  }
+  if (serviceName === "UPS: Express Saturday Delivery") {
+    output = "UPS Express Saturday Delivery";
   }
   if (serviceName === "InPost 48") {
     output = "Drop off - InPost 48";
@@ -379,6 +422,7 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   }
   if (
     serviceName === "DHL UK" ||
+    serviceName === "DHL UK: Standard" ||
     serviceName === "ukparcels_UKMailDomestic_NextDay" ||
     serviceName === "DHL Express"
   ) {
@@ -386,6 +430,7 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   }
   if (
     serviceName === "ukparcels_UKMailDomestic_NextDay0900" ||
+    serviceName === "DHL UK: Express by 09:00 am (where available)" ||
     serviceName === "DHL Express PRE 9AM"
   ) {
     output = "DHL UK NextDay by 9am";
@@ -393,7 +438,10 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   if (serviceName === "ukparcels_UKMailDomestic_NextDay1030") {
     output = "DHL UK NextDay by 10am";
   }
-  if (serviceName === "DHL Express PRE NOON") {
+  if (
+    serviceName === "DHL Express PRE NOON" ||
+    serviceName === "DHL UK: Express by 12:00"
+  ) {
     output = "DHL UK NextDay by 12am";
   }
   if (serviceName === "ukparcels_UKMailDomestic_Saturday") {
@@ -450,7 +498,11 @@ export const serviceNameF = (serviceName: string, courier: string) => {
   if (serviceName === "FedEx UK Drop Off") {
     output = "FedEx UK Drop Off";
   }
-  if (serviceName === "DPD Collection" || serviceName === "ukparcels_dpdcollected24") {
+  if (
+    serviceName === "DPD Collection" ||
+    serviceName === "DPD: Standard" ||
+    serviceName === "ukparcels_dpdcollected24"
+  ) {
     output = "DPD Collection";
   }
   if (serviceName === "") {

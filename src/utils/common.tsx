@@ -7,6 +7,8 @@ export const VARIABLES: Variables = {
   PARCEL_MONKEY_LOGO_SRC: "parcelMonkey-logo.png",
   P4D: "P4D",
   P4D_LOGO_SRC: "p4d-logo.svg",
+  PARCELBROKER: "ParcelBroker",
+  PARCELBROKER_LOGO_SRC: "parcelbroker-logo.svg",
   SLOW: "SLOW",
   MEDIUM: "MEDIUM",
   FAST: "FAST",

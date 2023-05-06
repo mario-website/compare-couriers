@@ -14,6 +14,8 @@ const {
   PARCEL2GO,
   P4D,
   P4D_LOGO_SRC,
+  PARCELBROKER,
+  PARCELBROKER_LOGO_SRC,
 } = VARIABLES;
 
 export interface Initial_State_Main {
@@ -258,6 +260,32 @@ export const formattingData = (
           deliveryTime,
           logoSrc,
           url,
+        };
+      });
+    case PARCELBROKER:
+      interface PARCELBROKER_Item {
+        fullServiceName: string;
+        courierName: string;
+        serviceName: string;
+        deliveryTime: string;
+        price: string;
+      }
+
+      return data.map((item: PARCELBROKER_Item) => {
+        const courierName = courierNameF(item.courierName, companyName);
+        const serviceName = serviceNameF(item.fullServiceName, companyName);
+        const deliveryTime = deliveryTimeF(item.deliveryTime, companyName);
+        const price = item.price;
+        const logoSrc = PARCELBROKER_LOGO_SRC;
+        const url = "https://parcelbroker.co.uk/";
+        return {
+          companyName,
+          courierName,
+          serviceName,
+          price,
+          deliveryTime,
+          url,
+          logoSrc,
         };
       });
 

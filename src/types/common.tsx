@@ -98,6 +98,8 @@ export interface Variables {
   PARCEL_MONKEY_LOGO_SRC: string;
   P4D: string;
   P4D_LOGO_SRC: string;
+  PARCELBROKER: string;
+  PARCELBROKER_LOGO_SRC: string;
   SLOW: string;
   MEDIUM: string;
   FAST: string;
